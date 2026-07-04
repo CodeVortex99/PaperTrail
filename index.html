@@ -559,6 +559,162 @@
         flex-wrap: wrap;
       }
     }
+
+    /* New styles for Dashboard, Revision, Tools, Support */
+    .dashboard-grid,
+    .revision-grid,
+    .tools-grid,
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--paper-card);
+      border: 1px solid var(--ink);
+      border-radius: 2px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    /* Welcome Card */
+    .welcome-form input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* Countdown */
+    .countdown-timer {
+      font-family: 'Space Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    /* Progress Bars */
+    .progress-container {
+      margin-top: 15px;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-bar-bg {
+      background: var(--line);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: var(--highlight-dark);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    /* Flashcards */
+    .flashcard-container {
+      perspective: 1000px;
+      width: 100%;
+      height: 200px;
+      cursor: pointer;
+    }
+
+    .flashcard {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border: 1px solid var(--ink);
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-front,
+    .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--paper-card);
+    }
+
+    .flashcard-back {
+      transform: rotateY(180deg);
+      background: var(--highlight);
+    }
+
+    /* Timer */
+    .timer-display {
+      font-family: 'Space Mono', monospace;
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* Quiz */
+    .quiz-question {
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quiz-option {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .quiz-option:hover {
+      background: rgba(27, 35, 64, 0.04);
+    }
+
+    .quiz-option.correct {
+      background: var(--highlight);
+      border-color: var(--highlight-dark);
+    }
+
+    .quiz-option.incorrect {
+      background: #f8d7da;
+      border-color: #f5c6cb;
+    }
   </style>
 </head>
 
@@ -568,12 +724,233 @@
     <div class="header-row">
       <div class="logo">Paper<span>Trail</span></div>
       <nav>
+        <a href="#dashboard">Dashboard</a>
         <a href="#papers">Past papers</a>
+        <a href="#revision">Revision</a>
         <a href="#planner">Planner</a>
+        <a href="#tools">Tools</a>
+        <a href="#support">Support</a>
         <a href="#pricing">Pricing</a>
       </nav>
     </div>
   </header>
+
+  <section class="section hidden" id="dashboard">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Overview</p>
+        <h2>My Dashboard</h2>
+      </div>
+      <div class="dashboard-grid">
+        <div class="card">
+          <h3>Welcome back, <span id="display-name">Student</span>!</h3>
+          <p class="instructions">Set your details to personalize your revision.</p>
+          <div class="welcome-form">
+            <input type="text" id="input-name" placeholder="Your Name">
+            <div style="display: flex; gap: 10px;">
+              <input type="text" id="input-target" placeholder="Target Grade (e.g. A*)">
+              <input type="date" id="input-date">
+            </div>
+            <button class="btn primary" style="width: 100%;" onclick="saveUserData()">Save Profile</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Exam Countdown</h3>
+          <p class="instructions">Days until your next big exam.</p>
+          <div class="countdown-timer" id="countdown-display">
+            --d --h
+          </div>
+          <p id="target-date-label" style="text-align: center; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft);"></p>
+        </div>
+        <div class="card">
+          <h3>Revision Progress</h3>
+          <p class="instructions">Keep track of your subject mastery.</p>
+          <div id="progress-container">
+            <!-- Progress bars will be rendered here by JS -->
+          </div>
+          <svg id="progress-svg" width="100%" height="100" style="margin-top: 10px; border-bottom: 1px solid var(--line);">
+            <!-- SVG Bars will be rendered here by JS -->
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hidden" id="support">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Assistance</p>
+        <h2>Support & Resources</h2>
+      </div>
+      <div class="support-grid">
+        <div class="card">
+          <h3>UCAS Advice</h3>
+          <p class="instructions">Uni admissions, personal statements, and more.</p>
+          <ul style="font-size: 13px; color: var(--ink-soft); padding-left: 20px;">
+            <li>How to write a killer Personal Statement</li>
+            <li>Choosing the right University for you</li>
+            <li>Key UCAS Deadlines 2026</li>
+          </ul>
+          <button class="btn" style="width: 100%; margin-top: 10px;">Read Guide</button>
+        </div>
+        <div class="card">
+          <h3>Online Shop</h3>
+          <p class="instructions">Premium educational resources.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px;">
+            <div style="border: 1px solid var(--line); padding: 5px; text-align: center;">
+              Revision Guide<br><strong>£9.99</strong>
+            </div>
+            <div style="border: 1px solid var(--line); padding: 5px; text-align: center;">
+              Flashcard Set<br><strong>£4.99</strong>
+            </div>
+          </div>
+          <button class="btn primary" style="width: 100%; margin-top: 10px;">Browse Shop</button>
+        </div>
+        <div class="card">
+          <h3>Expert Tutors</h3>
+          <p class="instructions">Book 1-on-1 sessions with top students.</p>
+          <div style="font-size: 13px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span>Advaith Dinesh</span>
+              <span style="color: var(--highlight-dark);">★★★★★</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Jane Smith</span>
+              <span style="color: var(--highlight-dark);">★★★★★</span>
+            </div>
+          </div>
+          <button class="btn" style="width: 100%; margin-top: 10px;">Book a Session</button>
+        </div>
+        <div class="card">
+          <h3>Advaith Dinesh: Courses</h3>
+          <p class="instructions">Intensive revision sessions and video courses.</p>
+          <div style="font-size: 13px;">
+            <p>• A-Level Maths Mastery</p>
+            <p>• Physics Crash Course</p>
+          </div>
+          <button class="btn primary" style="width: 100%; margin-top: 10px;">Enroll Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hidden" id="tools">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Utilities</p>
+        <h2>Revision Tools</h2>
+      </div>
+      <div class="tools-grid">
+        <div class="card">
+          <h3>Pomodoro Timer</h3>
+          <p class="instructions">Timed practice mode. 25m study, 5m break.</p>
+          <div class="timer-display" id="timer-display">25:00</div>
+          <div class="timer-controls">
+            <button class="btn primary" onclick="toggleTimer()" id="timer-btn">Start</button>
+            <button class="btn" onclick="resetTimer()">Reset</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Grade Boundary Look-up</h3>
+          <p class="instructions">Quickly check past paper boundaries.</p>
+          <div class="filters">
+            <input type="text" id="boundary-search" placeholder="Search subject..." style="width: 100%; font-family: 'Space Mono', monospace; font-size: 12px; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius);">
+          </div>
+          <div id="boundary-results" style="margin-top: 15px; font-size: 12px; font-family: 'Space Mono', monospace;">
+            <!-- Boundaries will be rendered here -->
+          </div>
+        </div>
+        <div class="card">
+          <h3>Numerical Reasoning</h3>
+          <p class="instructions">Practice your speed and accuracy.</p>
+          <div id="num-test-container">
+            <p id="num-question" style="font-size: 24px; font-weight: 700; text-align: center; margin: 20px 0;">Ready?</p>
+            <input type="number" id="num-answer" placeholder="Result" style="width: 100%; font-family: 'Space Mono', monospace; font-size: 18px; padding: 10px; border: 1px solid var(--ink); border-radius: var(--radius); text-align: center;">
+            <button class="btn primary" style="width: 100%; margin-top: 15px;" onclick="startNumTest()" id="num-start-btn">Start Test</button>
+          </div>
+          <p id="num-score" style="text-align: center; font-size: 14px; margin-top: 10px;"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hidden" id="revision">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Resources</p>
+        <h2>Revision Materials</h2>
+      </div>
+
+      <div class="revision-grid">
+        <div class="card">
+          <h3>Detailed Notes</h3>
+          <p class="instructions">Topic-by-topic breakdown of every subject.</p>
+          <div class="filters" style="margin-bottom: 10px;">
+            <select style="width: 100%; font-size: 11px;">
+              <option>All Subjects</option>
+              <option>Maths</option>
+              <option>Physics</option>
+            </select>
+          </div>
+          <div style="font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+            <a href="#" class="pdf-link">Pure Maths 1 - Algebra ↗</a>
+            <a href="#" class="pdf-link">Physics - Particle Physics ↗</a>
+            <a href="#" class="pdf-link">Chemistry - Organic Bonding ↗</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Questions by Topic</h3>
+          <p class="instructions">Practice specific areas you find difficult.</p>
+          <div class="filters" style="margin-bottom: 10px;">
+            <select style="width: 100%; font-size: 11px;">
+              <option>Filter by Topic</option>
+              <option>Calculus</option>
+              <option>Mechanics</option>
+            </select>
+          </div>
+          <div style="font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+            <a href="#" class="pdf-link">Maths: Differentiation Questions ↗</a>
+            <a href="#" class="pdf-link">Physics: Waves & Optics ↗</a>
+            <a href="#" class="pdf-link">Biology: Cell Structure ↗</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Flashcards</h3>
+          <p class="instructions">Click to flip, use buttons to navigate.</p>
+          <div class="flashcard-container" onclick="flipCard()">
+            <div class="flashcard" id="flashcard-element">
+              <div class="flashcard-front" id="flashcard-front">
+                Question loading...
+              </div>
+              <div class="flashcard-back" id="flashcard-back">
+                Answer loading...
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+            <button class="btn" onclick="prevCard()">Prev</button>
+            <span id="card-index" style="font-family: 'Space Mono', monospace; font-size: 12px; align-self: center;">1/10</span>
+            <button class="btn" onclick="nextCard()">Next</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Daily Quiz</h3>
+          <p class="instructions">Test your knowledge with 5 quick questions.</p>
+          <div id="quiz-container">
+            <div class="quiz-question" id="quiz-question">Loading question...</div>
+            <div class="quiz-options" id="quiz-options">
+              <!-- Options will be rendered here -->
+            </div>
+          </div>
+          <div id="quiz-results" class="hidden" style="text-align: center;">
+            <p style="font-size: 20px; font-weight: 700;">Quiz Complete!</p>
+            <p id="quiz-score-text">Your score: 0/5</p>
+            <button class="btn primary" onclick="resetQuiz()">Try Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="hero">
     <div class="cover-sheet">
@@ -697,6 +1074,320 @@
   </footer>
 
   <script>
+    // ---------- tools logic ----------
+    let timerInterval;
+    let timeLeft = 25 * 60;
+    let timerRunning = false;
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      const display = document.getElementById('timer-display');
+      if (display) {
+        display.textContent =
+          `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-btn');
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        btn.textContent = "Start";
+        timerRunning = false;
+      } else {
+        timerRunning = true;
+        btn.textContent = "Pause";
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          updateTimerDisplay();
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Time's up!");
+            resetTimer();
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 25 * 60;
+      timerRunning = false;
+      const btn = document.getElementById('timer-btn');
+      if (btn) btn.textContent = "Start";
+      updateTimerDisplay();
+    }
+
+    const BOUNDARIES = [
+      { s: "Maths", b: "AQA", y: "2023", g: { "A*": 210, "A": 180, "B": 150 } },
+      { s: "Physics", b: "Edexcel", y: "2023", g: { "A*": 240, "A": 200, "B": 170 } },
+      { s: "Chemistry", b: "AQA", y: "2023", g: { "A*": 220, "A": 190, "B": 160 } }
+    ];
+
+    function renderBoundaries(filter = '') {
+      const results = document.getElementById('boundary-results');
+      if (!results) return;
+      const filtered = BOUNDARIES.filter(b => b.s.toLowerCase().includes(filter.toLowerCase()));
+
+      if (filtered.length === 0) {
+        results.innerHTML = "No results found.";
+        return;
+      }
+
+      results.innerHTML = filtered.map(b => `
+        <div style="border-bottom: 1px dashed var(--line); padding: 8px 0;">
+          <strong>${b.s} (${b.b} ${b.y})</strong><br>
+          A*: ${b.g['A*']} | A: ${b.g['A']} | B: ${b.g['B']}
+        </div>
+      `).join('');
+    }
+
+    let numTestActive = false;
+    let numScore = 0;
+    let currentNumAns = 0;
+
+    function startNumTest() {
+      const btn = document.getElementById('num-start-btn');
+      const input = document.getElementById('num-answer');
+      const score = document.getElementById('num-score');
+
+      if (numTestActive) {
+        // Submit answer
+        if (parseInt(input.value) === currentNumAns) {
+          numScore++;
+          score.textContent = "Correct! Score: " + numScore;
+          score.style.color = "green";
+        } else {
+          score.textContent = "Wrong! Correct was " + currentNumAns + ". Final Score: " + numScore;
+          score.style.color = "red";
+          numTestActive = false;
+          btn.textContent = "Restart Test";
+          input.value = "";
+          return;
+        }
+        input.value = "";
+        nextNumQuestion();
+      } else {
+        // Start test
+        numScore = 0;
+        numTestActive = true;
+        btn.textContent = "Submit Answer";
+        score.textContent = "Score: 0";
+        score.style.color = "inherit";
+        input.value = "";
+        nextNumQuestion();
+      }
+    }
+
+    function nextNumQuestion() {
+      const a = Math.floor(Math.random() * 12) + 1;
+      const b = Math.floor(Math.random() * 12) + 1;
+      currentNumAns = a * b;
+      document.getElementById('num-question').textContent = `${a} x ${b} = ?`;
+    }
+
+    // ---------- revision logic ----------
+    const FLASHCARDS = [
+      { q: "What is the formula for the area of a circle?", a: "πr²" },
+      { q: "What is Newton's second law?", a: "F = ma" },
+      { q: "What is the functional group of an alcohol?", a: "-OH (hydroxyl)" },
+      { q: "Who wrote 'Romeo and Juliet'?", a: "William Shakespeare" },
+      { q: "What is the powerhouse of the cell?", a: "Mitochondria" }
+    ];
+
+    let currentCardIndex = 0;
+
+    function flipCard() {
+      document.getElementById('flashcard-element').classList.toggle('flipped');
+    }
+
+    function renderCard() {
+      const card = FLASHCARDS[currentCardIndex];
+      const front = document.getElementById('flashcard-front');
+      const back = document.getElementById('flashcard-back');
+      const idx = document.getElementById('card-index');
+      if (front) front.textContent = card.q;
+      if (back) back.textContent = card.a;
+      if (idx) idx.textContent = `${currentCardIndex + 1}/${FLASHCARDS.length}`;
+      document.getElementById('flashcard-element')?.classList.remove('flipped');
+    }
+
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % FLASHCARDS.length;
+      renderCard();
+    }
+
+    function prevCard() {
+      currentCardIndex = (currentCardIndex - 1 + FLASHCARDS.length) % FLASHCARDS.length;
+      renderCard();
+    }
+
+    const QUIZ_QUESTIONS = [
+      { q: "Which element has the symbol 'O'?", o: ["Osmium", "Oxygen", "Gold", "Iron"], a: 1 },
+      { q: "What is 7 x 8?", o: ["54", "56", "62", "48"], a: 1 },
+      { q: "In which year did WWII end?", o: ["1943", "1944", "1945", "1946"], a: 2 },
+      { q: "What is the square root of 144?", o: ["10", "11", "12", "14"], a: 2 },
+      { q: "Capital of France?", o: ["London", "Berlin", "Madrid", "Paris"], a: 3 }
+    ];
+
+    let currentQuizStep = 0;
+    let quizScore = 0;
+
+    function renderQuiz() {
+      const q = QUIZ_QUESTIONS[currentQuizStep];
+      const qText = document.getElementById('quiz-question');
+      const options = document.getElementById('quiz-options');
+      if (qText) qText.textContent = q.q;
+      if (options) {
+        options.innerHTML = q.o.map((opt, i) => `
+          <div class="quiz-option" onclick="handleQuizAnswer(${i})">${opt}</div>
+        `).join('');
+      }
+    }
+
+    function handleQuizAnswer(index) {
+      const q = QUIZ_QUESTIONS[currentQuizStep];
+      const options = document.querySelectorAll('.quiz-option');
+
+      if (index === q.a) {
+        quizScore++;
+        options[index].classList.add('correct');
+      } else {
+        options[index].classList.add('incorrect');
+        options[q.a].classList.add('correct');
+      }
+
+      // Disable all options after answer
+      options.forEach(opt => opt.style.pointerEvents = 'none');
+
+      setTimeout(() => {
+        currentQuizStep++;
+        if (currentQuizStep < QUIZ_QUESTIONS.length) {
+          renderQuiz();
+        } else {
+          showQuizResults();
+        }
+      }, 1000);
+    }
+
+    function showQuizResults() {
+      document.getElementById('quiz-container')?.classList.add('hidden');
+      document.getElementById('quiz-results')?.classList.remove('hidden');
+      const scoreText = document.getElementById('quiz-score-text');
+      if (scoreText) scoreText.textContent = `Your score: ${quizScore}/${QUIZ_QUESTIONS.length}`;
+    }
+
+    function resetQuiz() {
+      currentQuizStep = 0;
+      quizScore = 0;
+      document.getElementById('quiz-container')?.classList.remove('hidden');
+      document.getElementById('quiz-results')?.classList.add('hidden');
+      renderQuiz();
+    }
+
+    // ---------- dashboard logic ----------
+    let userData = {
+      name: '',
+      targetGrade: '',
+      examDate: ''
+    };
+
+    function loadUserData() {
+      const saved = localStorage.getItem('paperTrailUser');
+      if (saved) {
+        userData = JSON.parse(saved);
+        const nameDisp = document.getElementById('display-name');
+        if (nameDisp) nameDisp.textContent = userData.name || 'Student';
+        const nameInput = document.getElementById('input-name');
+        if (nameInput) nameInput.value = userData.name || '';
+        const targetInput = document.getElementById('input-target');
+        if (targetInput) targetInput.value = userData.targetGrade || '';
+        const dateInput = document.getElementById('input-date');
+        if (dateInput) dateInput.value = userData.examDate || '';
+      }
+      updateCountdown();
+      renderProgress();
+    }
+
+    function saveUserData() {
+      userData.name = document.getElementById('input-name').value;
+      userData.targetGrade = document.getElementById('input-target').value;
+      userData.examDate = document.getElementById('input-date').value;
+      localStorage.setItem('paperTrailUser', JSON.stringify(userData));
+      const nameDisp = document.getElementById('display-name');
+      if (nameDisp) nameDisp.textContent = userData.name || 'Student';
+      updateCountdown();
+      alert('Profile saved!');
+    }
+
+    function updateCountdown() {
+      const display = document.getElementById('countdown-display');
+      const label = document.getElementById('target-date-label');
+      if (!display || !label) return;
+
+      if (!userData.examDate) {
+        display.textContent = "--d --h";
+        label.textContent = "Set an exam date in your profile";
+        return;
+      }
+
+      const target = new Date(userData.examDate);
+      label.textContent = "Target: " + target.toLocaleDateString();
+
+      function refresh() {
+        const now = new Date();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          display.textContent = "Exam Day!";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        display.textContent = `${days}d ${hours}h`;
+      }
+
+      refresh();
+    }
+
+    function renderProgress() {
+      const container = document.getElementById('progress-container');
+      const svg = document.getElementById('progress-svg');
+      if (!container || !svg) return;
+
+      const subjects = [
+        { name: 'Maths', progress: 75, color: '--highlight-dark' },
+        { name: 'Physics', progress: 60, color: '--blue-dark' },
+        { name: 'Chemistry', progress: 45, color: '--coral-dark' },
+        { name: 'Biology', progress: 85, color: '--purple-dark' }
+      ];
+
+      // Render standard bars
+      container.innerHTML = subjects.map(s => `
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>${s.name}</span>
+            <span>${s.progress}%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: ${s.progress}%; background-color: var(${s.color});"></div>
+          </div>
+        </div>
+      `).join('');
+
+      // Render SVG bars for a more "graphical" look
+      const barWidth = 40;
+      const spacing = 60;
+      svg.innerHTML = subjects.map((s, i) => `
+        <rect x="${20 + i * spacing}" y="${100 - s.progress}" width="${barWidth}" height="${s.progress}" fill="var(${s.color})" opacity="0.8">
+          <title>${s.name}: ${s.progress}% mastery</title>
+        </rect>
+        <text x="${20 + i * spacing}" y="95" font-family="Space Mono" font-size="10" fill="white">${s.name[0]}</text>
+      `).join('');
+    }
+
     // ---------- past papers ----------
     // Local file convention:
     //   papers/{Subject}/{Board}/{Session} {Type} - {Paper}.pdf
@@ -713,25 +1404,21 @@
     const YEARS = ['June 2023', 'June 2022', 'June 2019', 'June 2018'];
 
     function getPapersFor(subject, board) {
+      let base = [];
       if (subject === 'maths') {
-        if (board === 'Edexcel') {
-          return ['Paper 1', 'Paper 2', 'Paper 31', 'Paper 32'];
-        }
-        return ['Paper 1', 'Paper 2', 'Paper 3'];
+        if (board === 'Edexcel') base = ['Paper 1', 'Paper 2', 'Paper 31', 'Paper 32'];
+        else base = ['Paper 1', 'Paper 2', 'Paper 3'];
+      } else if (subject === 'further-maths') {
+        if (board === 'AQA') base = ['Paper 1', 'Paper 2'];
+        else base = ['Paper 1', 'Paper 2', 'Paper 3A', 'Paper 3B'];
+      } else if (subject === 'physics') {
+        if (board === 'AQA') base = ['Paper 1', 'Paper 2', 'Paper 3A', 'Paper 3B'];
+        else base = ['Paper 1', 'Paper 2', 'Paper 3'];
+      } else {
+        base = ['Paper 1', 'Paper 2', 'Paper 3'];
       }
-      if (subject === 'further-maths') {
-        if (board === 'AQA') {
-          return ['Paper 1', 'Paper 2'];
-        }
-        return ['Paper 1', 'Paper 2', 'Paper 3A', 'Paper 3B'];
-      }
-      if (subject === 'physics') {
-        if (board === 'AQA') {
-          return ['Paper 1', 'Paper 2', 'Paper 3A', 'Paper 3B'];
-        }
-        return ['Paper 1', 'Paper 2', 'Paper 3'];
-      }
-      return ['Paper 1', 'Paper 2', 'Paper 3'];
+      // Add Predicted and Mock papers
+      return [...base, 'Predicted Paper', 'Mock Paper'];
     }
 
     const ALL_PAPERS = [];
@@ -939,15 +1626,42 @@
 
     renderPlanner();
 
+    // ---------- event listeners ----------
+    document.getElementById('boundary-search')?.addEventListener('input', (e) => {
+      renderBoundaries(e.target.value);
+    });
+
     // ---------- tabs switching logic ----------
     const sections = {
+      'dashboard': {
+        navLink: document.querySelector('nav a[href="#dashboard"]'),
+        elements: [document.getElementById('dashboard')],
+        onShow: () => loadUserData()
+      },
       'papers': {
         navLink: document.querySelector('nav a[href="#papers"]'),
         elements: [document.querySelector('.hero'), document.getElementById('papers')]
       },
+      'revision': {
+        navLink: document.querySelector('nav a[href="#revision"]'),
+        elements: [document.getElementById('revision')],
+        onShow: () => { renderCard(); renderQuiz(); }
+      },
       'planner': {
         navLink: document.querySelector('nav a[href="#planner"]'),
         elements: [document.getElementById('planner')]
+      },
+      'tools': {
+        navLink: document.querySelector('nav a[href="#tools"]'),
+        elements: [document.getElementById('tools')],
+        onShow: () => {
+          updateTimerDisplay();
+          renderBoundaries();
+        }
+      },
+      'support': {
+        navLink: document.querySelector('nav a[href="#support"]'),
+        elements: [document.getElementById('support')]
       },
       'pricing': {
         navLink: document.querySelector('nav a[href="#pricing"]'),
@@ -972,6 +1686,9 @@
         sections[tabId].elements.forEach(el => {
           if (el) el.classList.remove('hidden');
         });
+        if (sections[tabId].onShow) {
+          sections[tabId].onShow();
+        }
       }
     }
 
