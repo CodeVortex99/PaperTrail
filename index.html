@@ -4,7 +4,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Trail — past papers, sorted. Revision, planned.</title>
+  <title>Paper Trail — Past papers, sorted. Revision, planned.</title>
+  <meta name="description" content="Paper Trail is a better alternative to PMT, offering A-Level and GCSE past papers, detailed revision notes, questions by topic, a study planner, and a Pomodoro timer.">
+  <meta name="keywords" content="past papers, revision notes, AQA, Edexcel, OCR, exam countdown, study planner, PMT alternative, questions by topic, mark schemes">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://papertrail.edu/">
+  <meta property="og:title" content="Paper Trail — Past papers, sorted. Revision, planned.">
+  <meta property="og:description" content="The ultimate revision platform for students. Access all past papers and notes without redirects.">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Paper Trail — Past papers, sorted. Revision, planned.">
+  <meta property="twitter:description" content="The ultimate revision platform for students. Access all past papers and notes without redirects.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Paper Trail",
+    "alternateName": "Paper Trail Education",
+    "url": "https://papertrail.edu/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://papertrail.edu/#papers{search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "Paper Trail",
+    "url": "https://papertrail.edu/",
+    "description": "The ultimate revision platform for students, providing past papers, notes, and study tools."
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -157,7 +195,7 @@
       border: 1px solid var(--ink-soft);
     }
 
-    .hero h1 {
+    .hero h2 {
       font-size: 44px;
       margin: 0 0 12px;
       letter-spacing: -1px;
@@ -165,7 +203,7 @@
       font-weight: 600;
     }
 
-    .hero h1 em {
+    .hero h2 em {
       font-style: normal;
       background: var(--highlight);
       padding: 0 8px;
@@ -544,7 +582,7 @@
     }
 
     @media(max-width:640px) {
-      .hero h1 {
+      .hero h2 {
         font-size: 32px;
       }
 
@@ -722,7 +760,7 @@
 
   <header>
     <div class="header-row">
-      <div class="logo">Paper<span>Trail</span></div>
+      <h1 class="logo">Paper<span>Trail</span></h1>
       <nav>
         <a href="#dashboard">Dashboard</a>
         <a href="#papers">Past papers</a>
@@ -735,6 +773,10 @@
     </div>
   </header>
 
+
+
+
+  <main>
   <section class="section hidden" id="dashboard">
     <div class="wrap">
       <div class="section-head">
@@ -833,6 +875,7 @@
       </div>
     </div>
   </section>
+
 
   <section class="section hidden" id="tools">
     <div class="wrap">
@@ -966,7 +1009,7 @@
           </div>
         </div>
       </div>
-      <h1>Past papers, sorted.<br>Revision, <em>planned.</em></h1>
+      <h2>Past papers, sorted.<br>Revision, <em>planned.</em></h2>
       <p class="instructions">
         INSTRUCTIONS TO CANDIDATES: browse real past papers by subject and board, then
         build a week you can actually stick to. No sign-up required to look around.
@@ -1064,7 +1107,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </main>
 
   <footer>
     <div class="footer-row">
@@ -1697,7 +1740,7 @@
       if (sections[hash]) {
         showTab(hash);
       } else {
-        showTab('papers');
+        showTab('dashboard');
       }
     }
 
