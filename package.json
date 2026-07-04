@@ -1,0 +1,14 @@
+{
+  "name": "papertrail",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Past papers, sorted. Revision, planned.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6"
+  }
+}
