@@ -4,9 +4,16 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}"
+      "name": "Launch Chrome with Dev Server",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Start Dev Server"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome (Static File)",
+      "file": "${workspaceFolder}/index.html"
     }
   ]
 }
