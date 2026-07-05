@@ -67,6 +67,19 @@
       --maxw: 1080px;
     }
 
+    body.dark-mode {
+      --paper: #1B2340;
+      --paper-card: #242D4D;
+      --ink: #EEF0E6;
+      --ink-soft: #A6ACC9;
+      --line: #4A5170;
+    }
+
+    body.dark-mode .logo span,
+    body.dark-mode .paper-tag.subject-maths {
+      color: #000;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -376,9 +389,15 @@
     }
 
     /* Dashboard & Tools */
-    .dashboard-grid, .tools-grid, .support-grid {
+    .dashboard-grid, .support-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
       gap: 24px;
     }
 
@@ -696,23 +715,49 @@
 
 <body>
 
-  <header>
+  <header id="main-header" class="hidden">
     <div class="header-row">
       <h1 class="logo">Paper<span>Trail</span></h1>
-      <nav>
+      <nav id="main-nav">
         <a href="#dashboard">Dashboard</a>
-        <a href="#papers">Papers</a>
+        <a href="#papers" class="cat-gcse cat-alevel">Papers</a>
         <a href="#revision">Revision</a>
         <a href="#planner">Planner</a>
         <a href="#tools">Tools</a>
-        <a href="#support">Support</a>
+        <a href="#support" class="cat-uni cat-alevel">Uni Advice</a>
         <a href="#pricing">Pricing</a>
         <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal()">Login</a>
+        <button class="btn" onclick="toggleDarkMode()" style="padding: 4px 8px; font-size: 12px;">🌓</button>
       </nav>
     </div>
   </header>
 
   <main>
+    <!-- Landing Section -->
+    <section class="section" id="landing" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+      <div class="wrap" style="text-align: center;">
+        <h1 class="logo" style="font-size: 48px; margin-bottom: 40px;">Paper<span>Trail</span></h1>
+        <p style="margin-bottom: 40px; color: var(--ink-soft); font-family: 'Space Mono', monospace;">Select your pathway to get started.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+           <div class="card" onclick="setCategory('gcse')" style="cursor: pointer;">
+              <h3>GCSE</h3>
+              <p class="instructions">Core subjects and revision guides.</p>
+              <button class="btn primary" style="width: 100%;">Select</button>
+           </div>
+           <div class="card" onclick="setCategory('alevel')" style="cursor: pointer;">
+              <h3>A-Levels</h3>
+              <p class="instructions">Advanced subjects, papers and uni prep.</p>
+              <button class="btn primary" style="width: 100%;">Select</button>
+           </div>
+           <div class="card" onclick="setCategory('uni')" style="cursor: pointer;">
+              <h3>University</h3>
+              <p class="instructions">Uni advice, personal statements and advice.</p>
+              <button class="btn primary" style="width: 100%;">Select</button>
+           </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Dashboard Section -->
     <section class="section hidden" id="dashboard">
       <div class="wrap">
@@ -817,30 +862,30 @@
           <h2>Revision Lab</h2>
         </div>
         <div class="dashboard-grid">
-          <div class="card">
+          <div class="card" style="grid-row: span 2;">
             <h3>SRS Flashcards</h3>
-            <p class="instructions" id="flash-status">Study mode: click to flip.</p>
-            <div class="flashcard-container" onclick="flipCard()">
-              <div class="flashcard" id="flashcard-element">
-                <div class="flashcard-front" id="flash-q">Loading...</div>
-                <div class="flashcard-back">
-                  <div id="flash-a">Loading...</div>
-                  <div class="srs-buttons">
-                    <button class="btn srs-btn hard" onclick="rateCard(0, event)">Hard</button>
-                    <button class="btn srs-btn good" onclick="rateCard(1, event)">Good</button>
-                    <button class="btn srs-btn easy" onclick="rateCard(2, event)">Easy</button>
-                  </div>
-                </div>
-              </div>
+            <p class="instructions">Master concepts with spaced repetition.</p>
+
+            <div id="flashcard-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding-right: 8px;">
+               <!-- Flashcards will be rendered here -->
             </div>
-            <div style="margin-top: 15px; display: flex; justify-content: space-between;">
-              <button class="btn" onclick="resetSRS()">Reset Data</button>
-              <span id="srs-count" style="font-size: 11px; align-self: center;">Due: 0</span>
+
+            <div style="border-top: 1px solid var(--line); padding-top: 15px;">
+              <p class="eyebrow" style="margin-bottom: 10px;">Create New Card</p>
+              <input type="text" id="new-flash-q" placeholder="Question" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 4px;">
+              <input type="text" id="new-flash-a" placeholder="Answer" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 4px;">
+              <input type="text" id="new-flash-deck" placeholder="Deck Name (optional)" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 4px;">
+              <button class="btn primary" style="width: 100%;" onclick="createFlashcard()">Create Card</button>
+            </div>
+
+            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+              <button class="btn" style="font-size: 10px; padding: 4px 8px;" onclick="resetSRS()">Reset All</button>
+              <span id="srs-count" style="font-size: 11px;">Due: 0</span>
             </div>
           </div>
-          <div class="card">
-            <h3>Daily Quiz</h3>
-            <p class="instructions">5 random questions to stay sharp.</p>
+          <div class="card" style="grid-row: span 2;">
+            <h3>Quiz Lab</h3>
+            <p class="instructions">Daily challenges and custom quizzes.</p>
             <div id="quiz-area">
               <p id="quiz-q" style="font-weight: 600;"></p>
               <div class="quiz-options" id="quiz-opts"></div>
@@ -849,6 +894,20 @@
               <p>Quiz Finished!</p>
               <p id="score-text"></p>
               <button class="btn primary" onclick="startQuiz()">Restart</button>
+            </div>
+
+            <div style="border-top: 1px solid var(--line); padding-top: 15px; margin-top: 20px;">
+              <p class="eyebrow" style="margin-bottom: 10px;">Create New Quiz Question</p>
+              <input type="text" id="new-quiz-q" placeholder="Question" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 4px;">
+              <input type="text" id="new-quiz-o1" placeholder="Option 1" style="width: 100%; padding: 8px; margin-bottom: 4px; border: 1px solid var(--line); border-radius: 4px;">
+              <input type="text" id="new-quiz-o2" placeholder="Option 2" style="width: 100%; padding: 8px; margin-bottom: 4px; border: 1px solid var(--line); border-radius: 4px;">
+              <input type="text" id="new-quiz-o3" placeholder="Option 3" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 4px;">
+              <select id="new-quiz-a" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 4px;">
+                <option value="0">Option 1 is correct</option>
+                <option value="1">Option 2 is correct</option>
+                <option value="2">Option 3 is correct</option>
+              </select>
+              <button class="btn primary" style="width: 100%;" onclick="createQuizQuestion()">Add Question</button>
             </div>
           </div>
           <div class="card">
@@ -899,13 +958,16 @@
             </div>
           </div>
           <div class="card">
-            <h3>Numerical Reasoning</h3>
-            <p class="instructions">Multiplication speed test.</p>
-            <div id="num-test">
-               <p id="num-q" style="font-size: 24px; font-weight: 700; text-align: center;">Ready?</p>
-               <input type="number" id="num-input" style="width: 100%; padding: 10px; margin-bottom: 10px;" placeholder="Answer...">
-               <button class="btn primary" style="width: 100%;" onclick="startNumTest()" id="num-btn">Start Test</button>
-            </div>
+            <h3>Spaced Repetition</h3>
+            <p class="instructions">Scientific technique for long-term memory.</p>
+            <p style="font-size: 13px; color: var(--ink-soft);">Spaced repetition involves reviewing information at increasing intervals to exploit the psychological spacing effect. Our SRS Flashcards automate this for you.</p>
+            <a href="#revision" class="btn primary" style="margin-top: 10px; width: 100%; text-align: center;">Open Flashcards</a>
+          </div>
+          <div class="card">
+            <h3>Active Recall</h3>
+            <p class="instructions">Testing yourself is better than re-reading.</p>
+            <p style="font-size: 13px; color: var(--ink-soft);">Active recall involves actively stimulating memory during the learning process. It is much more effective than passive study like reading or highlighting.</p>
+            <a href="#revision" class="btn primary" style="margin-top: 10px; width: 100%; text-align: center;">Take a Quiz</a>
           </div>
           <div class="card">
             <h3>Grade Boundaries</h3>
@@ -922,7 +984,7 @@
       <div class="wrap">
         <div class="section-head">
           <p class="eyebrow">Resources</p>
-          <h2>Support & Advice</h2>
+          <h2>Uni Advice</h2>
         </div>
         <div class="support-grid">
           <div class="card">
@@ -970,7 +1032,7 @@
               <li>All past papers and markschemes</li>
               <li>Spaced Repetition Flashcards</li>
               <li>Weekly Revision Planner</li>
-              <li>Numerical Reasoning Tests</li>
+              <li>Active Recall & SRS Tools</li>
             </ul>
           </div>
         </div>
@@ -1029,7 +1091,7 @@
 
   <footer>
     <div class="footer-row">
-      <div>PAPER TRAIL — Better than PMT.</div>
+      <div>PAPER TRAIL</div>
       <div style="display: flex; gap: 20px;">
         <a href="#legal">Legal</a>
         <span>© 2026</span>
@@ -1091,6 +1153,12 @@
       document.getElementById('cookie-banner').classList.add('hidden');
     }
 
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('paperTrailDarkMode', isDark);
+    }
+
     // ---------- Logic: Dashboard ----------
     function saveUserData() {
       userData.name = document.getElementById('input-name').value;
@@ -1129,6 +1197,14 @@
     }
     function renderProgress() {
       const container = document.getElementById('progress-container');
+      const svg = document.getElementById('progress-chart');
+
+      if (!currentUser) {
+        container.innerHTML = `<p style="font-size:13px; color:var(--ink-soft); text-align:center; padding:20px;">Please login to track your progress.</p>`;
+        svg.innerHTML = '';
+        return;
+      }
+
       const subjects = [
         { name: 'Maths', p: 75 },
         { name: 'Physics', p: 62 },
@@ -1142,7 +1218,6 @@
       `).join('');
 
       // Render SVG Chart
-      const svg = document.getElementById('progress-chart');
       const w = svg.clientWidth || 250;
       const h = 80;
       svg.setAttribute('height', h);
@@ -1289,13 +1364,14 @@
       e.stopPropagation();
       delete planData[key];
       localStorage.setItem('paperTrailPlan', JSON.stringify(planData));
-      renderPlanner();
+      updateSlot(key);
     }
     function openAddForm(el) {
       document.querySelectorAll('.add-form').forEach(f => f.remove());
       const key = el.dataset.key;
       const form = document.createElement('div');
       form.className = 'add-form open';
+      form.onclick = (e) => e.stopPropagation();
       form.innerHTML = `
         <select id="sel-task">
           ${Object.keys(SUBJECT_COLORS).map(s => `<option value="${s}">${s}</option>`).join('')}
@@ -1316,7 +1392,34 @@
       if (val) {
         planData[key] = val;
         localStorage.setItem('paperTrailPlan', JSON.stringify(planData));
-        renderPlanner();
+        updateSlot(key);
+      }
+    }
+
+    function updateSlot(key) {
+      const slot = document.querySelector(`.slot[data-key="${key}"]`);
+      if (!slot) return;
+      slot.innerHTML = '';
+      const task = planData[key];
+      if (task) {
+        const c = SUBJECT_COLORS[task] || { bg: '#eee', fg: '#333' };
+        const chip = document.createElement('div');
+        chip.className = 'task-chip';
+        chip.style.background = c.bg;
+        chip.style.color = c.fg;
+        const span = document.createElement('span');
+        span.style.pointerEvents = 'none';
+        span.textContent = task;
+        const rm = document.createElement('span');
+        rm.className = 'rm';
+        rm.textContent = '×';
+        rm.onclick = (e) => rmTask(key, e);
+        chip.appendChild(span);
+        chip.appendChild(rm);
+        slot.appendChild(chip);
+        slot.onclick = null;
+      } else {
+        slot.onclick = () => openAddForm(slot);
       }
     }
 
@@ -1389,51 +1492,103 @@
     };
 
     // ---------- Logic: SRS & Revision ----------
-    let FLASHCARDS = [
-      { id: 1, q: "Area of Circle?", a: "πr²" },
-      { id: 2, q: "Force formula?", a: "F = ma" },
-      { id: 3, q: "Functional group alcohol?", a: "-OH" }
+    let DEFAULT_FLASHCARDS = [
+      { id: 1, q: "Area of Circle?", a: "πr²", deck: "Maths" },
+      { id: 2, q: "Force formula?", a: "F = ma", deck: "Physics" },
+      { id: 3, q: "Functional group alcohol?", a: "-OH", deck: "Chemistry" }
     ];
+    let userFlashcards = JSON.parse(localStorage.getItem('paperTrailUserFlashcards')) || [];
     let srsData = JSON.parse(localStorage.getItem('paperTrailSRS')) || {};
-    let activeCard = null;
+
+    function createFlashcard() {
+      const q = document.getElementById('new-flash-q').value;
+      const a = document.getElementById('new-flash-a').value;
+      const deck = document.getElementById('new-flash-deck').value || "General";
+      if (!q || !a) return alert("Please fill Question and Answer");
+
+      const newCard = {
+        id: Date.now(),
+        q, a, deck
+      };
+      userFlashcards.push(newCard);
+      localStorage.setItem('paperTrailUserFlashcards', JSON.stringify(userFlashcards));
+
+      document.getElementById('new-flash-q').value = '';
+      document.getElementById('new-flash-a').value = '';
+      renderSRS();
+    }
 
     function renderSRS() {
-      const due = FLASHCARDS.filter(c => {
+      const allCards = [...DEFAULT_FLASHCARDS, ...userFlashcards];
+      const due = allCards.filter(c => {
         const d = srsData[c.id];
         return !d || d.nextDue <= Date.now();
       });
+
       document.getElementById('srs-count').textContent = `Due: ${due.length}`;
+      const list = document.getElementById('flashcard-list');
+
       if (due.length === 0) {
-        document.getElementById('flash-q').textContent = "All caught up!";
-        document.getElementById('flash-a').textContent = "Come back tomorrow.";
-        activeCard = null;
-      } else {
-        activeCard = due[0];
-        document.getElementById('flash-q').textContent = activeCard.q;
-        document.getElementById('flash-a').textContent = activeCard.a;
+        list.innerHTML = `<div style="text-align:center; color:var(--ink-soft); padding:40px 0;">All caught up for now!</div>`;
+        return;
       }
-      document.getElementById('flashcard-element').classList.remove('flipped');
+
+      list.innerHTML = due.map(c => `
+        <div class="card" style="padding: 15px; border-style: dashed; cursor: default;">
+          <div style="font-size: 10px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 5px;">${c.deck}</div>
+          <div style="font-weight: 600; margin-bottom: 10px;">${c.q}</div>
+          <details style="font-size: 14px; background: var(--highlight); padding: 8px; border-radius: 4px; margin-bottom: 10px;">
+            <summary style="cursor:pointer; font-weight: 500;">Show Answer</summary>
+            <div style="margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 10px; color: #000;">${c.a}</div>
+          </details>
+          <div class="srs-buttons">
+            <button class="btn srs-btn hard" style="flex:1" onclick="rateCard(${c.id}, 0)">Hard</button>
+            <button class="btn srs-btn good" style="flex:1" onclick="rateCard(${c.id}, 1)">Good</button>
+            <button class="btn srs-btn easy" style="flex:1" onclick="rateCard(${c.id}, 2)">Easy</button>
+          </div>
+        </div>
+      `).join('');
     }
-    function flipCard() { if (activeCard) document.getElementById('flashcard-element').classList.toggle('flipped'); }
-    function rateCard(rating, e) {
-      e.stopPropagation();
-      if (!activeCard) return;
-      let d = srsData[activeCard.id] || { interval: 0, ease: 2.5, nextDue: 0 };
+
+    function rateCard(cardId, rating) {
+      let d = srsData[cardId] || { interval: 0, ease: 2.5, nextDue: 0 };
       if (rating === 0) d.interval = 1;
       else if (rating === 1) d.interval = d.interval === 0 ? 1 : Math.ceil(d.interval * d.ease);
       else { d.interval = d.interval === 0 ? 4 : Math.ceil(d.interval * d.ease * 1.3); d.ease += 0.1; }
       d.nextDue = Date.now() + (d.interval * 24 * 60 * 60 * 1000);
-      srsData[activeCard.id] = d;
+      srsData[cardId] = d;
       localStorage.setItem('paperTrailSRS', JSON.stringify(srsData));
       renderSRS();
     }
     function resetSRS() { localStorage.removeItem('paperTrailSRS'); srsData = {}; renderSRS(); }
 
     let quizStep = 0;
-    const QUIZ = [
+    const DEFAULT_QUIZ = [
       { q: "O is the symbol for?", o: ["Gold", "Oxygen", "Iron"], a: 1 },
       { q: "7 x 8?", o: ["54", "56", "64"], a: 1 }
     ];
+    let userQuiz = JSON.parse(localStorage.getItem('paperTrailUserQuiz')) || [];
+
+    function createQuizQuestion() {
+      const q = document.getElementById('new-quiz-q').value;
+      const o1 = document.getElementById('new-quiz-o1').value;
+      const o2 = document.getElementById('new-quiz-o2').value;
+      const o3 = document.getElementById('new-quiz-o3').value;
+      const a = parseInt(document.getElementById('new-quiz-a').value);
+
+      if (!q || !o1 || !o2 || !o3) return alert("Please fill all fields");
+
+      const newQ = { q, o: [o1, o2, o3], a };
+      userQuiz.push(newQ);
+      localStorage.setItem('paperTrailUserQuiz', JSON.stringify(userQuiz));
+
+      document.getElementById('new-quiz-q').value = '';
+      document.getElementById('new-quiz-o1').value = '';
+      document.getElementById('new-quiz-o2').value = '';
+      document.getElementById('new-quiz-o3').value = '';
+      alert("Question added!");
+    }
+
     function startQuiz() {
       quizStep = 0;
       document.getElementById('quiz-area').classList.remove('hidden');
@@ -1441,22 +1596,30 @@
       renderQuizStep();
     }
     function renderQuizStep() {
-      const q = QUIZ[quizStep];
+      const allQ = [...DEFAULT_QUIZ, ...userQuiz];
+      const q = allQ[quizStep];
+      if (!q) {
+          document.getElementById('quiz-area').classList.add('hidden');
+          document.getElementById('quiz-score').classList.remove('hidden');
+          document.getElementById('score-text').textContent = "No questions available.";
+          return;
+      }
       document.getElementById('quiz-q').textContent = q.q;
       document.getElementById('quiz-opts').innerHTML = q.o.map((o, i) => `
         <div class="quiz-option" onclick="ansQuiz(${i})">${o}</div>
       `).join('');
     }
     function ansQuiz(i) {
+      const allQ = [...DEFAULT_QUIZ, ...userQuiz];
       const opts = document.querySelectorAll('.quiz-option');
-      if (i === QUIZ[quizStep].a) {
+      if (i === allQ[quizStep].a) {
         opts[i].classList.add('correct');
         setTimeout(() => {
           quizStep++;
-          if (quizStep >= QUIZ.length) {
+          if (quizStep >= allQ.length) {
             document.getElementById('quiz-area').classList.add('hidden');
             document.getElementById('quiz-score').classList.remove('hidden');
-            document.getElementById('score-text').textContent = `Correct: ${quizStep}/${QUIZ.length}`;
+            document.getElementById('score-text').textContent = `Correct: ${quizStep}/${allQ.length}`;
           } else { renderQuizStep(); }
         }, 600);
       } else {
@@ -1466,15 +1629,44 @@
     }
 
     // ---------- Navigation & Init ----------
-    const SECTIONS = ['dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
+    const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
+    let selectedCategory = localStorage.getItem('paperTrailCategory');
+
+    function setCategory(cat) {
+      selectedCategory = cat;
+      localStorage.setItem('paperTrailCategory', cat);
+      window.location.hash = '#dashboard';
+      navigate();
+    }
+
     function navigate() {
-      const hash = window.location.hash.substring(1) || 'dashboard';
+      const hash = window.location.hash.substring(1) || (selectedCategory ? 'dashboard' : 'landing');
+
+      const header = document.getElementById('main-header');
+      if (hash === 'landing') {
+        header.classList.add('hidden');
+      } else {
+        header.classList.remove('hidden');
+      }
+
       SECTIONS.forEach(s => {
         const el = document.getElementById(s);
         if (el) el.classList.add('hidden');
         const link = document.querySelector(`nav a[href="#${s}"]`);
         if (link) link.classList.remove('active');
       });
+
+      // Filter nav based on category
+      if (selectedCategory) {
+        document.querySelectorAll('#main-nav a').forEach(a => {
+          if (a.classList.length > 0 && !a.classList.contains('cat-' + selectedCategory)) {
+            a.classList.add('hidden');
+          } else {
+            a.classList.remove('hidden');
+          }
+        });
+      }
+
       document.getElementById('papers-hero').classList.toggle('hidden', hash !== 'papers');
       const target = document.getElementById(hash);
       if (target) {
@@ -1491,6 +1683,9 @@
     window.onload = () => {
       navigate();
       updateAuthUI();
+      if (localStorage.getItem('paperTrailDarkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
       if (!localStorage.getItem('paperTrailCookies')) document.getElementById('cookie-banner').classList.remove('hidden');
     };
   </script>
