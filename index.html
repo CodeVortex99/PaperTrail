@@ -4,7 +4,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paper Trail — past papers, sorted. Revision, planned.</title>
+  <title>Paper Trail — Past papers, sorted. Revision, planned.</title>
+  <meta name="description" content="Paper Trail is a better alternative to PMT, offering A-Level and GCSE past papers, detailed revision notes, questions by topic, a study planner, and a Pomodoro timer.">
+  <meta name="keywords" content="past papers, revision notes, AQA, Edexcel, OCR, exam countdown, study planner, PMT alternative, questions by topic, mark schemes, spaced repetition">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://papertrail.edu/">
+  <meta property="og:title" content="Paper Trail — Past papers, sorted. Revision, planned.">
+  <meta property="og:description" content="The ultimate revision platform for students. Access all past papers and notes without redirects.">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Paper Trail — Past papers, sorted. Revision, planned.">
+  <meta property="twitter:description" content="The ultimate revision platform for students. Access all past papers and notes without redirects.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Paper Trail",
+    "alternateName": "Paper Trail Education",
+    "url": "https://papertrail.edu/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://papertrail.edu/#papers?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "Paper Trail",
+    "url": "https://papertrail.edu/",
+    "description": "The ultimate revision platform for students, providing past papers, notes, and study tools."
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -78,6 +116,7 @@
       font-weight: 700;
       font-size: 20px;
       letter-spacing: -0.5px;
+      margin: 0;
     }
 
     .logo span {
@@ -87,7 +126,7 @@
 
     nav {
       display: flex;
-      gap: 28px;
+      gap: 24px;
       font-size: 14px;
       font-weight: 500;
     }
@@ -106,6 +145,56 @@
     .hidden {
       display: none !important;
     }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(27, 35, 64, 0.8);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal {
+      background: var(--paper-card);
+      border: 2px solid var(--ink);
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .modal h2 { margin-top: 0; }
+    .modal input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Cookie Banner */
+    .cookie-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: var(--paper-card);
+      border: 2px solid var(--ink);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 200;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .cookie-banner p { margin: 0; font-size: 14px; }
 
     /* hero: exam cover sheet */
     .hero {
@@ -157,47 +246,34 @@
       border: 1px solid var(--ink-soft);
     }
 
-    .hero h1 {
+    .hero h2 {
       font-size: 44px;
       margin: 0 0 12px;
-      letter-spacing: -1px;
-      line-height: 1.1;
-      font-weight: 600;
-    }
-
-    .hero h1 em {
-      font-style: normal;
-      background: var(--highlight);
-      padding: 0 8px;
     }
 
     .hero p.instructions {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
+      max-width: 600px;
+      font-size: 15px;
       color: var(--ink-soft);
-      max-width: 520px;
-      margin: 0 0 28px;
-      line-height: 1.7;
+      margin-bottom: 32px;
     }
 
     .cta-row {
       display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .btn {
+      display: inline-block;
+      padding: 10px 20px;
       font-family: 'Space Mono', monospace;
-      font-size: 13px;
       font-weight: 700;
-      padding: 12px 22px;
-      border-radius: var(--radius);
+      font-size: 14px;
+      text-decoration: none;
       border: 2px solid var(--ink);
       cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
       background: transparent;
-      color: var(--ink);
+      transition: all 0.1s ease;
     }
 
     .btn.primary {
@@ -205,242 +281,332 @@
       color: var(--highlight);
     }
 
-    .btn.primary:hover {
-      background: var(--highlight-dark);
+    .btn:hover {
+      box-shadow: 4px 4px 0 var(--ink);
+      transform: translate(-2px, -2px);
     }
 
-    .btn:not(.primary):hover {
-      background: rgba(27, 35, 64, 0.06);
-    }
-
-    /* section titles */
+    /* section heads */
     .section {
-      padding: 56px 24px;
+      padding: 64px 0;
+      border-top: 1px solid var(--line);
     }
 
     .section-head {
-      margin-bottom: 28px;
+      margin-bottom: 40px;
+    }
+
+    .section-head h2 {
+      font-size: 32px;
+      margin: 4px 0 0;
     }
 
     .eyebrow {
       font-family: 'Space Mono', monospace;
       font-size: 12px;
-      color: var(--ink-soft);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin: 0 0 6px;
-    }
-
-    .section-head h2 {
-      font-size: 28px;
+      color: var(--ink-soft);
       margin: 0;
-      font-weight: 600;
-      letter-spacing: -0.5px;
     }
 
-    /* past papers */
+    /* papers grid */
     .filters {
       display: flex;
       gap: 12px;
-      flex-wrap: wrap;
       margin-bottom: 24px;
     }
 
     .filters select {
+      padding: 8px 12px;
       font-family: 'Space Mono', monospace;
       font-size: 13px;
-      padding: 8px 12px;
-      border: 1px solid var(--ink);
+      border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--paper-card);
-      color: var(--ink);
-      cursor: pointer;
     }
 
     .papers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .paper-card {
       background: var(--paper-card);
       border: 1px solid var(--ink);
+      padding: 20px;
       border-radius: 2px;
-      padding: 18px;
-      position: relative;
-    }
-
-    .paper-card::before {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      right: 8px;
-      bottom: 8px;
-      border: 1px dashed var(--line);
-      pointer-events: none;
     }
 
     .paper-tag {
       font-family: 'Space Mono', monospace;
       font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 2px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-bottom: 12px;
       display: inline-block;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    .subject-maths {
-      background: var(--highlight);
-      color: var(--highlight-dark);
-    }
-
-    .subject-physics {
-      background: #E4EEF4;
-      color: var(--blue-dark);
-    }
-
-    .subject-chemistry {
-      background: #F5E4DE;
-      color: var(--coral-dark);
-    }
-
-    .subject-biology {
-      background: #E9E6F5;
-      color: var(--purple-dark);
-    }
-
-    .subject-english {
-      background: #EFEFE0;
-      color: var(--ink-soft);
-    }
+    .subject-maths { background: var(--highlight); color: var(--highlight-dark); }
+    .subject-physics { background: #C9DDEA; color: #2B4A63; }
+    .subject-chemistry { background: #F0D6C8; color: #8A3319; }
+    .subject-biology { background: #DAD3F0; color: #4A3E86; }
 
     .paper-card h3 {
-      font-size: 16px;
       margin: 0 0 4px;
-      font-weight: 600;
+      font-size: 17px;
     }
 
     .paper-meta {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
+      font-size: 13px;
       color: var(--ink-soft);
       margin: 0 0 16px;
     }
 
     .paper-actions {
       display: flex;
-      gap: 8px;
+      gap: 12px;
     }
 
-    .paper-actions a {
-      font-size: 12px;
-      font-weight: 600;
-      border-bottom: 1px solid var(--ink);
-      padding-bottom: 1px;
-      text-decoration: none;
-    }
-
-    .no-results {
-      font-family: 'Space Mono', monospace;
+    .pdf-link {
       font-size: 13px;
-      color: var(--ink-soft);
-      padding: 32px;
-      text-align: center;
-      border: 1px dashed var(--line);
+      font-weight: 600;
+      text-decoration: underline;
     }
 
-    /* planner */
-    .planner-wrap {
+    /* Dashboard & Tools */
+    .dashboard-grid, .tools-grid, .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
       background: var(--paper-card);
       border: 1px solid var(--ink);
       border-radius: 2px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .instructions {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+    }
+
+    /* Welcome Card */
+    .welcome-form input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Countdown */
+    .countdown-timer {
+      font-family: 'Space Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
       padding: 20px;
-      overflow-x: auto;
+      background: var(--paper);
+      border: 1px dashed var(--line);
+      margin-bottom: 10px;
+    }
+
+    /* Progress Tracking */
+    .progress-bar {
+      height: 8px;
+      background: var(--paper);
+      border-radius: 4px;
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--highlight);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* Planner grid */
+    .planner-wrap {
+      border: 2px solid var(--ink);
+      background: var(--paper-card);
     }
 
     .planner-grid {
       display: grid;
-      grid-template-columns: 70px repeat(7, 1fr);
-      min-width: 760px;
+      grid-template-columns: 80px repeat(7, 1fr);
+      border-bottom: 1px solid var(--line);
     }
 
-    .planner-grid .head-cell {
+    .planner-grid > div {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      min-height: 40px;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .head-cell {
+      background: var(--ink);
+      color: var(--highlight);
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
       font-weight: 700;
       text-align: center;
-      padding: 8px 4px;
-      text-transform: uppercase;
-      border-bottom: 2px solid var(--ink);
     }
 
-    .planner-grid .time-cell {
+    .time-cell {
+      background: var(--paper);
       font-family: 'Space Mono', monospace;
       font-size: 11px;
       color: var(--ink-soft);
-      padding: 6px 4px;
-      border-right: 1px solid var(--line);
-      display: flex;
-      align-items: flex-start;
+      text-align: right;
     }
 
     .slot {
-      border-bottom: 1px solid var(--line);
-      border-right: 1px solid var(--line);
-      min-height: 46px;
-      padding: 3px;
       cursor: pointer;
       position: relative;
     }
 
     .slot:hover {
-      background: rgba(27, 35, 64, 0.04);
+      background: #fdfdf0;
     }
 
     .task-chip {
-      font-size: 11px;
-      font-weight: 600;
+      padding: 2px 6px;
       border-radius: 4px;
-      padding: 4px 6px;
-      height: 100%;
+      font-size: 10px;
+      font-weight: 700;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 4px;
+      align-items: center;
     }
 
     .task-chip .rm {
+      margin-left: 4px;
       cursor: pointer;
-      opacity: 0.6;
-      font-weight: 700;
+      opacity: 0.5;
     }
 
-    .task-chip .rm:hover {
-      opacity: 1;
-    }
+    .task-chip .rm:hover { opacity: 1; }
 
     .planner-legend {
+      padding: 16px;
       display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 16px;
+      gap: 20px;
       font-size: 12px;
-      color: var(--ink-soft);
+      font-family: 'Space Mono', monospace;
     }
 
     .legend-dot {
+      display: inline-block;
       width: 10px;
       height: 10px;
-      border-radius: 2px;
-      display: inline-block;
+      border-radius: 50%;
       margin-right: 6px;
-      vertical-align: -1px;
     }
+
+    /* flashcards */
+    .flashcard-container {
+      perspective: 1000px;
+      width: 100%;
+      height: 180px;
+      cursor: pointer;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border: 2px solid var(--ink);
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-front,
+    .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--paper-card);
+      text-align: center;
+    }
+
+    .flashcard-back {
+      transform: rotateY(180deg);
+      background: var(--highlight);
+      flex-direction: column;
+    }
+
+    .srs-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .srs-btn {
+      padding: 4px 8px;
+      font-size: 10px;
+    }
+
+    .srs-btn.hard { background: #ff4d4d; color: white; }
+    .srs-btn.good { background: #4da6ff; color: white; }
+    .srs-btn.easy { background: #4dff4d; color: black; }
+
+    /* Timer */
+    .timer-display {
+      font-family: 'Space Mono', monospace;
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* quiz options */
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .quiz-option {
+      padding: 10px;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .quiz-option:hover { background: var(--paper); }
+    .quiz-option.correct { background: #d4edda; border-color: #c3e6cb; }
+    .quiz-option.incorrect { background: #f8d7da; border-color: #f5c6cb; }
 
     /* add-task popover */
     .add-form {
@@ -480,84 +646,50 @@
       border: none;
       border-radius: 4px;
       padding: 7px;
-      cursor: pointer;
     }
 
-    /* how it works / monetisation teaser */
+    /* pricing */
     .tiers {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
     }
 
     .tier {
+      flex: 1;
       background: var(--paper-card);
       border: 1px solid var(--ink);
-      border-radius: 2px;
-      padding: 24px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
     }
 
     .tier.featured {
-      border-width: 2px;
-      box-shadow: 3px 3px 0 var(--highlight);
+      background: #FFF;
+      box-shadow: 6px 6px 0 var(--ink);
+      transform: translate(-3px, -3px);
     }
 
-    .tier .price {
-      font-family: 'Space Mono', monospace;
-      font-size: 26px;
-      font-weight: 700;
-      margin: 8px 0 16px;
-    }
-
-    .tier ul {
-      padding-left: 18px;
-      margin: 0;
-      font-size: 13px;
-      color: var(--ink-soft);
-    }
-
-    .tier li {
-      margin-bottom: 6px;
-    }
-
-    .tier h3 {
-      margin: 0 0 4px;
-      font-size: 16px;
-    }
+    .tier h3 { margin: 0 0 8px; }
+    .tier .price { font-size: 24px; font-weight: 700; margin-bottom: 24px; }
+    .tier ul { padding: 0; list-style: none; flex-grow: 1; font-size: 14px; }
+    .tier li { margin-bottom: 12px; color: var(--ink-soft); }
+    .tier li::before { content: "— "; }
 
     footer {
       border-top: 2px solid var(--ink);
-      padding: 32px 24px;
-      margin-top: 20px;
+      padding: 40px 0;
       font-family: 'Space Mono', monospace;
       font-size: 12px;
-      color: var(--ink-soft);
     }
 
     .footer-row {
-      max-width: var(--maxw);
-      margin: 0 auto;
       display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    @media(max-width:640px) {
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      .header-row {
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
-      }
-
-      nav {
-        gap: 16px;
-        flex-wrap: wrap;
-      }
+      align-items: center;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 24px;
     }
   </style>
 </head>
@@ -566,284 +698,531 @@
 
   <header>
     <div class="header-row">
-      <div class="logo">Paper<span>Trail</span></div>
+      <h1 class="logo">Paper<span>Trail</span></h1>
       <nav>
-        <a href="#papers">Past papers</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#papers">Papers</a>
+        <a href="#revision">Revision</a>
         <a href="#planner">Planner</a>
+        <a href="#tools">Tools</a>
+        <a href="#support">Support</a>
         <a href="#pricing">Pricing</a>
+        <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal()">Login</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero">
-    <div class="cover-sheet">
-      <div class="cover-top">
-        <div>PAPER TRAIL &nbsp;·&nbsp; REVISION RESOURCE &nbsp;·&nbsp; ALL BOARDS</div>
-        <div class="candidate-box">
-          CANDIDATE NO.
-          <div class="cells">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
+  <main>
+    <!-- Dashboard Section -->
+    <section class="section hidden" id="dashboard">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Overview</p>
+          <h2>My Dashboard</h2>
+        </div>
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>Welcome back, <span id="display-name">Student</span>!</h3>
+            <p class="instructions">Set your details to personalize your revision.</p>
+            <div class="welcome-form">
+              <input type="text" id="input-name" placeholder="Your Name">
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="input-target" placeholder="Target Grade (e.g. A*)">
+                <input type="date" id="input-date">
+              </div>
+              <button class="btn primary" style="width: 100%;" onclick="saveUserData()">Save Profile</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Exam Countdown</h3>
+            <p class="instructions">Days until your next big exam.</p>
+            <div class="countdown-timer" id="countdown-display">
+              --d --h
+            </div>
+            <p id="target-date-label" style="text-align: center; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft);"></p>
+          </div>
+          <div class="card">
+            <h3>Revision Progress</h3>
+            <p class="instructions">Keep track of your subject mastery.</p>
+            <div id="progress-container">
+              <!-- Progress bars will be rendered here by JS -->
+            </div>
+            <svg width="100%" height="60" id="progress-chart">
+              <!-- Mini chart placeholder -->
+            </svg>
           </div>
         </div>
       </div>
-      <h1>Past papers, sorted.<br>Revision, <em>planned.</em></h1>
-      <p class="instructions">
-        INSTRUCTIONS TO CANDIDATES: browse real past papers by subject and board, then
-        build a week you can actually stick to. No sign-up required to look around.
-      </p>
-      <div class="cta-row">
-        <a href="#papers" class="btn primary">Browse past papers</a>
-        <a href="#planner" class="btn">Build my study plan</a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section" id="papers">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Library</p>
-        <h2>Past papers</h2>
-      </div>
-      <div class="filters">
-        <select id="filter-subject">
-          <option value="all">All subjects</option>
-          <option value="maths">Maths</option>
-          <option value="further-maths">Further Maths</option>
-          <option value="physics">Physics</option>
-          <option value="chemistry">Chemistry</option>
-          <option value="biology">Biology</option>
-        </select>
-        <select id="filter-board">
-          <option value="all">All boards</option>
-          <option value="AQA">AQA</option>
-          <option value="Edexcel">Edexcel</option>
-        </select>
-        <select id="filter-year">
-          <option value="all">All years</option>
-          <option value="June 2023">June 2023</option>
-          <option value="June 2022">June 2022</option>
-          <option value="June 2019">June 2019</option>
-          <option value="June 2018">June 2018</option>
-        </select>
-      </div>
-      <div class="papers-grid" id="papers-grid"></div>
-      <p style="font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-soft);margin-top:20px;">
-        Papers open directly in your browser — no ads, no redirects. Drop your downloaded PDFs into
-        the <code>papers/</code> folder using the naming format shown below each card.
-      </p>
-    </div>
-  </section>
-
-  <section class="section" id="planner">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Tool</p>
-        <h2>Weekly study planner</h2>
-      </div>
-      <div class="planner-wrap">
-        <div class="planner-grid" id="planner-grid"></div>
-        <div class="planner-legend" id="planner-legend"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="pricing">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Model</p>
-        <h2>Free to start, upgrade later</h2>
-      </div>
-      <div class="tiers">
-        <div class="tier">
-          <h3>Free</h3>
-          <div class="price mono">£0</div>
-          <ul>
-            <li>Browse and download past papers</li>
-            <li>Use the weekly planner</li>
-            <li>Community mark schemes</li>
-          </ul>
+    <!-- Past Papers Section -->
+    <section class="hero" id="papers-hero">
+      <div class="cover-sheet">
+        <div class="cover-top">
+          <div>PAPER TRAIL &nbsp;·&nbsp; REVISION RESOURCE &nbsp;·&nbsp; ALL BOARDS</div>
+          <div class="candidate-box">
+            CANDIDATE NO.
+            <div class="cells"><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>
+          </div>
         </div>
-        <div class="tier featured">
-          <h3>Premium</h3>
-          <div class="price mono">£3<span style="font-size:13px;font-weight:400;">/mo</span></div>
-          <ul>
-            <li>Everything in Free</li>
-            <li>Model answers with examiner notes</li>
-            <li>Printable planner as PDF</li>
-            <li>No ads</li>
-          </ul>
-        </div>
-        <div class="tier">
-          <h3>Tutoring add-on</h3>
-          <div class="price mono">Custom</div>
-          <ul>
-            <li>Book 1:1 sessions with you</li>
-            <li>Booking calendar built in</li>
-            <li>Paid per session</li>
-          </ul>
+        <h2>Past papers, sorted.<br>Revision, <em>planned.</em></h2>
+        <p class="instructions">
+          INSTRUCTIONS TO CANDIDATES: Browse real past papers, predicted papers, and mocks by subject and board. No redirects, just study.
+        </p>
+        <div class="cta-row">
+          <a href="#papers" class="btn primary">Browse papers</a>
+          <a href="#planner" class="btn">Build my plan</a>
         </div>
       </div>
+    </section>
+
+    <section class="section hidden" id="papers">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Library</p>
+          <h2>Paper Finder</h2>
+        </div>
+        <div class="filters">
+          <select id="filter-subject">
+            <option value="all">All subjects</option>
+            <option value="maths">Maths</option>
+            <option value="physics">Physics</option>
+            <option value="chemistry">Chemistry</option>
+            <option value="biology">Biology</option>
+          </select>
+          <select id="filter-board">
+            <option value="all">All boards</option>
+            <option value="AQA">AQA</option>
+            <option value="Edexcel">Edexcel</option>
+            <option value="OCR">OCR</option>
+          </select>
+          <select id="filter-type">
+            <option value="all">All types</option>
+            <option value="past">Past Papers</option>
+            <option value="predicted">Predicted</option>
+            <option value="mock">Our Mocks</option>
+          </select>
+        </div>
+        <div class="papers-grid" id="papers-grid">
+          <!-- Papers will be rendered here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Revision Section -->
+    <section class="section hidden" id="revision">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Study</p>
+          <h2>Revision Lab</h2>
+        </div>
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>SRS Flashcards</h3>
+            <p class="instructions" id="flash-status">Study mode: click to flip.</p>
+            <div class="flashcard-container" onclick="flipCard()">
+              <div class="flashcard" id="flashcard-element">
+                <div class="flashcard-front" id="flash-q">Loading...</div>
+                <div class="flashcard-back">
+                  <div id="flash-a">Loading...</div>
+                  <div class="srs-buttons">
+                    <button class="btn srs-btn hard" onclick="rateCard(0, event)">Hard</button>
+                    <button class="btn srs-btn good" onclick="rateCard(1, event)">Good</button>
+                    <button class="btn srs-btn easy" onclick="rateCard(2, event)">Easy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+              <button class="btn" onclick="resetSRS()">Reset Data</button>
+              <span id="srs-count" style="font-size: 11px; align-self: center;">Due: 0</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Daily Quiz</h3>
+            <p class="instructions">5 random questions to stay sharp.</p>
+            <div id="quiz-area">
+              <p id="quiz-q" style="font-weight: 600;"></p>
+              <div class="quiz-options" id="quiz-opts"></div>
+            </div>
+            <div id="quiz-score" class="hidden" style="text-align: center;">
+              <p>Quiz Finished!</p>
+              <p id="score-text"></p>
+              <button class="btn primary" onclick="startQuiz()">Restart</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Detailed Notes</h3>
+            <p class="instructions">Comprehensive guides for every topic.</p>
+            <div class="filters">
+               <select id="notes-subject" style="width: 100%;">
+                 <option>Maths - Calculus</option>
+                 <option>Physics - Particles</option>
+                 <option>Chemistry - Organic</option>
+               </select>
+            </div>
+            <a href="#" class="pdf-link">Download Revision Guide (PDF)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planner Section -->
+    <section class="section hidden" id="planner">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Timetable</p>
+          <h2>Weekly Planner</h2>
+        </div>
+        <div class="planner-wrap">
+          <div class="planner-grid" id="planner-grid"></div>
+          <div class="planner-legend" id="planner-legend"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="section hidden" id="tools">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Utilities</p>
+          <h2>Revision Tools</h2>
+        </div>
+        <div class="tools-grid">
+          <div class="card">
+            <h3>Pomodoro Timer</h3>
+            <p class="instructions">25m study, 5m break.</p>
+            <div class="timer-display" id="timer-display">25:00</div>
+            <div class="timer-controls">
+              <button class="btn primary" id="timer-toggle" onclick="toggleTimer()">Start</button>
+              <button class="btn" onclick="resetTimer()">Reset</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Numerical Reasoning</h3>
+            <p class="instructions">Multiplication speed test.</p>
+            <div id="num-test">
+               <p id="num-q" style="font-size: 24px; font-weight: 700; text-align: center;">Ready?</p>
+               <input type="number" id="num-input" style="width: 100%; padding: 10px; margin-bottom: 10px;" placeholder="Answer...">
+               <button class="btn primary" style="width: 100%;" onclick="startNumTest()" id="num-btn">Start Test</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Grade Boundaries</h3>
+            <p class="instructions">Search lookup for all boards.</p>
+            <input type="text" id="boundary-search" placeholder="Search subject..." style="width: 100%; padding: 8px; border: 1px solid var(--line);">
+            <div id="boundary-results" style="margin-top: 15px; font-size: 12px; font-family: 'Space Mono', monospace;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="section hidden" id="support">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Resources</p>
+          <h2>Support & Advice</h2>
+        </div>
+        <div class="support-grid">
+          <div class="card">
+            <h3>UCAS Uni Advice</h3>
+            <p class="instructions">Admissions and personal statements.</p>
+            <ul style="font-size: 13px; padding-left: 20px;">
+              <li>Personal Statement Checklist</li>
+              <li>How to choose the right course</li>
+              <li>Oxbridge Interview Guide</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Advaith Dinesh: Courses</h3>
+            <p class="instructions">Premium revision sessions.</p>
+            <button class="btn" style="width: 100%;">View Courses</button>
+          </div>
+          <div class="card">
+            <h3>Find a Tutor</h3>
+            <p class="instructions">Connect with expert educators.</p>
+            <button class="btn" style="width: 100%;">Search Tutors</button>
+          </div>
+          <div class="card">
+            <h3>Online Shop</h3>
+            <p class="instructions">Revision booklets and paper packs.</p>
+            <div style="font-family: 'Space Mono', monospace; font-size: 12px; border: 1px solid var(--line); padding: 8px;">
+               Maths Pack (Pure) - £4.99
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section hidden" id="pricing">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Membership</p>
+          <h2>Free Forever</h2>
+        </div>
+        <div class="tiers">
+          <div class="tier featured">
+            <h3>Candidate</h3>
+            <div class="price mono">£0</div>
+            <ul>
+              <li>All past papers and markschemes</li>
+              <li>Spaced Repetition Flashcards</li>
+              <li>Weekly Revision Planner</li>
+              <li>Numerical Reasoning Tests</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Legal Section -->
+    <section class="section hidden" id="legal">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Regulations</p>
+          <h2>Legal & Privacy</h2>
+        </div>
+        <div class="dashboard-grid">
+           <div class="card">
+              <h3>Terms of Use</h3>
+              <p style="font-size: 12px; color: var(--ink-soft);">By using Paper Trail, you agree that this is a student project for educational purposes. We are not an official exam board.</p>
+           </div>
+           <div class="card">
+              <h3>Privacy Policy</h3>
+              <p style="font-size: 12px; color: var(--ink-soft);">All data (names, target grades, study plans) is stored locally on your device via browser storage. We don't track you.</p>
+           </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="auth-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 id="auth-title">Login</h2>
+      <div id="login-form">
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button class="btn primary" style="width:100%;" onclick="doLogin()">Login</button>
+        <p style="font-size:12px; margin-top:15px; text-align:center;">
+          Don't have an account? <a href="javascript:void(0)" onclick="toggleAuthMode(true)">Sign Up</a>
+        </p>
+      </div>
+      <div id="signup-form" class="hidden">
+        <input type="text" id="signup-name" placeholder="Full Name">
+        <input type="email" id="signup-email" placeholder="Email">
+        <input type="password" id="signup-password" placeholder="Password">
+        <button class="btn primary" style="width:100%;" onclick="doSignup()">Sign Up</button>
+        <p style="font-size:12px; margin-top:15px; text-align:center;">
+          Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode(false)">Login</a>
+        </p>
+      </div>
+      <button class="btn" style="width:100%; margin-top:10px; border:none;" onclick="closeAuthModal()">Cancel</button>
     </div>
-  </section>
+  </div>
+
+  <div id="cookie-banner" class="cookie-banner hidden">
+    <p>This site uses local cookies to save your progress. <a href="#legal" style="text-decoration:underline;">Details</a></p>
+    <button class="btn primary" onclick="acceptCookies()">Accept</button>
+  </div>
 
   <footer>
     <div class="footer-row">
-      <div>PAPER TRAIL — made by a student, for students.</div>
-      <div>© 2026</div>
+      <div>PAPER TRAIL — Better than PMT.</div>
+      <div style="display: flex; gap: 20px;">
+        <a href="#legal">Legal</a>
+        <span>© 2026</span>
+      </div>
     </div>
   </footer>
 
   <script>
-    // ---------- past papers ----------
-    // Local file convention:
-    //   papers/{Subject}/{Board}/{Session} {Type} - {Paper}.pdf
-    //   e.g. papers/Maths/AQA/June 2023 QP - Paper 1.pdf
-    const SUBJECTS = {
-      'maths': { label: 'Maths', folder: 'Maths' },
-      'further-maths': { label: 'Further Maths', folder: 'Maths' },
-      'physics': { label: 'Physics', folder: 'Physics' },
-      'chemistry': { label: 'Chemistry', folder: 'Chemistry' },
-      'biology': { label: 'Biology', folder: 'Biology' }
-    };
+    // ---------- Logic: Global & Auth ----------
+    let currentUser = JSON.parse(localStorage.getItem('paperTrailSession'));
+    let userData = JSON.parse(localStorage.getItem('paperTrailUser')) || { name: '', targetGrade: '', examDate: '' };
 
-    const BOARDS = ['AQA', 'Edexcel'];
-    const YEARS = ['June 2023', 'June 2022', 'June 2019', 'June 2018'];
-
-    function getPapersFor(subject, board) {
-      if (subject === 'maths') {
-        if (board === 'Edexcel') {
-          return ['Paper 1', 'Paper 2', 'Paper 31', 'Paper 32'];
+    function openAuthModal() {
+      if (currentUser) {
+        if (confirm("Logout?")) {
+          currentUser = null;
+          localStorage.removeItem('paperTrailSession');
+          updateAuthUI();
         }
-        return ['Paper 1', 'Paper 2', 'Paper 3'];
+        return;
       }
-      if (subject === 'further-maths') {
-        if (board === 'AQA') {
-          return ['Paper 1', 'Paper 2'];
-        }
-        return ['Paper 1', 'Paper 2', 'Paper 3A', 'Paper 3B'];
-      }
-      if (subject === 'physics') {
-        if (board === 'AQA') {
-          return ['Paper 1', 'Paper 2', 'Paper 3A', 'Paper 3B'];
-        }
-        return ['Paper 1', 'Paper 2', 'Paper 3'];
-      }
-      return ['Paper 1', 'Paper 2', 'Paper 3'];
+      document.getElementById('auth-modal').classList.remove('hidden');
+    }
+    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+    function toggleAuthMode(isSignup) {
+      document.getElementById('auth-title').textContent = isSignup ? 'Sign Up' : 'Login';
+      document.getElementById('login-form').classList.toggle('hidden', isSignup);
+      document.getElementById('signup-form').classList.toggle('hidden', !isSignup);
+    }
+    function doSignup() {
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const pass = document.getElementById('signup-password').value;
+      if (!name || !email || !pass) return alert("Fill all fields");
+      const users = JSON.parse(localStorage.getItem('paperTrailUsers') || '{}');
+      users[email] = { name, pass };
+      localStorage.setItem('paperTrailUsers', JSON.stringify(users));
+      alert("Account created! Log in now.");
+      toggleAuthMode(false);
+    }
+    function doLogin() {
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-password').value;
+      const users = JSON.parse(localStorage.getItem('paperTrailUsers') || '{}');
+      if (users[email] && users[email].pass === pass) {
+        currentUser = { email, name: users[email].name };
+        localStorage.setItem('paperTrailSession', JSON.stringify(currentUser));
+        closeAuthModal();
+        updateAuthUI();
+      } else { alert("Wrong credentials."); }
+    }
+    function updateAuthUI() {
+      const btn = document.getElementById('auth-btn');
+      btn.textContent = currentUser ? currentUser.name : 'Login';
+      btn.style.background = currentUser ? 'var(--highlight)' : 'none';
+    }
+    function acceptCookies() {
+      localStorage.setItem('paperTrailCookies', 'true');
+      document.getElementById('cookie-banner').classList.add('hidden');
     }
 
-    const ALL_PAPERS = [];
-    Object.keys(SUBJECTS).forEach(subjKey => {
-      const subj = SUBJECTS[subjKey];
-      BOARDS.forEach(board => {
-        YEARS.forEach(year => {
-          const papers = getPapersFor(subjKey, board);
-          papers.forEach(paperName => {
-            ALL_PAPERS.push({
-              subjectKey: subjKey,
-              subjectLabel: subj.label,
-              folder: subj.folder,
-              board: board,
-              year: year,
-              paperName: paperName
-            });
-          });
-        });
-      });
-    });
+    // ---------- Logic: Dashboard ----------
+    function saveUserData() {
+      userData.name = document.getElementById('input-name').value;
+      userData.targetGrade = document.getElementById('input-target').value;
+      userData.examDate = document.getElementById('input-date').value;
+      localStorage.setItem('paperTrailUser', JSON.stringify(userData));
+      loadUserData();
+      alert('Profile saved!');
+    }
+    function loadUserData() {
+      document.getElementById('display-name').textContent = userData.name || 'Student';
+      document.getElementById('input-name').value = userData.name || '';
+      document.getElementById('input-target').value = userData.targetGrade || '';
+      document.getElementById('input-date').value = userData.examDate || '';
+      updateCountdown();
+      renderProgress();
+    }
+    function updateCountdown() {
+      const disp = document.getElementById('countdown-display');
+      const label = document.getElementById('target-date-label');
+      if (!userData.examDate) {
+        disp.textContent = '--d --h';
+        return;
+      }
+      const target = new Date(userData.examDate);
+      label.textContent = "Target: " + target.toLocaleDateString();
+      const now = new Date();
+      const diff = target - now;
+      if (diff < 0) {
+        disp.textContent = 'Exam Passed';
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        disp.textContent = `${days}d ${hours}h`;
+      }
+    }
+    function renderProgress() {
+      const container = document.getElementById('progress-container');
+      const subjects = [
+        { name: 'Maths', p: 75 },
+        { name: 'Physics', p: 62 },
+        { name: 'Chemistry', p: 48 }
+      ];
+      container.innerHTML = subjects.map(s => `
+        <div style="font-size:12px; margin-bottom:4px; display:flex; justify-content:space-between;">
+          <span>${s.name}</span><span>${s.p}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${s.p}%"></div></div>
+      `).join('');
 
-    const OFFICIAL_SOURCES = [
-      { name: 'AQA past paper finder', url: 'https://www.aqa.org.uk/find-past-papers-and-mark-schemes' },
-      { name: 'Pearson Edexcel past papers', url: 'https://qualifications.pearson.com/en/support/support-topics/exams/past-papers.html' },
-      { name: 'OCR past paper finder', url: 'https://www.ocr.org.uk/qualifications/past-paper-finder/' },
+      // Render SVG Chart
+      const svg = document.getElementById('progress-chart');
+      const w = svg.clientWidth || 250;
+      const h = 80;
+      svg.setAttribute('height', h);
+      const padding = 10;
+      const drawW = w - (padding * 2);
+      const drawH = h - (padding * 2);
+
+      const points = subjects.map((s, i) => {
+        const x = padding + (i / (subjects.length - 1)) * drawW;
+        const y = h - padding - (s.p / 100) * drawH;
+        return `${x},${y}`;
+      }).join(' ');
+
+      svg.innerHTML = `
+        <polyline fill="none" stroke="var(--highlight)" stroke-width="2" points="${points}" stroke-linejoin="round" stroke-linecap="round" />
+        ${subjects.map((s, i) => {
+          const x = padding + (i / (subjects.length - 1)) * drawW;
+          const y = h - padding - (s.p / 100) * drawH;
+          return `<circle cx="${x}" cy="${y}" r="3" fill="var(--ink)" />`;
+        }).join('')}
+      `;
+    }
+
+    // ---------- Logic: Papers ----------
+    const ALL_PAPERS = [
+      { subjectKey: 'maths', subjectLabel: 'Maths', folder: 'Maths', board: 'AQA', year: 'June 2023', paperName: 'Paper 1' },
+      { subjectKey: 'maths', subjectLabel: 'Maths', folder: 'Maths', board: 'AQA', year: 'June 2023', paperName: 'Paper 2' },
+      { subjectKey: 'maths', subjectLabel: 'Maths', folder: 'Maths', board: 'Edexcel', year: 'June 2023', paperName: 'Paper 1' },
+      { subjectKey: 'physics', subjectLabel: 'Physics', folder: 'Physics', board: 'AQA', year: 'June 2022', paperName: 'Paper 1' },
+      { subjectKey: 'chemistry', subjectLabel: 'Chemistry', folder: 'Chemistry', board: 'Edexcel', year: 'June 2019', paperName: 'Paper 2' },
+      { subjectKey: 'biology', subjectLabel: 'Biology', folder: 'Biology', board: 'AQA', year: 'June 2018', paperName: 'Paper 3' }
     ];
 
-    // Build a local file path for the PDF
     function makeLocalPath(folder, board, year, type, paperName) {
-      const fileName = `${year} ${type} - ${paperName}.pdf`;
-      return `papers/${folder}/${board}/${fileName}`;
-    }
-
-    // Check if a local file exists (returns a promise)
-    async function fileExists(url) {
-      try {
-        const resp = await fetch(url, { method: 'HEAD' });
-        return resp.ok;
-      } catch {
-        return false;
-      }
-    }
-
-    // Cache of file-existence checks to avoid repeated HEAD requests
-    const existsCache = {};
-    async function checkFile(path) {
-      if (path in existsCache) return existsCache[path];
-      const exists = await fileExists(path);
-      existsCache[path] = exists;
-      return exists;
+      return `papers/${folder}/${board}/${year} ${type} - ${paperName}.pdf`;
     }
 
     function renderPapers() {
       const subj = document.getElementById('filter-subject').value;
       const board = document.getElementById('filter-board').value;
-      const year = document.getElementById('filter-year').value;
+      const type = document.getElementById('filter-type').value;
       const grid = document.getElementById('papers-grid');
 
       const filtered = ALL_PAPERS.filter(p => {
-        return (subj === 'all' || p.subjectKey === subj) &&
-          (board === 'all' || p.board === board) &&
-          (year === 'all' || p.year === year);
+        const matchesSubj = subj === 'all' || p.subjectKey === subj;
+        const matchesBoard = board === 'all' || p.board === board;
+        // In this prototype, 'type' filter still shows results but flags them
+        return matchesSubj && matchesBoard;
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = '<div class="no-results">No papers match that filter yet — try widening your search.</div>';
+        grid.innerHTML = '<div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--ink-soft); font-family: \'Space Mono\', monospace;">No papers match that filter.</div>';
         return;
       }
 
-      const cards = filtered.map(p => {
+      grid.innerHTML = filtered.map(p => {
+        const isPredicted = type === 'predicted';
+        const isMock = type === 'mock';
+        const displayType = isPredicted ? 'Predicted' : (isMock ? 'Mock' : 'Past Paper');
+
         const qpPath = makeLocalPath(p.folder, p.board, p.year, 'QP', p.paperName);
         const msPath = makeLocalPath(p.folder, p.board, p.year, 'MS', p.paperName);
 
-        let displayPaperName = p.paperName;
-        if (p.subjectKey === 'maths' && p.board === 'Edexcel' && p.paperName === 'Paper 31') displayPaperName = 'Paper 3 (Stats)';
-        if (p.subjectKey === 'maths' && p.board === 'Edexcel' && p.paperName === 'Paper 32') displayPaperName = 'Paper 3 (Mech)';
-
-        const expectedFile = `${p.year} QP - ${p.paperName}.pdf`;
-
         return `
-        <div class="paper-card" data-qp="${qpPath}" data-ms="${msPath}">
-          <span class="paper-tag subject-${p.subjectKey === 'further-maths' ? 'maths' : p.subjectKey}">${p.subjectLabel}</span>
-          <h3>${p.board} A-level</h3>
-          <p class="paper-meta" style="margin-bottom: 8px;">${displayPaperName} (${p.year})</p>
-          <div class="paper-actions">
-            <a href="${qpPath}" target="_blank" class="pdf-link" data-path="${qpPath}">Question Paper ↗</a>
-            <a href="${msPath}" target="_blank" class="pdf-link" data-path="${msPath}">Mark Scheme ↗</a>
+          <div class="paper-card">
+            <span class="paper-tag subject-${p.subjectKey}">${p.subjectLabel}</span>
+            <span class="paper-tag" style="background:var(--paper); color:var(--ink-soft); border:1px solid var(--line);">${displayType}</span>
+            <h3>${p.board} A-Level</h3>
+            <p class="paper-meta">${p.paperName} (${p.year})</p>
+            <div class="paper-actions">
+              <a href="${qpPath}" target="_blank" class="pdf-link">Paper ↗</a>
+              <a href="${msPath}" target="_blank" class="pdf-link">Markscheme ↗</a>
+            </div>
+            <p class="mono" style="font-size:9px; color:var(--ink-soft); margin-top:8px; word-break:break-all;">${qpPath}</p>
           </div>
-          <p class="file-hint mono" style="font-size:9px;color:var(--ink-soft);margin:8px 0 0;word-break:break-all;">📂 papers/${p.folder}/${p.board}/${expectedFile}</p>
-        </div>
-      `;
-      });
-
-      grid.innerHTML = cards.join('') + `
-      <div class="paper-card" style="background:transparent;border-style:dashed;">
-        <span class="paper-tag" style="background:var(--paper);color:var(--ink-soft);">Official</span>
-        <h3>Straight from the boards</h3>
-        <p class="paper-meta">Recent papers are login-gated for schools; these are each board's own finder.</p>
-        <div class="paper-actions" style="flex-direction:column;align-items:flex-start;gap:4px;">
-          ${OFFICIAL_SOURCES.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name} ↗</a>`).join('')}
-        </div>
-      </div>
-    `;
+        `;
+      }).join('');
     }
 
-    document.getElementById('filter-subject').addEventListener('change', renderPapers);
-    document.getElementById('filter-board').addEventListener('change', renderPapers);
-    document.getElementById('filter-year').addEventListener('change', renderPapers);
-    renderPapers();
-
-    // ---------- planner ----------
+    // ---------- Logic: Planner ----------
     const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const HOURS = ['9am', '11am', '1pm', '3pm', '5pm', '7pm'];
     const SUBJECT_COLORS = {
@@ -851,143 +1230,269 @@
       'Physics': { bg: '#C9DDEA', fg: '#1F3A4E' },
       'Chemistry': { bg: '#F0D6C8', fg: '#6B2E15' },
       'Biology': { bg: '#DAD3F0', fg: '#3A2E70' },
-      'English': { bg: '#E4E4D2', fg: '#3F4030' },
       'Break': { bg: '#EDEDED', fg: '#666' }
     };
-
-    let plan = {};
-    try {
-      const saved = localStorage.getItem('paperTrailPlan');
-      if (saved) plan = JSON.parse(saved);
-    } catch (e) { plan = {}; }
-
-    function savePlan() {
-      try { localStorage.setItem('paperTrailPlan', JSON.stringify(plan)); } catch (e) { }
-    }
+    let planData = JSON.parse(localStorage.getItem('paperTrailPlan')) || {};
 
     function renderPlanner() {
       const grid = document.getElementById('planner-grid');
-      let html = '<div></div>';
-      DAYS.forEach(d => html += `<div class="head-cell">${d}</div>`);
+      grid.innerHTML = '';
+      grid.appendChild(document.createElement('div'));
+      DAYS.forEach(d => {
+        const cell = document.createElement('div');
+        cell.className = 'head-cell';
+        cell.textContent = d;
+        grid.appendChild(cell);
+      });
       HOURS.forEach((h, hi) => {
-        html += `<div class="time-cell">${h}</div>`;
+        const timeCell = document.createElement('div');
+        timeCell.className = 'time-cell';
+        timeCell.textContent = h;
+        grid.appendChild(timeCell);
         DAYS.forEach((d, di) => {
           const key = `${di}-${hi}`;
-          const task = plan[key];
+          const task = planData[key];
+          const slot = document.createElement('div');
+          slot.className = 'slot';
+          slot.dataset.key = key;
           if (task) {
             const c = SUBJECT_COLORS[task] || { bg: '#eee', fg: '#333' };
-            html += `<div class="slot" data-key="${key}">
-            <div class="task-chip" style="background:${c.bg};color:${c.fg};">
-              <span>${task}</span><span class="rm" data-key="${key}">×</span>
-            </div>
-          </div>`;
+            const chip = document.createElement('div');
+            chip.className = 'task-chip';
+            chip.style.background = c.bg;
+            chip.style.color = c.fg;
+            const span = document.createElement('span');
+            span.style.pointerEvents = 'none';
+            span.textContent = task;
+            const rm = document.createElement('span');
+            rm.className = 'rm';
+            rm.textContent = '×';
+            rm.onclick = (e) => rmTask(key, e);
+            chip.appendChild(span);
+            chip.appendChild(rm);
+            slot.appendChild(chip);
           } else {
-            html += `<div class="slot" data-key="${key}"></div>`;
+            slot.onclick = () => openAddForm(slot);
           }
+          grid.appendChild(slot);
         });
-      });
-      grid.innerHTML = html;
-
-      grid.querySelectorAll('.rm').forEach(el => {
-        el.addEventListener('click', (e) => {
-          e.stopPropagation();
-          delete plan[el.dataset.key];
-          savePlan();
-          renderPlanner();
-        });
-      });
-      grid.querySelectorAll('.slot').forEach(el => {
-        el.addEventListener('click', () => openAddForm(el));
       });
       renderLegend();
     }
-
     function renderLegend() {
       const legend = document.getElementById('planner-legend');
       legend.innerHTML = Object.keys(SUBJECT_COLORS).map(s =>
         `<span><span class="legend-dot" style="background:${SUBJECT_COLORS[s].bg};"></span>${s}</span>`
       ).join('');
     }
-
-    function openAddForm(slotEl) {
+    function rmTask(key, e) {
+      e.stopPropagation();
+      delete planData[key];
+      localStorage.setItem('paperTrailPlan', JSON.stringify(planData));
+      renderPlanner();
+    }
+    function openAddForm(el) {
       document.querySelectorAll('.add-form').forEach(f => f.remove());
-      const key = slotEl.dataset.key;
+      const key = el.dataset.key;
       const form = document.createElement('div');
       form.className = 'add-form open';
       form.innerHTML = `
-      <select>
-        ${Object.keys(SUBJECT_COLORS).map(s => `<option value="${s}">${s}</option>`).join('')}
-      </select>
-      <button type="button">Add to plan</button>
-    `;
-      slotEl.style.position = 'relative';
-      slotEl.appendChild(form);
-      const select = form.querySelector('select');
-      form.querySelector('button').addEventListener('click', (e) => {
-        e.stopPropagation();
-        plan[key] = select.value;
-        savePlan();
+        <select id="sel-task">
+          ${Object.keys(SUBJECT_COLORS).map(s => `<option value="${s}">${s}</option>`).join('')}
+          <option value="custom">-- Custom --</option>
+        </select>
+        <input type="text" id="custom-task" class="hidden" placeholder="Study...">
+        <button onclick="addTask('${key}')">Add</button>
+      `;
+      el.appendChild(form);
+      const sel = form.querySelector('#sel-task');
+      const custom = form.querySelector('#custom-task');
+      sel.onchange = () => custom.classList.toggle('hidden', sel.value !== 'custom');
+    }
+    function addTask(key) {
+      const sel = document.getElementById('sel-task');
+      const custom = document.getElementById('custom-task');
+      const val = sel.value === 'custom' ? custom.value : sel.value;
+      if (val) {
+        planData[key] = val;
+        localStorage.setItem('paperTrailPlan', JSON.stringify(planData));
         renderPlanner();
-      });
-      document.addEventListener('click', function closeOnce(e) {
-        if (!form.contains(e.target) && e.target !== slotEl) {
-          form.remove();
-          document.removeEventListener('click', closeOnce);
-        }
-      }, { capture: true });
+      }
     }
 
-    renderPlanner();
-
-    // ---------- tabs switching logic ----------
-    const sections = {
-      'papers': {
-        navLink: document.querySelector('nav a[href="#papers"]'),
-        elements: [document.querySelector('.hero'), document.getElementById('papers')]
-      },
-      'planner': {
-        navLink: document.querySelector('nav a[href="#planner"]'),
-        elements: [document.getElementById('planner')]
-      },
-      'pricing': {
-        navLink: document.querySelector('nav a[href="#pricing"]'),
-        elements: [document.getElementById('pricing')]
+    // ---------- Logic: Tools ----------
+    let timerInt;
+    let timeLeft = 25 * 60;
+    function toggleTimer() {
+      const btn = document.getElementById('timer-toggle');
+      if (timerInt) {
+        clearInterval(timerInt);
+        timerInt = null;
+        btn.textContent = 'Start';
+      } else {
+        btn.textContent = 'Pause';
+        timerInt = setInterval(() => {
+          timeLeft--;
+          const m = Math.floor(timeLeft/60);
+          const s = timeLeft%60;
+          document.getElementById('timer-display').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+          if (timeLeft <= 0) { clearInterval(timerInt); alert("Study over!"); }
+        }, 1000);
       }
+    }
+    function resetTimer() {
+      clearInterval(timerInt); timerInt = null;
+      timeLeft = 25 * 60;
+      document.getElementById('timer-display').textContent = '25:00';
+      document.getElementById('timer-toggle').textContent = 'Start';
+    }
+
+    let numActive = false;
+    let numAns = 0;
+    function startNumTest() {
+      const btn = document.getElementById('num-btn');
+      const q = document.getElementById('num-q');
+      const input = document.getElementById('num-input');
+      if (!numActive) {
+        numActive = true;
+        btn.textContent = 'Check';
+        nextNum();
+      } else {
+        if (parseInt(input.value) === numAns) {
+          alert("Correct!");
+          nextNum();
+        } else {
+          alert("Wrong. Test reset.");
+          numActive = false;
+          btn.textContent = 'Start Test';
+          q.textContent = 'Ready?';
+        }
+      }
+    }
+    function nextNum() {
+      const a = Math.floor(Math.random()*12)+1;
+      const b = Math.floor(Math.random()*12)+1;
+      numAns = a * b;
+      document.getElementById('num-q').textContent = `${a} x ${b} = ?`;
+      document.getElementById('num-input').value = '';
+    }
+
+    const BOUNDS = [
+      { s: 'Maths', b: 'AQA', y: '2023', a: 180 },
+      { s: 'Physics', b: 'Edexcel', y: '2023', a: 150 }
+    ];
+    document.getElementById('boundary-search').oninput = (e) => {
+      const val = e.target.value.toLowerCase();
+      const res = document.getElementById('boundary-results');
+      const filtered = BOUNDS.filter(b => b.s.toLowerCase().includes(val));
+      res.innerHTML = filtered.map(b => `<div>${b.s} (${b.b} ${b.y}): A = ${b.a}</div>`).join('');
     };
 
-    function showTab(tabId) {
-      Object.keys(sections).forEach(id => {
-        if (sections[id].navLink) {
-          sections[id].navLink.classList.remove('active');
-        }
-        sections[id].elements.forEach(el => {
-          if (el) el.classList.add('hidden');
-        });
+    // ---------- Logic: SRS & Revision ----------
+    let FLASHCARDS = [
+      { id: 1, q: "Area of Circle?", a: "πr²" },
+      { id: 2, q: "Force formula?", a: "F = ma" },
+      { id: 3, q: "Functional group alcohol?", a: "-OH" }
+    ];
+    let srsData = JSON.parse(localStorage.getItem('paperTrailSRS')) || {};
+    let activeCard = null;
+
+    function renderSRS() {
+      const due = FLASHCARDS.filter(c => {
+        const d = srsData[c.id];
+        return !d || d.nextDue <= Date.now();
       });
-
-      if (sections[tabId]) {
-        if (sections[tabId].navLink) {
-          sections[tabId].navLink.classList.add('active');
-        }
-        sections[tabId].elements.forEach(el => {
-          if (el) el.classList.remove('hidden');
-        });
-      }
-    }
-
-    function handleHashChange() {
-      const hash = window.location.hash.substring(1);
-      if (sections[hash]) {
-        showTab(hash);
+      document.getElementById('srs-count').textContent = `Due: ${due.length}`;
+      if (due.length === 0) {
+        document.getElementById('flash-q').textContent = "All caught up!";
+        document.getElementById('flash-a').textContent = "Come back tomorrow.";
+        activeCard = null;
       } else {
-        showTab('papers');
+        activeCard = due[0];
+        document.getElementById('flash-q').textContent = activeCard.q;
+        document.getElementById('flash-a').textContent = activeCard.a;
+      }
+      document.getElementById('flashcard-element').classList.remove('flipped');
+    }
+    function flipCard() { if (activeCard) document.getElementById('flashcard-element').classList.toggle('flipped'); }
+    function rateCard(rating, e) {
+      e.stopPropagation();
+      if (!activeCard) return;
+      let d = srsData[activeCard.id] || { interval: 0, ease: 2.5, nextDue: 0 };
+      if (rating === 0) d.interval = 1;
+      else if (rating === 1) d.interval = d.interval === 0 ? 1 : Math.ceil(d.interval * d.ease);
+      else { d.interval = d.interval === 0 ? 4 : Math.ceil(d.interval * d.ease * 1.3); d.ease += 0.1; }
+      d.nextDue = Date.now() + (d.interval * 24 * 60 * 60 * 1000);
+      srsData[activeCard.id] = d;
+      localStorage.setItem('paperTrailSRS', JSON.stringify(srsData));
+      renderSRS();
+    }
+    function resetSRS() { localStorage.removeItem('paperTrailSRS'); srsData = {}; renderSRS(); }
+
+    let quizStep = 0;
+    const QUIZ = [
+      { q: "O is the symbol for?", o: ["Gold", "Oxygen", "Iron"], a: 1 },
+      { q: "7 x 8?", o: ["54", "56", "64"], a: 1 }
+    ];
+    function startQuiz() {
+      quizStep = 0;
+      document.getElementById('quiz-area').classList.remove('hidden');
+      document.getElementById('quiz-score').classList.add('hidden');
+      renderQuizStep();
+    }
+    function renderQuizStep() {
+      const q = QUIZ[quizStep];
+      document.getElementById('quiz-q').textContent = q.q;
+      document.getElementById('quiz-opts').innerHTML = q.o.map((o, i) => `
+        <div class="quiz-option" onclick="ansQuiz(${i})">${o}</div>
+      `).join('');
+    }
+    function ansQuiz(i) {
+      const opts = document.querySelectorAll('.quiz-option');
+      if (i === QUIZ[quizStep].a) {
+        opts[i].classList.add('correct');
+        setTimeout(() => {
+          quizStep++;
+          if (quizStep >= QUIZ.length) {
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('quiz-score').classList.remove('hidden');
+            document.getElementById('score-text').textContent = `Correct: ${quizStep}/${QUIZ.length}`;
+          } else { renderQuizStep(); }
+        }, 600);
+      } else {
+        opts[i].classList.add('incorrect');
+        setTimeout(() => opts[i].classList.remove('incorrect'), 600);
       }
     }
 
-    window.addEventListener('hashchange', handleHashChange);
-    handleHashChange();
+    // ---------- Navigation & Init ----------
+    const SECTIONS = ['dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
+    function navigate() {
+      const hash = window.location.hash.substring(1) || 'dashboard';
+      SECTIONS.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.classList.add('hidden');
+        const link = document.querySelector(`nav a[href="#${s}"]`);
+        if (link) link.classList.remove('active');
+      });
+      document.getElementById('papers-hero').classList.toggle('hidden', hash !== 'papers');
+      const target = document.getElementById(hash);
+      if (target) {
+        target.classList.remove('hidden');
+        const link = document.querySelector(`nav a[href="#${hash}"]`);
+        if (link) link.classList.add('active');
+        if (hash === 'dashboard') loadUserData();
+        if (hash === 'papers') renderPapers();
+        if (hash === 'planner') renderPlanner();
+        if (hash === 'revision') { renderSRS(); startQuiz(); }
+      }
+    }
+    window.onhashchange = navigate;
+    window.onload = () => {
+      navigate();
+      updateAuthUI();
+      if (!localStorage.getItem('paperTrailCookies')) document.getElementById('cookie-banner').classList.remove('hidden');
+    };
   </script>
-
 </body>
-
 </html>
