@@ -4,16 +4,18 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome with Dev Server",
+      "name": "Run Web App (Chrome)",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}",
       "preLaunchTask": "Start Dev Server"
     },
     {
-      "type": "chrome",
+      "type": "msedge",
       "request": "launch",
-      "name": "Launch Chrome (Static File)",
-      "file": "${workspaceFolder}/index.html"
+      "name": "Run Web App (Edge)",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Start Dev Server"
     }
   ]
 }

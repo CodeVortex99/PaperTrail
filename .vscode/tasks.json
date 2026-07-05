@@ -3,20 +3,23 @@
   "tasks": [
     {
       "label": "Start Dev Server",
-      "type": "npm",
-      "script": "dev",
+      "type": "shell",
+      "command": "npm run dev",
       "isBackground": true,
       "problemMatcher": {
-        "owner": "typescript",
-        "fileLocation": "relative",
+        "owner": "custom",
         "pattern": {
-          "regexp": ".*"
+          "regexp": "^$"
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".*",
+          "beginsPattern": ".*VITE.*",
           "endsPattern": ".*ready in.*"
         }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
       }
     }
   ]
