@@ -1,0 +1,7 @@
+node_modules/
+dist/
+test-results/
+dev.log
+server.log
+package-lock.json
+.DS_Store
