@@ -4,9 +4,18 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}"
+      "name": "Run Web App (Chrome)",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Start Dev Server"
+    },
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Run Web App (Edge)",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Start Dev Server"
     }
   ]
 }
