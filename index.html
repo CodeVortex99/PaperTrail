@@ -68,11 +68,11 @@
     }
 
     body.dark-mode {
-      --paper: #1B2340;
-      --paper-card: #242D4D;
+      --paper: #000000;
+      --paper-card: #0A0A0A;
       --ink: #EEF0E6;
       --ink-soft: #A6ACC9;
-      --line: #4A5170;
+      --line: #333333;
     }
 
     body.dark-mode .logo span,
@@ -401,6 +401,15 @@
       gap: 24px;
     }
 
+    .scroll-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding-right: 12px;
+    }
+
     .card {
       background: var(--paper-card);
       border: 1px solid var(--ink);
@@ -463,6 +472,7 @@
     .planner-wrap {
       border: 2px solid var(--ink);
       background: var(--paper-card);
+      position: relative;
     }
 
     .planner-grid {
@@ -485,6 +495,36 @@
       font-family: 'Space Mono', monospace;
       font-weight: 700;
       text-align: center;
+    }
+
+    .monthly-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .monthly-grid > div {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      min-height: 100px;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .monthly-day-num {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--ink-soft);
+    }
+
+    .month-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: var(--paper);
+      border-bottom: 2px solid var(--ink);
     }
 
     .time-cell {
@@ -717,7 +757,7 @@
 
   <header id="main-header" class="hidden">
     <div class="header-row">
-      <h1 class="logo">Paper<span>Trail</span></h1>
+      <a href="#landing" onclick="resetCategory()" class="logo" style="text-decoration: none;">Paper<span>Trail</span></a>
       <nav id="main-nav">
         <a href="#dashboard">Dashboard</a>
         <a href="#papers" class="cat-gcse cat-alevel">Papers</a>
@@ -861,8 +901,8 @@
           <p class="eyebrow">Study</p>
           <h2>Revision Lab</h2>
         </div>
-        <div class="dashboard-grid">
-          <div class="card" style="grid-row: span 2;">
+        <div class="scroll-stack">
+          <div class="card">
             <h3>SRS Flashcards</h3>
             <p class="instructions">Master concepts with spaced repetition.</p>
 
@@ -883,7 +923,7 @@
               <span id="srs-count" style="font-size: 11px;">Due: 0</span>
             </div>
           </div>
-          <div class="card" style="grid-row: span 2;">
+          <div class="card">
             <h3>Quiz Lab</h3>
             <p class="instructions">Daily challenges and custom quizzes.</p>
             <div id="quiz-area">
@@ -929,12 +969,29 @@
     <!-- Planner Section -->
     <section class="section hidden" id="planner">
       <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">Timetable</p>
-          <h2>Weekly Planner</h2>
+        <div class="section-head" style="display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <p class="eyebrow">Timetable</p>
+            <h2 id="planner-title">Weekly Planner</h2>
+          </div>
+          <div class="cta-row" style="margin-bottom: 4px;">
+            <button class="btn" id="btn-weekly" onclick="setPlannerView('weekly')">Weekly</button>
+            <button class="btn" id="btn-monthly" onclick="setPlannerView('monthly')">Monthly</button>
+          </div>
         </div>
+
         <div class="planner-wrap">
-          <div class="planner-grid" id="planner-grid"></div>
+          <div id="weekly-view">
+            <div class="planner-grid" id="planner-grid"></div>
+          </div>
+          <div id="monthly-view" class="hidden">
+            <div class="month-nav">
+               <button class="btn" onclick="changeMonth(-1)" style="padding: 4px 12px;">&larr;</button>
+               <h3 id="month-label" style="margin: 0; font-family: 'Space Mono', monospace;">Month YYYY</h3>
+               <button class="btn" onclick="changeMonth(1)" style="padding: 4px 12px;">&rarr;</button>
+            </div>
+            <div class="monthly-grid" id="monthly-planner-grid"></div>
+          </div>
           <div class="planner-legend" id="planner-legend"></div>
         </div>
       </div>
@@ -947,7 +1004,7 @@
           <p class="eyebrow">Utilities</p>
           <h2>Revision Tools</h2>
         </div>
-        <div class="tools-grid">
+        <div class="scroll-stack">
           <div class="card">
             <h3>Pomodoro Timer</h3>
             <p class="instructions">25m study, 5m break.</p>
@@ -1101,6 +1158,18 @@
 
   <script>
     // ---------- Logic: Global & Auth ----------
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
     let currentUser = JSON.parse(localStorage.getItem('paperTrailSession'));
     let userData = JSON.parse(localStorage.getItem('paperTrailUser')) || { name: '', targetGrade: '', examDate: '' };
 
@@ -1308,6 +1377,88 @@
       'Break': { bg: '#EDEDED', fg: '#666' }
     };
     let planData = JSON.parse(localStorage.getItem('paperTrailPlan')) || {};
+    let currentPlannerView = 'weekly';
+    let currentMonthDate = new Date();
+
+    function setPlannerView(view) {
+      currentPlannerView = view;
+      document.getElementById('weekly-view').classList.toggle('hidden', view !== 'weekly');
+      document.getElementById('monthly-view').classList.toggle('hidden', view !== 'monthly');
+      document.getElementById('planner-title').textContent = view === 'weekly' ? 'Weekly Planner' : 'Monthly Planner';
+      document.getElementById('btn-weekly').classList.toggle('primary', view === 'weekly');
+      document.getElementById('btn-monthly').classList.toggle('primary', view === 'monthly');
+      if (view === 'weekly') renderPlanner();
+      else renderMonthlyPlanner();
+    }
+
+    function changeMonth(dir) {
+      currentMonthDate.setMonth(currentMonthDate.getMonth() + dir);
+      renderMonthlyPlanner();
+    }
+
+    function renderMonthlyPlanner() {
+      const grid = document.getElementById('monthly-planner-grid');
+      const label = document.getElementById('month-label');
+      grid.innerHTML = '';
+
+      const year = currentMonthDate.getFullYear();
+      const month = currentMonthDate.getMonth();
+      label.textContent = currentMonthDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+      // Header row
+      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach(d => {
+        const cell = document.createElement('div');
+        cell.className = 'head-cell';
+        cell.style.minHeight = 'auto';
+        cell.textContent = d;
+        grid.appendChild(cell);
+      });
+
+      const firstDay = new Date(year, month, 1).getDay(); // 0=Sun, 1=Mon...
+      const startingDay = firstDay === 0 ? 6 : firstDay - 1; // Adjust to Mon=0
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Empty slots for previous month
+      for (let i = 0; i < startingDay; i++) {
+        grid.appendChild(document.createElement('div'));
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const key = `date-${dateStr}`;
+        const task = planData[key];
+
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.dataset.key = key;
+
+        const dayNum = document.createElement('div');
+        dayNum.className = 'monthly-day-num';
+        dayNum.textContent = d;
+        slot.appendChild(dayNum);
+
+        if (task) {
+          const c = SUBJECT_COLORS[task] || { bg: '#eee', fg: '#333' };
+          const chip = document.createElement('div');
+          chip.className = 'task-chip';
+          chip.style.background = c.bg;
+          chip.style.color = c.fg;
+          const span = document.createElement('span');
+          span.style.pointerEvents = 'none';
+          span.textContent = task;
+          const rm = document.createElement('span');
+          rm.className = 'rm';
+          rm.textContent = '×';
+          rm.onclick = (e) => rmTask(key, e);
+          chip.appendChild(span);
+          chip.appendChild(rm);
+          slot.appendChild(chip);
+        } else {
+          slot.onclick = () => openAddForm(slot);
+        }
+        grid.appendChild(slot);
+      }
+    }
 
     function renderPlanner() {
       const grid = document.getElementById('planner-grid');
@@ -1400,6 +1551,15 @@
       const slot = document.querySelector(`.slot[data-key="${key}"]`);
       if (!slot) return;
       slot.innerHTML = '';
+
+      if (key.startsWith('date-')) {
+        const day = parseInt(key.split('-').pop());
+        const dayNum = document.createElement('div');
+        dayNum.className = 'monthly-day-num';
+        dayNum.textContent = day;
+        slot.appendChild(dayNum);
+      }
+
       const task = planData[key];
       if (task) {
         const c = SUBJECT_COLORS[task] || { bg: '#eee', fg: '#333' };
@@ -1484,12 +1644,12 @@
       { s: 'Maths', b: 'AQA', y: '2023', a: 180 },
       { s: 'Physics', b: 'Edexcel', y: '2023', a: 150 }
     ];
-    document.getElementById('boundary-search').oninput = (e) => {
+    document.getElementById('boundary-search').oninput = debounce((e) => {
       const val = e.target.value.toLowerCase();
       const res = document.getElementById('boundary-results');
       const filtered = BOUNDS.filter(b => b.s.toLowerCase().includes(val));
       res.innerHTML = filtered.map(b => `<div>${b.s} (${b.b} ${b.y}): A = ${b.a}</div>`).join('');
-    };
+    }, 250);
 
     // ---------- Logic: SRS & Revision ----------
     let DEFAULT_FLASHCARDS = [
@@ -1631,6 +1791,12 @@
     // ---------- Navigation & Init ----------
     const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
+    let currentSection = null;
+
+    function resetCategory() {
+      selectedCategory = null;
+      localStorage.removeItem('paperTrailCategory');
+    }
 
     function setCategory(cat) {
       selectedCategory = cat;
@@ -1649,12 +1815,18 @@
         header.classList.remove('hidden');
       }
 
-      SECTIONS.forEach(s => {
-        const el = document.getElementById(s);
-        if (el) el.classList.add('hidden');
-        const link = document.querySelector(`nav a[href="#${s}"]`);
-        if (link) link.classList.remove('active');
-      });
+      if (currentSection && currentSection !== hash) {
+        const prevEl = document.getElementById(currentSection);
+        if (prevEl) prevEl.classList.add('hidden');
+        const prevLink = document.querySelector(`nav a[href="#${currentSection}"]`);
+        if (prevLink) prevLink.classList.remove('active');
+      } else if (!currentSection) {
+        SECTIONS.forEach(s => {
+          const el = document.getElementById(s);
+          if (el) el.classList.add('hidden');
+        });
+      }
+      currentSection = hash;
 
       // Filter nav based on category
       if (selectedCategory) {
@@ -1675,7 +1847,10 @@
         if (link) link.classList.add('active');
         if (hash === 'dashboard') loadUserData();
         if (hash === 'papers') renderPapers();
-        if (hash === 'planner') renderPlanner();
+        if (hash === 'planner') {
+           if (currentPlannerView === 'weekly') renderPlanner();
+           else renderMonthlyPlanner();
+        }
         if (hash === 'revision') { renderSRS(); startQuiz(); }
       }
     }
