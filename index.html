@@ -48,6 +48,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
   <style>
     :root {
       --paper: #EEF0E6;
@@ -865,8 +866,9 @@
 
   <main>
     <!-- Landing Section -->
-    <section class="section" id="landing" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
-      <div class="wrap" style="text-align: center;">
+    <section class="section" id="landing" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: var(--paper);">
+      <canvas id="hero-3d-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6;"></canvas>
+      <div class="wrap" style="text-align: center; position: relative; z-index: 1;">
         <h1 class="logo" style="font-size: 48px; margin-bottom: 40px;">Paper<span>Trail</span></h1>
         <p style="margin-bottom: 40px; color: var(--ink-soft); font-family: 'Space Mono', monospace;">Select your pathway to get started.</p>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
@@ -897,6 +899,13 @@
           <h2>My Dashboard</h2>
         </div>
         <div class="dashboard-grid">
+          <div id="pinned-section" class="card bento-wide hidden">
+            <h3>📌 Pinned Resources</h3>
+            <p class="instructions">Quick access to your favorite papers.</p>
+            <div id="pinned-list" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;">
+               <!-- Pinned items will be rendered here -->
+            </div>
+          </div>
           <div class="card bento-wide">
             <h3>Welcome back, <span id="display-name">Student</span>!</h3>
             <p class="instructions">Set your details to personalize your revision.</p>
@@ -1402,6 +1411,42 @@
       `;
     }
 
+    // ---------- Logic: Pinned Items ----------
+    let pinnedItems = JSON.parse(localStorage.getItem('paperTrailPinned')) || [];
+
+    function togglePin(paperId, e) {
+      if (e) e.stopPropagation();
+      const index = pinnedItems.indexOf(paperId);
+      if (index > -1) {
+        pinnedItems.splice(index, 1);
+      } else {
+        pinnedItems.push(paperId);
+      }
+      localStorage.setItem('paperTrailPinned', JSON.stringify(pinnedItems));
+      renderPapers();
+      if (currentSection === 'dashboard') renderPinned();
+    }
+
+    function renderPinned() {
+      const section = document.getElementById('pinned-section');
+      const list = document.getElementById('pinned-list');
+      if (pinnedItems.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+      section.classList.remove('hidden');
+
+      const pinnedData = ALL_PAPERS.filter(p => pinnedItems.includes(`${p.subjectKey}-${p.paperName}-${p.year}`));
+
+      list.innerHTML = pinnedData.map(p => `
+        <div class="card" style="min-width: 200px; padding: 12px; flex-shrink: 0;" onclick="window.open('${makeLocalPath(p.folder, p.board, p.year, 'QP', p.paperName)}', '_blank')">
+          <div class="paper-tag subject-${p.subjectKey}">${p.subjectLabel}</div>
+          <div style="font-weight: 600; font-size: 14px;">${p.paperName}</div>
+          <div style="font-size: 11px; color: var(--ink-soft);">${p.year}</div>
+        </div>
+      `).join('');
+    }
+
     // ---------- Logic: Papers ----------
     const ALL_PAPERS = [
       { subjectKey: 'maths', subjectLabel: 'Maths', folder: 'Maths', board: 'AQA', year: 'June 2023', paperName: 'Paper 1' },
@@ -1442,9 +1487,15 @@
         const qpPath = makeLocalPath(p.folder, p.board, p.year, 'QP', p.paperName);
         const msPath = makeLocalPath(p.folder, p.board, p.year, 'MS', p.paperName);
 
+        const paperId = `${p.subjectKey}-${p.paperName}-${p.year}`;
+        const isPinned = pinnedItems.includes(paperId);
+
         return `
           <div class="paper-card">
-            <span class="paper-tag subject-${p.subjectKey}">${p.subjectLabel}</span>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span class="paper-tag subject-${p.subjectKey}">${p.subjectLabel}</span>
+              <span style="cursor: pointer; font-size: 16px;" onclick="togglePin('${paperId}', event)">${isPinned ? '📌' : '📍'}</span>
+            </div>
             <span class="paper-tag" style="background:var(--paper); color:var(--ink-soft); border:1px solid var(--line);">${displayType}</span>
             <h3>${p.board} A-Level</h3>
             <p class="paper-meta">${p.paperName} (${p.year})</p>
@@ -1880,6 +1931,80 @@
       }
     }
 
+    // ---------- Logic: 3D Hero ----------
+    function initHero3D() {
+      const canvas = document.getElementById('hero-3d-canvas');
+      if (!canvas) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Create floating geometric "knowledge blocks"
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const objects = [];
+      const colors = [0xD7E362, 0x5B84A8, 0x8A7CC7, 0xE2613C]; // Theme colors
+
+      for (let i = 0; i < 20; i++) {
+        const material = new THREE.MeshPhongMaterial({
+          color: colors[Math.floor(Math.random() * colors.length)],
+          transparent: true,
+          opacity: 0.8
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(
+          (Math.random() - 0.5) * 15,
+          (Math.random() - 0.5) * 15,
+          (Math.random() - 0.5) * 10
+        );
+        cube.rotation.set(Math.random(), Math.random(), Math.random());
+        cube.userData.velocity = {
+          x: (Math.random() - 0.5) * 0.01,
+          y: (Math.random() - 0.5) * 0.01,
+          z: (Math.random() - 0.5) * 0.01
+        };
+        scene.add(cube);
+        objects.push(cube);
+      }
+
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(1, 1, 5).normalize();
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0x404040));
+
+      camera.position.z = 8;
+
+      let mouseX = 0, mouseY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth) - 0.5;
+        mouseY = (e.clientY / window.innerHeight) - 0.5;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        objects.forEach(obj => {
+          obj.rotation.x += 0.005;
+          obj.rotation.y += 0.005;
+          obj.position.x += obj.userData.velocity.x + mouseX * 0.01;
+          obj.position.y += obj.userData.velocity.y - mouseY * 0.01;
+
+          // Boundary check
+          if (Math.abs(obj.position.x) > 10) obj.userData.velocity.x *= -1;
+          if (Math.abs(obj.position.y) > 10) obj.userData.velocity.y *= -1;
+        });
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
     // ---------- Navigation & Init ----------
     const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
@@ -1937,7 +2062,7 @@
         target.classList.remove('hidden');
         const link = document.querySelector(`nav a[href="#${hash}"]`);
         if (link) link.classList.add('active');
-        if (hash === 'dashboard') loadUserData();
+        if (hash === 'dashboard') { loadUserData(); renderPinned(); }
         if (hash === 'papers') renderPapers();
         if (hash === 'planner') {
            if (currentPlannerView === 'weekly') renderPlanner();
@@ -1950,6 +2075,7 @@
     window.onload = () => {
       navigate();
       updateAuthUI();
+      initHero3D();
       if (localStorage.getItem('paperTrailDarkMode') === 'true') {
         document.body.classList.add('dark-mode');
       }
