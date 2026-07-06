@@ -1,0 +1,20 @@
+
+    .btn.primary {
+      background: var(--ink);
+      color: var(--highlight);
+    }
+
+    .btn:hover {
+      box-shadow: 4px 4px 0 var(--ink);
+      transform: translate(-2px, -2px);
+    }
+
+    /* section heads */
+    .section {
+      padding: 64px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      margin-bottom: 40px;
+    }

@@ -1,0 +1,20 @@
+        <div class="cover-top">
+          <div>PAPER TRAIL &nbsp;·&nbsp; REVISION RESOURCE &nbsp;·&nbsp; ALL BOARDS</div>
+          <div class="candidate-box">
+            CANDIDATE NO.
+            <div class="cells"><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>
+          </div>
+        </div>
+        <h2>Past papers, sorted.<br>Revision, <em>planned.</em></h2>
+        <p class="instructions">
+          INSTRUCTIONS TO CANDIDATES: Browse real past papers, predicted papers, and mocks by subject and board. No redirects, just study.
+        </p>
+        <div class="cta-row">
+          <a href="#papers" class="btn primary">Browse papers</a>
+          <a href="#planner" class="btn">Build my plan</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hidden" id="papers">
+      <div class="wrap">

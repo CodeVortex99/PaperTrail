@@ -90,6 +90,8 @@
       color: var(--ink);
       font-family: 'Inter', sans-serif;
       line-height: 1.55;
+      /* UI/UX Pro Max: Global smooth transitions */
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .mono {
@@ -224,6 +226,7 @@
       position: relative;
       background-image:
         repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(27, 35, 64, 0.06) 28px);
+      overflow: hidden;
     }
 
     .cover-top {
@@ -299,6 +302,61 @@
       transform: translate(-2px, -2px);
     }
 
+    /* Magic UI Inspired: Shiny Button Effect */
+    .btn-shiny {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-shiny::after {
+      content: "";
+      position: absolute;
+      top: -110%;
+      left: -210%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transform: rotate(45deg);
+      transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+      pointer-events: none;
+    }
+
+    .btn-shiny:hover::after {
+      left: 100%;
+      top: 100%;
+    }
+
+    /* Magic UI Inspired: Border Beam Animation */
+    @keyframes border-beam {
+      0% { offset-distance: 0%; }
+      100% { offset-distance: 100%; }
+    }
+
+    .border-beam {
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      border-radius: inherit;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .border-beam::before {
+      content: "";
+      position: absolute;
+      aspect-ratio: 1;
+      width: 200px;
+      background: linear-gradient(to right, var(--highlight), transparent);
+      offset-path: rect(0 100% 100% 0 round 2px);
+      animation: border-beam 4s linear infinite;
+    }
+
     /* section heads */
     .section {
       padding: 64px 0;
@@ -350,6 +408,14 @@
       border: 1px solid var(--ink);
       padding: 20px;
       border-radius: 2px;
+      /* UI/UX Pro Max: Consistent hover effects */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .paper-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
     .paper-tag {
@@ -389,7 +455,23 @@
     }
 
     /* Dashboard & Tools */
-    .dashboard-grid, .support-grid {
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: auto;
+      gap: 24px;
+    }
+
+    /* Bento-style spans */
+    .bento-wide { grid-column: span 2; }
+    .bento-tall { grid-row: span 2; }
+
+    @media (max-width: 900px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .bento-wide { grid-column: span 1; }
+    }
+
+    .support-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 24px;
@@ -416,6 +498,15 @@
       border-radius: 2px;
       padding: 24px;
       position: relative;
+      /* UI/UX Pro Max: Soft UI shadow and transitions */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      cursor: pointer; /* Tactile feedback */
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
     .card h3 {
@@ -806,7 +897,7 @@
           <h2>My Dashboard</h2>
         </div>
         <div class="dashboard-grid">
-          <div class="card">
+          <div class="card bento-wide">
             <h3>Welcome back, <span id="display-name">Student</span>!</h3>
             <p class="instructions">Set your details to personalize your revision.</p>
             <div class="welcome-form">
@@ -855,9 +946,10 @@
           INSTRUCTIONS TO CANDIDATES: Browse real past papers, predicted papers, and mocks by subject and board. No redirects, just study.
         </p>
         <div class="cta-row">
-          <a href="#papers" class="btn primary">Browse papers</a>
-          <a href="#planner" class="btn">Build my plan</a>
+          <a href="#papers" class="btn primary btn-shiny">Browse papers</a>
+          <a href="#planner" class="btn btn-shiny">Build my plan</a>
         </div>
+        <div class="border-beam"></div>
       </div>
     </section>
 
