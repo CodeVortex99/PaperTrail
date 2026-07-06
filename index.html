@@ -145,6 +145,7 @@
       gap: 24px;
       font-size: 14px;
       font-weight: 500;
+      align-items: center;
     }
 
     nav a {
@@ -156,6 +157,55 @@
     nav a:hover,
     nav a.active {
       border-bottom-color: var(--ink);
+    }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px;
+      z-index: 21;
+    }
+
+    .hamburger div {
+      width: 24px;
+      height: 2px;
+      background-color: var(--ink);
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 850px) {
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 250px;
+        height: 100vh;
+        background: var(--paper-card);
+        border-left: 2px solid var(--ink);
+        flex-direction: column;
+        padding: 80px 24px;
+        gap: 20px;
+        transition: right 0.3s ease;
+        z-index: 20;
+        align-items: flex-start;
+      }
+
+      nav.open {
+        right: 0;
+      }
+
+      .hamburger.open div:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      .hamburger.open div:nth-child(2) { opacity: 0; }
+      .hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
     }
 
     .hidden {
@@ -850,16 +900,21 @@
   <header id="main-header" class="hidden">
     <div class="header-row">
       <a href="#landing" onclick="resetCategory()" class="logo" style="text-decoration: none;">Paper<span>Trail</span></a>
+      <button class="hamburger" id="hamburger-btn" onclick="toggleNav()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </button>
       <nav id="main-nav">
-        <a href="#dashboard">Dashboard</a>
-        <a href="#papers" class="cat-gcse cat-alevel">Papers</a>
-        <a href="#revision">Revision</a>
-        <a href="#planner">Planner</a>
-        <a href="#tools">Tools</a>
-        <a href="#support" class="cat-uni cat-alevel">Uni Advice</a>
-        <a href="#pricing">Pricing</a>
-        <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal()">Login</a>
-        <button class="btn" onclick="toggleDarkMode()" style="padding: 4px 8px; font-size: 12px;">🌓</button>
+        <a href="#dashboard" onclick="closeNav()">Dashboard</a>
+        <a href="#papers" class="cat-gcse cat-alevel" onclick="closeNav()">Papers</a>
+        <a href="#revision" onclick="closeNav()">Revision</a>
+        <a href="#planner" onclick="closeNav()">Planner</a>
+        <a href="#tools" onclick="closeNav()">Tools</a>
+        <a href="#support" class="cat-uni cat-alevel" onclick="closeNav()">Uni Advice</a>
+        <a href="#pricing" onclick="closeNav()">Pricing</a>
+        <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal(); closeNav()">Login</a>
+        <button class="btn" onclick="toggleDarkMode()" style="padding: 4px 8px; font-size: 12px; margin-top: 10px;">🌓</button>
       </nav>
     </div>
   </header>
@@ -2006,6 +2061,20 @@
     }
 
     // ---------- Navigation & Init ----------
+    function toggleNav() {
+      const nav = document.getElementById('main-nav');
+      const btn = document.getElementById('hamburger-btn');
+      nav.classList.toggle('open');
+      btn.classList.toggle('open');
+    }
+
+    function closeNav() {
+      const nav = document.getElementById('main-nav');
+      const btn = document.getElementById('hamburger-btn');
+      nav.classList.remove('open');
+      btn.classList.remove('open');
+    }
+
     const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
     let currentSection = null;
