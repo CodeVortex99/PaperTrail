@@ -48,6 +48,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
   <style>
     :root {
       --paper: #EEF0E6;
@@ -68,11 +69,11 @@
     }
 
     body.dark-mode {
-      --paper: #1B2340;
-      --paper-card: #242D4D;
+      --paper: #000000;
+      --paper-card: #0A0A0A;
       --ink: #EEF0E6;
       --ink-soft: #A6ACC9;
-      --line: #4A5170;
+      --line: #333333;
     }
 
     body.dark-mode .logo span,
@@ -90,6 +91,8 @@
       color: var(--ink);
       font-family: 'Inter', sans-serif;
       line-height: 1.55;
+      /* UI/UX Pro Max: Global smooth transitions */
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .mono {
@@ -224,6 +227,7 @@
       position: relative;
       background-image:
         repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(27, 35, 64, 0.06) 28px);
+      overflow: hidden;
     }
 
     .cover-top {
@@ -299,6 +303,61 @@
       transform: translate(-2px, -2px);
     }
 
+    /* Magic UI Inspired: Shiny Button Effect */
+    .btn-shiny {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-shiny::after {
+      content: "";
+      position: absolute;
+      top: -110%;
+      left: -210%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transform: rotate(45deg);
+      transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+      pointer-events: none;
+    }
+
+    .btn-shiny:hover::after {
+      left: 100%;
+      top: 100%;
+    }
+
+    /* Magic UI Inspired: Border Beam Animation */
+    @keyframes border-beam {
+      0% { offset-distance: 0%; }
+      100% { offset-distance: 100%; }
+    }
+
+    .border-beam {
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      border-radius: inherit;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .border-beam::before {
+      content: "";
+      position: absolute;
+      aspect-ratio: 1;
+      width: 200px;
+      background: linear-gradient(to right, var(--highlight), transparent);
+      offset-path: rect(0 100% 100% 0 round 2px);
+      animation: border-beam 4s linear infinite;
+    }
+
     /* section heads */
     .section {
       padding: 64px 0;
@@ -350,6 +409,14 @@
       border: 1px solid var(--ink);
       padding: 20px;
       border-radius: 2px;
+      /* UI/UX Pro Max: Consistent hover effects */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .paper-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
     .paper-tag {
@@ -389,7 +456,23 @@
     }
 
     /* Dashboard & Tools */
-    .dashboard-grid, .support-grid {
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: auto;
+      gap: 24px;
+    }
+
+    /* Bento-style spans */
+    .bento-wide { grid-column: span 2; }
+    .bento-tall { grid-row: span 2; }
+
+    @media (max-width: 900px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .bento-wide { grid-column: span 1; }
+    }
+
+    .support-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 24px;
@@ -401,12 +484,30 @@
       gap: 24px;
     }
 
+    .scroll-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding-right: 12px;
+    }
+
     .card {
       background: var(--paper-card);
       border: 1px solid var(--ink);
       border-radius: 2px;
       padding: 24px;
       position: relative;
+      /* UI/UX Pro Max: Soft UI shadow and transitions */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      cursor: pointer; /* Tactile feedback */
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
     .card h3 {
@@ -463,6 +564,7 @@
     .planner-wrap {
       border: 2px solid var(--ink);
       background: var(--paper-card);
+      position: relative;
     }
 
     .planner-grid {
@@ -485,6 +587,36 @@
       font-family: 'Space Mono', monospace;
       font-weight: 700;
       text-align: center;
+    }
+
+    .monthly-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .monthly-grid > div {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      min-height: 100px;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .monthly-day-num {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--ink-soft);
+    }
+
+    .month-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: var(--paper);
+      border-bottom: 2px solid var(--ink);
     }
 
     .time-cell {
@@ -717,7 +849,7 @@
 
   <header id="main-header" class="hidden">
     <div class="header-row">
-      <h1 class="logo">Paper<span>Trail</span></h1>
+      <a href="#landing" onclick="resetCategory()" class="logo" style="text-decoration: none;">Paper<span>Trail</span></a>
       <nav id="main-nav">
         <a href="#dashboard">Dashboard</a>
         <a href="#papers" class="cat-gcse cat-alevel">Papers</a>
@@ -734,8 +866,9 @@
 
   <main>
     <!-- Landing Section -->
-    <section class="section" id="landing" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
-      <div class="wrap" style="text-align: center;">
+    <section class="section" id="landing" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: var(--paper);">
+      <canvas id="hero-3d-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6;"></canvas>
+      <div class="wrap" style="text-align: center; position: relative; z-index: 1;">
         <h1 class="logo" style="font-size: 48px; margin-bottom: 40px;">Paper<span>Trail</span></h1>
         <p style="margin-bottom: 40px; color: var(--ink-soft); font-family: 'Space Mono', monospace;">Select your pathway to get started.</p>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
@@ -766,7 +899,14 @@
           <h2>My Dashboard</h2>
         </div>
         <div class="dashboard-grid">
-          <div class="card">
+          <div id="pinned-section" class="card bento-wide hidden">
+            <h3>📌 Pinned Resources</h3>
+            <p class="instructions">Quick access to your favorite papers.</p>
+            <div id="pinned-list" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;">
+               <!-- Pinned items will be rendered here -->
+            </div>
+          </div>
+          <div class="card bento-wide">
             <h3>Welcome back, <span id="display-name">Student</span>!</h3>
             <p class="instructions">Set your details to personalize your revision.</p>
             <div class="welcome-form">
@@ -815,9 +955,10 @@
           INSTRUCTIONS TO CANDIDATES: Browse real past papers, predicted papers, and mocks by subject and board. No redirects, just study.
         </p>
         <div class="cta-row">
-          <a href="#papers" class="btn primary">Browse papers</a>
-          <a href="#planner" class="btn">Build my plan</a>
+          <a href="#papers" class="btn primary btn-shiny">Browse papers</a>
+          <a href="#planner" class="btn btn-shiny">Build my plan</a>
         </div>
+        <div class="border-beam"></div>
       </div>
     </section>
 
@@ -861,8 +1002,8 @@
           <p class="eyebrow">Study</p>
           <h2>Revision Lab</h2>
         </div>
-        <div class="dashboard-grid">
-          <div class="card" style="grid-row: span 2;">
+        <div class="scroll-stack">
+          <div class="card">
             <h3>SRS Flashcards</h3>
             <p class="instructions">Master concepts with spaced repetition.</p>
 
@@ -883,7 +1024,7 @@
               <span id="srs-count" style="font-size: 11px;">Due: 0</span>
             </div>
           </div>
-          <div class="card" style="grid-row: span 2;">
+          <div class="card">
             <h3>Quiz Lab</h3>
             <p class="instructions">Daily challenges and custom quizzes.</p>
             <div id="quiz-area">
@@ -929,12 +1070,29 @@
     <!-- Planner Section -->
     <section class="section hidden" id="planner">
       <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">Timetable</p>
-          <h2>Weekly Planner</h2>
+        <div class="section-head" style="display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <p class="eyebrow">Timetable</p>
+            <h2 id="planner-title">Weekly Planner</h2>
+          </div>
+          <div class="cta-row" style="margin-bottom: 4px;">
+            <button class="btn" id="btn-weekly" onclick="setPlannerView('weekly')">Weekly</button>
+            <button class="btn" id="btn-monthly" onclick="setPlannerView('monthly')">Monthly</button>
+          </div>
         </div>
+
         <div class="planner-wrap">
-          <div class="planner-grid" id="planner-grid"></div>
+          <div id="weekly-view">
+            <div class="planner-grid" id="planner-grid"></div>
+          </div>
+          <div id="monthly-view" class="hidden">
+            <div class="month-nav">
+               <button class="btn" onclick="changeMonth(-1)" style="padding: 4px 12px;">&larr;</button>
+               <h3 id="month-label" style="margin: 0; font-family: 'Space Mono', monospace;">Month YYYY</h3>
+               <button class="btn" onclick="changeMonth(1)" style="padding: 4px 12px;">&rarr;</button>
+            </div>
+            <div class="monthly-grid" id="monthly-planner-grid"></div>
+          </div>
           <div class="planner-legend" id="planner-legend"></div>
         </div>
       </div>
@@ -947,7 +1105,7 @@
           <p class="eyebrow">Utilities</p>
           <h2>Revision Tools</h2>
         </div>
-        <div class="tools-grid">
+        <div class="scroll-stack">
           <div class="card">
             <h3>Pomodoro Timer</h3>
             <p class="instructions">25m study, 5m break.</p>
@@ -1101,6 +1259,18 @@
 
   <script>
     // ---------- Logic: Global & Auth ----------
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
     let currentUser = JSON.parse(localStorage.getItem('paperTrailSession'));
     let userData = JSON.parse(localStorage.getItem('paperTrailUser')) || { name: '', targetGrade: '', examDate: '' };
 
@@ -1241,6 +1411,42 @@
       `;
     }
 
+    // ---------- Logic: Pinned Items ----------
+    let pinnedItems = JSON.parse(localStorage.getItem('paperTrailPinned')) || [];
+
+    function togglePin(paperId, e) {
+      if (e) e.stopPropagation();
+      const index = pinnedItems.indexOf(paperId);
+      if (index > -1) {
+        pinnedItems.splice(index, 1);
+      } else {
+        pinnedItems.push(paperId);
+      }
+      localStorage.setItem('paperTrailPinned', JSON.stringify(pinnedItems));
+      renderPapers();
+      if (currentSection === 'dashboard') renderPinned();
+    }
+
+    function renderPinned() {
+      const section = document.getElementById('pinned-section');
+      const list = document.getElementById('pinned-list');
+      if (pinnedItems.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+      section.classList.remove('hidden');
+
+      const pinnedData = ALL_PAPERS.filter(p => pinnedItems.includes(`${p.subjectKey}-${p.paperName}-${p.year}`));
+
+      list.innerHTML = pinnedData.map(p => `
+        <div class="card" style="min-width: 200px; padding: 12px; flex-shrink: 0;" onclick="window.open('${makeLocalPath(p.folder, p.board, p.year, 'QP', p.paperName)}', '_blank')">
+          <div class="paper-tag subject-${p.subjectKey}">${p.subjectLabel}</div>
+          <div style="font-weight: 600; font-size: 14px;">${p.paperName}</div>
+          <div style="font-size: 11px; color: var(--ink-soft);">${p.year}</div>
+        </div>
+      `).join('');
+    }
+
     // ---------- Logic: Papers ----------
     const ALL_PAPERS = [
       { subjectKey: 'maths', subjectLabel: 'Maths', folder: 'Maths', board: 'AQA', year: 'June 2023', paperName: 'Paper 1' },
@@ -1281,9 +1487,15 @@
         const qpPath = makeLocalPath(p.folder, p.board, p.year, 'QP', p.paperName);
         const msPath = makeLocalPath(p.folder, p.board, p.year, 'MS', p.paperName);
 
+        const paperId = `${p.subjectKey}-${p.paperName}-${p.year}`;
+        const isPinned = pinnedItems.includes(paperId);
+
         return `
           <div class="paper-card">
-            <span class="paper-tag subject-${p.subjectKey}">${p.subjectLabel}</span>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span class="paper-tag subject-${p.subjectKey}">${p.subjectLabel}</span>
+              <span style="cursor: pointer; font-size: 16px;" onclick="togglePin('${paperId}', event)">${isPinned ? '📌' : '📍'}</span>
+            </div>
             <span class="paper-tag" style="background:var(--paper); color:var(--ink-soft); border:1px solid var(--line);">${displayType}</span>
             <h3>${p.board} A-Level</h3>
             <p class="paper-meta">${p.paperName} (${p.year})</p>
@@ -1308,6 +1520,88 @@
       'Break': { bg: '#EDEDED', fg: '#666' }
     };
     let planData = JSON.parse(localStorage.getItem('paperTrailPlan')) || {};
+    let currentPlannerView = 'weekly';
+    let currentMonthDate = new Date();
+
+    function setPlannerView(view) {
+      currentPlannerView = view;
+      document.getElementById('weekly-view').classList.toggle('hidden', view !== 'weekly');
+      document.getElementById('monthly-view').classList.toggle('hidden', view !== 'monthly');
+      document.getElementById('planner-title').textContent = view === 'weekly' ? 'Weekly Planner' : 'Monthly Planner';
+      document.getElementById('btn-weekly').classList.toggle('primary', view === 'weekly');
+      document.getElementById('btn-monthly').classList.toggle('primary', view === 'monthly');
+      if (view === 'weekly') renderPlanner();
+      else renderMonthlyPlanner();
+    }
+
+    function changeMonth(dir) {
+      currentMonthDate.setMonth(currentMonthDate.getMonth() + dir);
+      renderMonthlyPlanner();
+    }
+
+    function renderMonthlyPlanner() {
+      const grid = document.getElementById('monthly-planner-grid');
+      const label = document.getElementById('month-label');
+      grid.innerHTML = '';
+
+      const year = currentMonthDate.getFullYear();
+      const month = currentMonthDate.getMonth();
+      label.textContent = currentMonthDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+      // Header row
+      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach(d => {
+        const cell = document.createElement('div');
+        cell.className = 'head-cell';
+        cell.style.minHeight = 'auto';
+        cell.textContent = d;
+        grid.appendChild(cell);
+      });
+
+      const firstDay = new Date(year, month, 1).getDay(); // 0=Sun, 1=Mon...
+      const startingDay = firstDay === 0 ? 6 : firstDay - 1; // Adjust to Mon=0
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Empty slots for previous month
+      for (let i = 0; i < startingDay; i++) {
+        grid.appendChild(document.createElement('div'));
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const key = `date-${dateStr}`;
+        const task = planData[key];
+
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.dataset.key = key;
+
+        const dayNum = document.createElement('div');
+        dayNum.className = 'monthly-day-num';
+        dayNum.textContent = d;
+        slot.appendChild(dayNum);
+
+        if (task) {
+          const c = SUBJECT_COLORS[task] || { bg: '#eee', fg: '#333' };
+          const chip = document.createElement('div');
+          chip.className = 'task-chip';
+          chip.style.background = c.bg;
+          chip.style.color = c.fg;
+          const span = document.createElement('span');
+          span.style.pointerEvents = 'none';
+          span.textContent = task;
+          const rm = document.createElement('span');
+          rm.className = 'rm';
+          rm.textContent = '×';
+          rm.onclick = (e) => rmTask(key, e);
+          chip.appendChild(span);
+          chip.appendChild(rm);
+          slot.appendChild(chip);
+        } else {
+          slot.onclick = () => openAddForm(slot);
+        }
+        grid.appendChild(slot);
+      }
+    }
 
     function renderPlanner() {
       const grid = document.getElementById('planner-grid');
@@ -1400,6 +1694,15 @@
       const slot = document.querySelector(`.slot[data-key="${key}"]`);
       if (!slot) return;
       slot.innerHTML = '';
+
+      if (key.startsWith('date-')) {
+        const day = parseInt(key.split('-').pop());
+        const dayNum = document.createElement('div');
+        dayNum.className = 'monthly-day-num';
+        dayNum.textContent = day;
+        slot.appendChild(dayNum);
+      }
+
       const task = planData[key];
       if (task) {
         const c = SUBJECT_COLORS[task] || { bg: '#eee', fg: '#333' };
@@ -1484,12 +1787,12 @@
       { s: 'Maths', b: 'AQA', y: '2023', a: 180 },
       { s: 'Physics', b: 'Edexcel', y: '2023', a: 150 }
     ];
-    document.getElementById('boundary-search').oninput = (e) => {
+    document.getElementById('boundary-search').oninput = debounce((e) => {
       const val = e.target.value.toLowerCase();
       const res = document.getElementById('boundary-results');
       const filtered = BOUNDS.filter(b => b.s.toLowerCase().includes(val));
       res.innerHTML = filtered.map(b => `<div>${b.s} (${b.b} ${b.y}): A = ${b.a}</div>`).join('');
-    };
+    }, 250);
 
     // ---------- Logic: SRS & Revision ----------
     let DEFAULT_FLASHCARDS = [
@@ -1628,9 +1931,89 @@
       }
     }
 
+    // ---------- Logic: 3D Hero ----------
+    function initHero3D() {
+      const canvas = document.getElementById('hero-3d-canvas');
+      if (!canvas) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Create floating geometric "knowledge blocks"
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const objects = [];
+      const colors = [0xD7E362, 0x5B84A8, 0x8A7CC7, 0xE2613C]; // Theme colors
+
+      for (let i = 0; i < 20; i++) {
+        const material = new THREE.MeshPhongMaterial({
+          color: colors[Math.floor(Math.random() * colors.length)],
+          transparent: true,
+          opacity: 0.8
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(
+          (Math.random() - 0.5) * 15,
+          (Math.random() - 0.5) * 15,
+          (Math.random() - 0.5) * 10
+        );
+        cube.rotation.set(Math.random(), Math.random(), Math.random());
+        cube.userData.velocity = {
+          x: (Math.random() - 0.5) * 0.01,
+          y: (Math.random() - 0.5) * 0.01,
+          z: (Math.random() - 0.5) * 0.01
+        };
+        scene.add(cube);
+        objects.push(cube);
+      }
+
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(1, 1, 5).normalize();
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0x404040));
+
+      camera.position.z = 8;
+
+      let mouseX = 0, mouseY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth) - 0.5;
+        mouseY = (e.clientY / window.innerHeight) - 0.5;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        objects.forEach(obj => {
+          obj.rotation.x += 0.005;
+          obj.rotation.y += 0.005;
+          obj.position.x += obj.userData.velocity.x + mouseX * 0.01;
+          obj.position.y += obj.userData.velocity.y - mouseY * 0.01;
+
+          // Boundary check
+          if (Math.abs(obj.position.x) > 10) obj.userData.velocity.x *= -1;
+          if (Math.abs(obj.position.y) > 10) obj.userData.velocity.y *= -1;
+        });
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
     // ---------- Navigation & Init ----------
     const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
+    let currentSection = null;
+
+    function resetCategory() {
+      selectedCategory = null;
+      localStorage.removeItem('paperTrailCategory');
+    }
 
     function setCategory(cat) {
       selectedCategory = cat;
@@ -1649,12 +2032,18 @@
         header.classList.remove('hidden');
       }
 
-      SECTIONS.forEach(s => {
-        const el = document.getElementById(s);
-        if (el) el.classList.add('hidden');
-        const link = document.querySelector(`nav a[href="#${s}"]`);
-        if (link) link.classList.remove('active');
-      });
+      if (currentSection && currentSection !== hash) {
+        const prevEl = document.getElementById(currentSection);
+        if (prevEl) prevEl.classList.add('hidden');
+        const prevLink = document.querySelector(`nav a[href="#${currentSection}"]`);
+        if (prevLink) prevLink.classList.remove('active');
+      } else if (!currentSection) {
+        SECTIONS.forEach(s => {
+          const el = document.getElementById(s);
+          if (el) el.classList.add('hidden');
+        });
+      }
+      currentSection = hash;
 
       // Filter nav based on category
       if (selectedCategory) {
@@ -1673,9 +2062,12 @@
         target.classList.remove('hidden');
         const link = document.querySelector(`nav a[href="#${hash}"]`);
         if (link) link.classList.add('active');
-        if (hash === 'dashboard') loadUserData();
+        if (hash === 'dashboard') { loadUserData(); renderPinned(); }
         if (hash === 'papers') renderPapers();
-        if (hash === 'planner') renderPlanner();
+        if (hash === 'planner') {
+           if (currentPlannerView === 'weekly') renderPlanner();
+           else renderMonthlyPlanner();
+        }
         if (hash === 'revision') { renderSRS(); startQuiz(); }
       }
     }
@@ -1683,6 +2075,7 @@
     window.onload = () => {
       navigate();
       updateAuthUI();
+      initHero3D();
       if (localStorage.getItem('paperTrailDarkMode') === 'true') {
         document.body.classList.add('dark-mode');
       }

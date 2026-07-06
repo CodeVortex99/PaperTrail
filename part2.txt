@@ -1,0 +1,20 @@
+
+    /* hero: exam cover sheet */
+    .hero {
+      padding: 56px 24px 40px;
+    }
+
+    .cover-sheet {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      background: var(--paper-card);
+      border: 2px solid var(--ink);
+      border-radius: 2px;
+      padding: 36px 40px;
+      position: relative;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(27, 35, 64, 0.06) 28px);
+    }
+
+    .cover-top {
+      display: flex;
