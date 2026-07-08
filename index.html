@@ -145,15 +145,15 @@
       padding: 0 4px;
     }
 
-    nav {
-      display: flex;
+    #main-nav {
+      display: none;
       gap: 24px;
       font-size: 14px;
       font-weight: 500;
     }
 
     .menu-toggle {
-      display: none;
+      display: block;
       background: none;
       border: 2px solid var(--ink);
       padding: 4px 8px;
@@ -161,43 +161,45 @@
       font-size: 20px;
     }
 
-    @media (max-width: 768px) {
-      .menu-toggle { display: block; }
-      nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--paper);
-        border-bottom: 2px solid var(--ink);
-        flex-direction: column;
-        gap: 0;
-        padding: 0;
-      }
-      nav.open { display: flex; }
-      nav a {
-        padding: 15px 24px;
-        border-bottom: 1px solid var(--line);
-        width: 100%;
-      }
-      nav a:hover, nav a.active {
-        border-bottom-color: var(--line);
-        background: var(--highlight);
-        color: #000;
-      }
+    #main-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--paper);
+      border-bottom: 2px solid var(--ink);
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+      z-index: 100;
     }
 
-    nav a {
+    #main-nav.open {
+      display: flex;
+    }
+
+    #main-nav a {
+      padding: 15px 24px;
+      border-bottom: 1px solid var(--line);
+      width: 100%;
       text-decoration: none;
-      border-bottom: 2px solid transparent;
-      padding-bottom: 2px;
     }
 
     nav a:hover,
     nav a.active {
-      border-bottom-color: var(--ink);
+      background: var(--highlight);
+      color: #000;
     }
+
+    @media (min-width: 769px) {
+      #main-nav {
+        left: auto;
+        width: 250px;
+        border-left: 2px solid var(--ink);
+      }
+    }
+
 
     .hidden {
       display: none !important;
@@ -903,7 +905,15 @@
         <a href="#support" class="cat-uni cat-alevel">Uni Advice</a>
         <a href="#pricing">Pricing</a>
         <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal()">Login</a>
-        <button class="btn" onclick="toggleDarkMode()" style="padding: 4px 8px; font-size: 12px;">🌓</button>
+        <div style="border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; display: flex; flex-direction: column;">
+           <p class="eyebrow" style="padding: 0 24px; font-size: 10px; margin-bottom: 5px;">Switch Pathway</p>
+           <a href="javascript:void(0)" onclick="setCategory('gcse')">GCSE</a>
+           <a href="javascript:void(0)" onclick="setCategory('alevel')">A-Levels</a>
+           <a href="javascript:void(0)" onclick="setCategory('uni')">University</a>
+        </div>
+        <div style="padding: 15px 24px;">
+           <button class="btn" onclick="toggleDarkMode()" style="width: 100%; font-size: 12px;">🌓 Toggle Dark Mode</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -2174,18 +2184,26 @@
     // ---------- Logic: Checklist & Weaknesses ----------
     let userWeaknesses = JSON.parse(localStorage.getItem('paperTrailWeaknesses')) || [];
 
-    function handleSpecUpload(e) {
+    async function handleSpecUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
-      // Simulated parsing of specification
       const container = document.getElementById('checklist-container');
       const list = document.getElementById('checklist-items');
       container.classList.remove('hidden');
       document.getElementById('checklist-title').textContent = `Checklist for ${file.name}`;
 
-      const simulatedItems = ['Introduction to Topic', 'Core Concepts', 'Advanced Applications', 'Case Studies', 'Exam Techniques'];
-      list.innerHTML = simulatedItems.map((item, i) => `
-        <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--paper-card); border: 1px solid var(--line);">
+      let items = ['Introduction to Topic', 'Core Concepts', 'Advanced Applications', 'Case Studies', 'Exam Techniques'];
+
+      if (file.type === "text/plain") {
+         try {
+           const text = await file.text();
+           const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 5 && l.length < 100);
+           if (lines.length > 0) items = lines.slice(0, 20);
+         } catch (err) { console.error("Error reading file", err); }
+      }
+
+      list.innerHTML = items.map((item, i) => `
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--paper-card); border: 1px solid var(--line); cursor: pointer;">
            <input type="checkbox">
            <span style="font-size: 14px;">${item}</span>
         </label>
