@@ -2132,19 +2132,23 @@
     }
 
     // ---------- Logic: 3D Hero ----------
+    const textureCache = {};
     function createTextTexture(text) {
+      if (textureCache[text]) return textureCache[text];
       const canvas = document.createElement('canvas');
       canvas.width = 128;
       canvas.height = 128;
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = 'rgba(255, 255, 255, 0)';
       ctx.fillRect(0, 0, 128, 128);
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = 'white'; // White text allows material color multiplication to work perfectly
       ctx.font = '700 80px "Space Mono"';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(text, 64, 64);
-      return new THREE.CanvasTexture(canvas);
+      const texture = new THREE.CanvasTexture(canvas);
+      textureCache[text] = texture;
+      return texture;
     }
 
     function initHero3D() {
@@ -2156,32 +2160,48 @@
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
 
-      // Create floating study-related symbols
-      const symbols = ['π', 'Σ', 'F=ma', 'Ω', '√', '∫', 'Δ', 'λ', '∞', 'E=mc²'];
+      // Expanded selection of characters, numbers, and academic/scientific symbols
+      const symbols = [
+        'π', 'Σ', 'F=ma', 'Ω', '√', '∫', 'Δ', 'λ', '∞', 'E=mc²',
+        'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'a', 'b', 'c', '+', '-', '=', 'θ', 'sin', 'cos', 'pH', 'H₂O', 'F', 'N'
+      ];
       const objects = [];
       const colors = [0xD7E362, 0x5B84A8, 0x8A7CC7, 0xE2613C]; // Theme colors
 
-      for (let i = 0; i < 25; i++) {
+      const numSprites = 75; // Richer vortex flow with more elements
+      for (let i = 0; i < numSprites; i++) {
         const sym = symbols[Math.floor(Math.random() * symbols.length)];
         const texture = createTextTexture(sym);
         const material = new THREE.SpriteMaterial({
           map: texture,
           color: colors[Math.floor(Math.random() * colors.length)],
           transparent: true,
-          opacity: 0.7
+          opacity: 0.8
         });
         const sprite = new THREE.Sprite(material);
         sprite.scale.set(1.2, 1.2, 1);
+
+        // Cylindrical coordinates for the 3D vortex flow
+        const radius = Math.random() * 12 + 1;
+        const angle = Math.random() * Math.PI * 2;
+        const z = Math.random() * 20 - 12; // Initial depth range
+
         sprite.position.set(
-          (Math.random() - 0.5) * 15,
-          (Math.random() - 0.5) * 15,
-          (Math.random() - 0.5) * 10
+          radius * Math.cos(angle),
+          radius * Math.sin(angle),
+          z
         );
-        sprite.userData.velocity = {
-          x: (Math.random() - 0.5) * 0.01,
-          y: (Math.random() - 0.5) * 0.01,
-          z: (Math.random() - 0.5) * 0.01
+
+        sprite.userData = {
+          radius: radius,
+          angle: angle,
+          z: z,
+          angularSpeed: 0.003 + Math.random() * 0.005, // Slow rotation
+          radialSpeed: 0.005 + Math.random() * 0.01,   // Slow spiraling inward
+          verticalSpeed: 0.01 + Math.random() * 0.02   // Slow depth flow
         };
+
         scene.add(sprite);
         objects.push(sprite);
       }
@@ -2207,15 +2227,30 @@
         requestAnimationFrame(animate);
         if (currentSection && currentSection !== 'landing') return; // Bolt: Prevent background resource usage
 
-        objects.forEach(obj => {
-          // Sprites don't need rotation but we can sway them
-          obj.position.x += obj.userData.velocity.x + mouseX * 0.01;
-          obj.position.y += obj.userData.velocity.y - mouseY * 0.01;
+        // Smooth camera drift based on mouse coordinates for parallax
+        camera.position.x += (mouseX * 4 - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY * 4 - camera.position.y) * 0.05;
+        camera.lookAt(0, 0, 0);
 
-          // Boundary check
-          if (Math.abs(obj.position.x) > 10) obj.userData.velocity.x *= -1;
-          if (Math.abs(obj.position.y) > 10) obj.userData.velocity.y *= -1;
+        objects.forEach(obj => {
+          // Update cylindrical coordinates
+          obj.userData.angle += obj.userData.angularSpeed;
+          obj.userData.radius -= obj.userData.radialSpeed;
+          obj.userData.z += obj.userData.verticalSpeed;
+
+          // Continuous vortex flow reset when particles reach center or escape bounds
+          if (obj.userData.radius < 0.5 || obj.userData.z > 6) {
+            obj.userData.radius = Math.random() * 4 + 9; // Reset to outer rings
+            obj.userData.angle = Math.random() * Math.PI * 2;
+            obj.userData.z = -14; // Start back from the depths
+          }
+
+          // Map cylindrical back to Cartesian coordinates
+          obj.position.x = obj.userData.radius * Math.cos(obj.userData.angle);
+          obj.position.y = obj.userData.radius * Math.sin(obj.userData.angle);
+          obj.position.z = obj.userData.z;
         });
+
         renderer.render(scene, camera);
       }
 
