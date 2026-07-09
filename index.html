@@ -531,9 +531,6 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding-right: 12px;
     }
 
     .card {
@@ -1004,6 +1001,49 @@
                <!-- Activity items -->
             </div>
           </div>
+          <div class="card cat-alevel">
+            <h3>UCAS Calculator</h3>
+            <p class="instructions">Calculate your total tariff points.</p>
+            <div id="ucas-inputs" style="display: flex; flex-direction: column; gap: 8px;">
+               <div style="display: flex; gap: 5px;">
+                  <input type="text" placeholder="Subject" style="flex: 1; padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                  <select onchange="calculateUCAS()" style="padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                     <option value="0">Grade</option>
+                     <option value="56">A* (56)</option>
+                     <option value="48">A (48)</option>
+                     <option value="40">B (40)</option>
+                     <option value="32">C (32)</option>
+                     <option value="24">D (24)</option>
+                     <option value="16">E (16)</option>
+                  </select>
+               </div>
+               <div style="display: flex; gap: 5px;">
+                  <input type="text" placeholder="Subject" style="flex: 1; padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                  <select onchange="calculateUCAS()" style="padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                     <option value="0">Grade</option>
+                     <option value="56">A* (56)</option>
+                     <option value="48">A (48)</option>
+                     <option value="40">B (40)</option>
+                     <option value="32">C (32)</option>
+                     <option value="24">D (24)</option>
+                     <option value="16">E (16)</option>
+                  </select>
+               </div>
+               <div style="display: flex; gap: 5px;">
+                  <input type="text" placeholder="Subject" style="flex: 1; padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                  <select onchange="calculateUCAS()" style="padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                     <option value="0">Grade</option>
+                     <option value="56">A* (56)</option>
+                     <option value="48">A (48)</option>
+                     <option value="40">B (40)</option>
+                     <option value="32">C (32)</option>
+                     <option value="24">D (24)</option>
+                     <option value="16">E (16)</option>
+                  </select>
+               </div>
+            </div>
+            <div id="ucas-total" style="margin-top: 15px; font-weight: 700; font-size: 20px; text-align: center; font-family: 'Space Mono', monospace;">Total: 0</div>
+          </div>
         </div>
       </div>
     </section>
@@ -1075,7 +1115,7 @@
             <h3>SRS Flashcards</h3>
             <p class="instructions">Master concepts with spaced repetition.</p>
 
-            <div id="flashcard-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding-right: 8px;">
+            <div id="flashcard-list" style="margin-bottom: 30px; display: flex; flex-direction: column; gap: 20px;">
                <!-- Flashcards will be rendered here -->
             </div>
 
@@ -1564,6 +1604,13 @@
       `).join('');
     }
 
+    function calculateUCAS() {
+       const selects = document.querySelectorAll('#ucas-inputs select');
+       let total = 0;
+       selects.forEach(s => total += parseInt(s.value));
+       document.getElementById('ucas-total').textContent = "Total: " + total;
+    }
+
     // ---------- Logic: Pinned Items ----------
     let pinnedItems = JSON.parse(localStorage.getItem('paperTrailPinned')) || [];
 
@@ -1990,7 +2037,7 @@
       }
 
       list.innerHTML = due.map(c => `
-        <div class="card" style="padding: 15px; border-style: dashed; cursor: default;">
+        <div class="card" style="padding: 40px; border-style: dashed; cursor: default; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
           <div style="font-size: 10px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 5px;">${c.deck}</div>
           <div style="font-weight: 600; margin-bottom: 10px;">${c.q}</div>
           <details style="font-size: 14px; background: var(--highlight); padding: 8px; border-radius: 4px; margin-bottom: 10px;">
