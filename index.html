@@ -81,6 +81,11 @@
       color: #000;
     }
 
+    body.dark-mode .modal .btn:not(.primary) {
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -140,23 +145,61 @@
       padding: 0 4px;
     }
 
-    nav {
-      display: flex;
+    #main-nav {
+      display: none;
       gap: 24px;
       font-size: 14px;
       font-weight: 500;
     }
 
-    nav a {
+    .menu-toggle {
+      display: block;
+      background: none;
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    #main-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--paper);
+      border-bottom: 2px solid var(--ink);
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+      z-index: 100;
+    }
+
+    #main-nav.open {
+      display: flex;
+    }
+
+    #main-nav a {
+      padding: 15px 24px;
+      border-bottom: 1px solid var(--line);
+      width: 100%;
       text-decoration: none;
-      border-bottom: 2px solid transparent;
-      padding-bottom: 2px;
     }
 
     nav a:hover,
     nav a.active {
-      border-bottom-color: var(--ink);
+      background: var(--highlight);
+      color: #000;
     }
+
+    @media (min-width: 769px) {
+      #main-nav {
+        left: auto;
+        width: 250px;
+        border-left: 2px solid var(--ink);
+      }
+    }
+
 
     .hidden {
       display: none !important;
@@ -488,9 +531,6 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding-right: 12px;
     }
 
     .card {
@@ -850,16 +890,27 @@
   <header id="main-header" class="hidden">
     <div class="header-row">
       <a href="#landing" onclick="resetCategory()" class="logo" style="text-decoration: none;">Paper<span>Trail</span></a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
       <nav id="main-nav">
         <a href="#dashboard">Dashboard</a>
         <a href="#papers" class="cat-gcse cat-alevel">Papers</a>
         <a href="#revision">Revision</a>
+        <a href="#checklist" class="cat-gcse cat-alevel">Checklist</a>
+        <a href="#weaknesses" class="cat-gcse cat-alevel">Weaknesses</a>
         <a href="#planner">Planner</a>
         <a href="#tools">Tools</a>
         <a href="#support" class="cat-uni cat-alevel">Uni Advice</a>
         <a href="#pricing">Pricing</a>
         <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal()">Login</a>
-        <button class="btn" onclick="toggleDarkMode()" style="padding: 4px 8px; font-size: 12px;">🌓</button>
+        <div style="border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; display: flex; flex-direction: column;">
+           <p class="eyebrow" style="padding: 0 24px; font-size: 10px; margin-bottom: 5px;">Switch Pathway</p>
+           <a href="javascript:void(0)" onclick="setCategory('gcse')">GCSE</a>
+           <a href="javascript:void(0)" onclick="setCategory('alevel')">A-Levels</a>
+           <a href="javascript:void(0)" onclick="setCategory('uni')">University</a>
+        </div>
+        <div style="padding: 15px 24px;">
+           <button class="btn" onclick="toggleDarkMode()" style="width: 100%; font-size: 12px;">🌓 Toggle Dark Mode</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -936,6 +987,63 @@
               <!-- Mini chart placeholder -->
             </svg>
           </div>
+          <div class="card">
+            <h3>Daily Study Goal</h3>
+            <p class="instructions">What do you want to achieve today?</p>
+            <input type="text" id="daily-goal-input" placeholder="e.g. 2 hours of Maths" style="width: 100%; padding: 8px; border: 1px solid var(--line); margin-bottom: 10px;">
+            <button class="btn primary" style="width: 100%; font-size: 11px;" onclick="saveDailyGoal()">Update Goal</button>
+            <div id="daily-goal-display" style="margin-top: 15px; font-weight: 600; text-align: center; color: var(--blue-dark);"></div>
+          </div>
+          <div class="card bento-wide">
+            <h3>Recent Activity</h3>
+            <p class="instructions">Your latest study sessions and updates.</p>
+            <div id="recent-activity-list" style="display: flex; flex-direction: column; gap: 8px;">
+               <!-- Activity items -->
+            </div>
+          </div>
+          <div class="card cat-alevel">
+            <h3>UCAS Calculator</h3>
+            <p class="instructions">Calculate your total tariff points.</p>
+            <div id="ucas-inputs" style="display: flex; flex-direction: column; gap: 8px;">
+               <div style="display: flex; gap: 5px;">
+                  <input type="text" placeholder="Subject" style="flex: 1; padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                  <select onchange="calculateUCAS()" style="padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                     <option value="0">Grade</option>
+                     <option value="56">A* (56)</option>
+                     <option value="48">A (48)</option>
+                     <option value="40">B (40)</option>
+                     <option value="32">C (32)</option>
+                     <option value="24">D (24)</option>
+                     <option value="16">E (16)</option>
+                  </select>
+               </div>
+               <div style="display: flex; gap: 5px;">
+                  <input type="text" placeholder="Subject" style="flex: 1; padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                  <select onchange="calculateUCAS()" style="padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                     <option value="0">Grade</option>
+                     <option value="56">A* (56)</option>
+                     <option value="48">A (48)</option>
+                     <option value="40">B (40)</option>
+                     <option value="32">C (32)</option>
+                     <option value="24">D (24)</option>
+                     <option value="16">E (16)</option>
+                  </select>
+               </div>
+               <div style="display: flex; gap: 5px;">
+                  <input type="text" placeholder="Subject" style="flex: 1; padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                  <select onchange="calculateUCAS()" style="padding: 5px; font-size: 12px; border: 1px solid var(--line);">
+                     <option value="0">Grade</option>
+                     <option value="56">A* (56)</option>
+                     <option value="48">A (48)</option>
+                     <option value="40">B (40)</option>
+                     <option value="32">C (32)</option>
+                     <option value="24">D (24)</option>
+                     <option value="16">E (16)</option>
+                  </select>
+               </div>
+            </div>
+            <div id="ucas-total" style="margin-top: 15px; font-weight: 700; font-size: 20px; text-align: center; font-family: 'Space Mono', monospace;">Total: 0</div>
+          </div>
         </div>
       </div>
     </section>
@@ -1007,7 +1115,7 @@
             <h3>SRS Flashcards</h3>
             <p class="instructions">Master concepts with spaced repetition.</p>
 
-            <div id="flashcard-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding-right: 8px;">
+            <div id="flashcard-list" style="margin-bottom: 30px; display: flex; flex-direction: column; gap: 20px;">
                <!-- Flashcards will be rendered here -->
             </div>
 
@@ -1176,6 +1284,63 @@
     </section>
 
     <!-- Pricing Section -->
+    <!-- Checklist Section -->
+    <section class="section hidden" id="checklist">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Organization</p>
+          <h2>Specification Checklist</h2>
+        </div>
+        <div class="card">
+          <h3>Interactive Checklist</h3>
+          <p class="instructions">Upload your exam specification (PDF or TXT) to generate a printable checklist.</p>
+          <div style="border: 2px dashed var(--line); padding: 30px; text-align: center; margin-bottom: 20px;">
+             <input type="file" id="spec-upload" style="display: none;" onchange="handleSpecUpload(event)">
+             <button class="btn primary" onclick="document.getElementById('spec-upload').click()">Upload Specification</button>
+          </div>
+          <div id="checklist-container" class="hidden">
+             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h4 id="checklist-title">My Checklist</h4>
+                <button class="btn" onclick="window.print()" style="font-size: 10px;">Print Checklist</button>
+             </div>
+             <div id="checklist-items" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Checklist items will appear here -->
+             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weaknesses Section -->
+    <section class="section hidden" id="weaknesses">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Analysis</p>
+          <h2>Weaknesses & Targets</h2>
+        </div>
+        <div class="dashboard-grid">
+           <div class="card bento-wide">
+              <h3>Identify Weaknesses</h3>
+              <p class="instructions">List topics you struggle with and set improvement targets.</p>
+              <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                 <input type="text" id="weakness-input" placeholder="e.g. Integration by parts" style="flex: 1; padding: 10px; border: 1px solid var(--line);">
+                 <button class="btn primary" onclick="addWeakness()">Add Topic</button>
+              </div>
+              <div id="weakness-list" style="display: flex; flex-direction: column; gap: 12px;">
+                 <!-- Weaknesses list -->
+              </div>
+           </div>
+           <div class="card">
+              <h3>Target Mastery</h3>
+              <p class="instructions">Your focus for this week.</p>
+              <div id="target-summary" style="font-family: 'Space Mono', monospace; font-size: 13px;">
+                 No targets set yet.
+              </div>
+           </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section hidden" id="pricing">
       <div class="wrap">
         <div class="section-head">
@@ -1272,7 +1437,7 @@
     }
 
     let currentUser = JSON.parse(localStorage.getItem('paperTrailSession'));
-    let userData = JSON.parse(localStorage.getItem('paperTrailUser')) || { name: '', targetGrade: '', examDate: '' };
+    let userData = JSON.parse(localStorage.getItem('paperTrailUser')) || { name: '', targetGrade: '', examDate: '', dailyGoal: '' };
 
     function openAuthModal() {
       if (currentUser) {
@@ -1330,12 +1495,19 @@
     }
 
     // ---------- Logic: Dashboard ----------
+    function saveDailyGoal() {
+      userData.dailyGoal = document.getElementById('daily-goal-input').value;
+      localStorage.setItem('paperTrailUser', JSON.stringify(userData));
+      loadUserData();
+      addActivity("Updated daily goal: " + userData.dailyGoal);
+    }
     function saveUserData() {
       userData.name = document.getElementById('input-name').value;
       userData.targetGrade = document.getElementById('input-target').value;
       userData.examDate = document.getElementById('input-date').value;
       localStorage.setItem('paperTrailUser', JSON.stringify(userData));
       loadUserData();
+      addActivity("Updated profile details");
       alert('Profile saved!');
     }
     function loadUserData() {
@@ -1343,8 +1515,11 @@
       document.getElementById('input-name').value = userData.name || '';
       document.getElementById('input-target').value = userData.targetGrade || '';
       document.getElementById('input-date').value = userData.examDate || '';
+      document.getElementById('daily-goal-input').value = userData.dailyGoal || '';
+      document.getElementById('daily-goal-display').textContent = userData.dailyGoal ? "Goal: " + userData.dailyGoal : "No goal set";
       updateCountdown();
       renderProgress();
+      renderActivity();
     }
     function updateCountdown() {
       const disp = document.getElementById('countdown-display');
@@ -1409,6 +1584,31 @@
           return `<circle cx="${x}" cy="${y}" r="3" fill="var(--ink)" />`;
         }).join('')}
       `;
+    }
+
+    // ---------- Logic: Activity Log ----------
+    let activities = JSON.parse(localStorage.getItem('paperTrailActivity')) || ["Joined Paper Trail"];
+    function addActivity(msg) {
+      activities.unshift(`${new Date().toLocaleTimeString()} - ${msg}`);
+      if (activities.length > 5) activities.pop();
+      localStorage.setItem('paperTrailActivity', JSON.stringify(activities));
+      renderActivity();
+    }
+    function renderActivity() {
+      const list = document.getElementById('recent-activity-list');
+      if (!list) return;
+      list.innerHTML = activities.map(a => `
+        <div style="font-size: 12px; padding: 8px; background: var(--paper); border-left: 3px solid var(--highlight);">
+          ${a}
+        </div>
+      `).join('');
+    }
+
+    function calculateUCAS() {
+       const selects = document.querySelectorAll('#ucas-inputs select');
+       let total = 0;
+       selects.forEach(s => total += parseInt(s.value));
+       document.getElementById('ucas-total').textContent = "Total: " + total;
     }
 
     // ---------- Logic: Pinned Items ----------
@@ -1837,7 +2037,7 @@
       }
 
       list.innerHTML = due.map(c => `
-        <div class="card" style="padding: 15px; border-style: dashed; cursor: default;">
+        <div class="card" style="padding: 40px; border-style: dashed; cursor: default; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
           <div style="font-size: 10px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 5px;">${c.deck}</div>
           <div style="font-weight: 600; margin-bottom: 10px;">${c.q}</div>
           <details style="font-size: 14px; background: var(--highlight); padding: 8px; border-radius: 4px; margin-bottom: 10px;">
@@ -1932,6 +2132,21 @@
     }
 
     // ---------- Logic: 3D Hero ----------
+    function createTextTexture(text) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+      ctx.fillRect(0, 0, 128, 128);
+      ctx.fillStyle = 'black';
+      ctx.font = '700 80px "Space Mono"';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 64, 64);
+      return new THREE.CanvasTexture(canvas);
+    }
+
     function initHero3D() {
       const canvas = document.getElementById('hero-3d-canvas');
       if (!canvas) return;
@@ -1941,31 +2156,34 @@
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
 
-      // Create floating geometric "knowledge blocks"
-      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      // Create floating study-related symbols
+      const symbols = ['π', 'Σ', 'F=ma', 'Ω', '√', '∫', 'Δ', 'λ', '∞', 'E=mc²'];
       const objects = [];
       const colors = [0xD7E362, 0x5B84A8, 0x8A7CC7, 0xE2613C]; // Theme colors
 
-      for (let i = 0; i < 20; i++) {
-        const material = new THREE.MeshPhongMaterial({
+      for (let i = 0; i < 25; i++) {
+        const sym = symbols[Math.floor(Math.random() * symbols.length)];
+        const texture = createTextTexture(sym);
+        const material = new THREE.SpriteMaterial({
+          map: texture,
           color: colors[Math.floor(Math.random() * colors.length)],
           transparent: true,
-          opacity: 0.8
+          opacity: 0.7
         });
-        const cube = new THREE.Mesh(geometry, material);
-        cube.position.set(
+        const sprite = new THREE.Sprite(material);
+        sprite.scale.set(1.2, 1.2, 1);
+        sprite.position.set(
           (Math.random() - 0.5) * 15,
           (Math.random() - 0.5) * 15,
           (Math.random() - 0.5) * 10
         );
-        cube.rotation.set(Math.random(), Math.random(), Math.random());
-        cube.userData.velocity = {
+        sprite.userData.velocity = {
           x: (Math.random() - 0.5) * 0.01,
           y: (Math.random() - 0.5) * 0.01,
           z: (Math.random() - 0.5) * 0.01
         };
-        scene.add(cube);
-        objects.push(cube);
+        scene.add(sprite);
+        objects.push(sprite);
       }
 
       const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -1976,16 +2194,21 @@
       camera.position.z = 8;
 
       let mouseX = 0, mouseY = 0;
+      let lastMove = 0;
       document.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastMove < 32) return; // Bolt: Throttle mousemove
+        lastMove = now;
         mouseX = (e.clientX / window.innerWidth) - 0.5;
         mouseY = (e.clientY / window.innerHeight) - 0.5;
       });
 
       function animate() {
         requestAnimationFrame(animate);
+        if (currentSection && currentSection !== 'landing') return; // Bolt: Prevent background resource usage
+
         objects.forEach(obj => {
-          obj.rotation.x += 0.005;
-          obj.rotation.y += 0.005;
+          // Sprites don't need rotation but we can sway them
           obj.position.x += obj.userData.velocity.x + mouseX * 0.01;
           obj.position.y += obj.userData.velocity.y - mouseY * 0.01;
 
@@ -2005,8 +2228,73 @@
       });
     }
 
+    // ---------- Logic: Checklist & Weaknesses ----------
+    let userWeaknesses = JSON.parse(localStorage.getItem('paperTrailWeaknesses')) || [];
+
+    async function handleSpecUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const container = document.getElementById('checklist-container');
+      const list = document.getElementById('checklist-items');
+      container.classList.remove('hidden');
+      document.getElementById('checklist-title').textContent = `Checklist for ${file.name}`;
+
+      let items = ['Introduction to Topic', 'Core Concepts', 'Advanced Applications', 'Case Studies', 'Exam Techniques'];
+
+      if (file.type === "text/plain") {
+         try {
+           const text = await file.text();
+           const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 5 && l.length < 100);
+           if (lines.length > 0) items = lines.slice(0, 20);
+         } catch (err) { console.error("Error reading file", err); }
+      }
+
+      list.innerHTML = items.map((item, i) => `
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--paper-card); border: 1px solid var(--line); cursor: pointer;">
+           <input type="checkbox">
+           <span style="font-size: 14px;">${item}</span>
+        </label>
+      `).join('');
+    }
+
+    function addWeakness() {
+      const input = document.getElementById('weakness-input');
+      const topic = input.value.trim();
+      if (!topic) return;
+      userWeaknesses.push({ topic, status: 'Red', target: 'Practice 10 questions' });
+      localStorage.setItem('paperTrailWeaknesses', JSON.stringify(userWeaknesses));
+      input.value = '';
+      renderWeaknesses();
+    }
+
+    function renderWeaknesses() {
+      const list = document.getElementById('weakness-list');
+      const summary = document.getElementById('target-summary');
+      if (userWeaknesses.length === 0) {
+        list.innerHTML = '<p class="instructions">No weaknesses listed. You\'re doing great!</p>';
+        summary.textContent = 'No targets set yet.';
+        return;
+      }
+      list.innerHTML = userWeaknesses.map((w, i) => `
+        <div class="card" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+           <div>
+              <div style="font-weight: 600;">${w.topic}</div>
+              <div style="font-size: 11px; color: var(--ink-soft);">Target: ${w.target}</div>
+           </div>
+           <button class="btn" style="padding: 4px 8px; font-size: 10px;" onclick="removeWeakness(${i})">Resolved</button>
+        </div>
+      `).join('');
+      summary.innerHTML = `Focusing on <strong>${userWeaknesses[0].topic}</strong> this week.`;
+    }
+
+    function removeWeakness(i) {
+      userWeaknesses.splice(i, 1);
+      localStorage.setItem('paperTrailWeaknesses', JSON.stringify(userWeaknesses));
+      renderWeaknesses();
+    }
+
     // ---------- Navigation & Init ----------
-    const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'planner', 'tools', 'support', 'pricing', 'legal'];
+    const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'checklist', 'weaknesses', 'planner', 'tools', 'support', 'pricing', 'legal'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
     let currentSection = null;
 
@@ -2022,8 +2310,16 @@
       navigate();
     }
 
+    function toggleMenu() {
+      const nav = document.getElementById('main-nav');
+      nav.classList.toggle('open');
+    }
+
     function navigate() {
       const hash = window.location.hash.substring(1) || (selectedCategory ? 'dashboard' : 'landing');
+
+      const nav = document.getElementById('main-nav');
+      if (nav) nav.classList.remove('open');
 
       const header = document.getElementById('main-header');
       if (hash === 'landing') {
@@ -2069,6 +2365,7 @@
            else renderMonthlyPlanner();
         }
         if (hash === 'revision') { renderSRS(); startQuiz(); }
+        if (hash === 'weaknesses') { renderWeaknesses(); }
       }
     }
     window.onhashchange = navigate;
