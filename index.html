@@ -892,21 +892,25 @@
       <a href="#landing" onclick="resetCategory()" class="logo" style="text-decoration: none;">Paper<span>Trail</span></a>
       <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
       <nav id="main-nav">
-        <a href="#dashboard">Dashboard</a>
+        <a href="#dashboard" class="cat-gcse cat-alevel cat-uni">Dashboard</a>
         <a href="#papers" class="cat-gcse cat-alevel">Papers</a>
-        <a href="#revision">Revision</a>
+        <a href="#revision" class="cat-gcse cat-alevel">Revision</a>
         <a href="#checklist" class="cat-gcse cat-alevel">Checklist</a>
         <a href="#weaknesses" class="cat-gcse cat-alevel">Weaknesses</a>
-        <a href="#planner">Planner</a>
-        <a href="#tools">Tools</a>
-        <a href="#support" class="cat-uni cat-alevel">Uni Advice</a>
-        <a href="#pricing">Pricing</a>
-        <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal()">Login</a>
+        <a href="#planner" class="cat-gcse cat-alevel">Planner</a>
+        <a href="#tools" class="cat-gcse cat-alevel">Tools</a>
+        <a href="#uni-personal-statement" class="cat-uni">Personal Statement Advice</a>
+        <a href="#uni-rankings" class="cat-uni">University Rankings</a>
+        <a href="#uni-essentials" class="cat-uni">University Essentials</a>
+        <a href="#uni-accommodation" class="cat-uni">University Accommodation</a>
+        <a href="#support" class="cat-alevel">Uni Advice</a>
+        <a href="#pricing" class="cat-gcse cat-alevel">Pricing</a>
+        <a href="javascript:void(0)" id="auth-btn" onclick="openAuthModal()" class="cat-gcse cat-alevel cat-uni">Login</a>
         <div style="border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; display: flex; flex-direction: column;">
            <p class="eyebrow" style="padding: 0 24px; font-size: 10px; margin-bottom: 5px;">Switch Pathway</p>
-           <a href="javascript:void(0)" onclick="setCategory('gcse')">GCSE</a>
-           <a href="javascript:void(0)" onclick="setCategory('alevel')">A-Levels</a>
-           <a href="javascript:void(0)" onclick="setCategory('uni')">University</a>
+           <a href="javascript:void(0)" onclick="setCategory('gcse')" class="cat-gcse cat-alevel cat-uni">GCSE</a>
+           <a href="javascript:void(0)" onclick="setCategory('alevel')" class="cat-gcse cat-alevel cat-uni">A-Levels</a>
+           <a href="javascript:void(0)" onclick="setCategory('uni')" class="cat-gcse cat-alevel cat-uni">University</a>
         </div>
         <div style="padding: 15px 24px;">
            <button class="btn" onclick="toggleDarkMode()" style="width: 100%; font-size: 12px;">🌓 Toggle Dark Mode</button>
@@ -1277,6 +1281,301 @@
             <p class="instructions">Revision booklets and paper packs.</p>
             <div style="font-family: 'Space Mono', monospace; font-size: 12px; border: 1px solid var(--line); padding: 8px;">
                Maths Pack (Pure) - £4.99
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- University: Personal Statement Advice Section -->
+    <section class="section hidden" id="uni-personal-statement">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Writing Guidance</p>
+          <h2>Personal Statement Advice</h2>
+        </div>
+        <div class="dashboard-grid">
+          <!-- Left Column: Templates & Advice -->
+          <div class="card bento-wide">
+            <h3>Structural Advice</h3>
+            <p class="instructions">Follow the recommended 47-line (4000 char) UCAS structure.</p>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+              <details style="border: 1px solid var(--line); padding: 12px; border-radius: var(--radius); background: var(--paper);">
+                <summary style="cursor: pointer; font-weight: 600;">Paragraph 1: Introduction & Hook (10%)</summary>
+                <p style="margin-top: 10px; font-size: 13px; color: var(--ink-soft);">
+                  Explain why you want to study this course. Focus on a specific academic concept, book, or lecture that triggered your passion. Avoid clichés like "Since I was young..." or quotes.
+                </p>
+              </details>
+              <details style="border: 1px solid var(--line); padding: 12px; border-radius: var(--radius); background: var(--paper);">
+                <summary style="cursor: pointer; font-weight: 600;">Paragraph 2 & 3: Supercurricular Exploration (70%-80%)</summary>
+                <p style="margin-top: 10px; font-size: 13px; color: var(--ink-soft);">
+                  This is the core of your statement. Detail your readings, independent research, online courses, and relevant summer schools. Use the <strong>ABC method</strong>:
+                  <br>• <strong>Activity:</strong> What you did (e.g., read a paper).
+                  <br>• <strong>Benefit:</strong> What you learned/thought about it.
+                  <br>• <strong>Course connection:</strong> How it prepares you for your degree.
+                </p>
+              </details>
+              <details style="border: 1px solid var(--line); padding: 12px; border-radius: var(--radius); background: var(--paper);">
+                <summary style="cursor: pointer; font-weight: 600;">Paragraph 4: Extracurriculars & Skills (10%-15%)</summary>
+                <p style="margin-top: 10px; font-size: 13px; color: var(--ink-soft);">
+                  Briefly mention hobbies, sports, part-time jobs, or school leadership roles. Emphasize transferable skills like time management, leadership, or teamwork, and connect them back to university life.
+                </p>
+              </details>
+              <details style="border: 1px solid var(--line); padding: 12px; border-radius: var(--radius); background: var(--paper);">
+                <summary style="cursor: pointer; font-weight: 600;">Paragraph 5: Conclusion (5%)</summary>
+                <p style="margin-top: 10px; font-size: 13px; color: var(--ink-soft);">
+                  A concise summary of your suitability and passion. Reiterate why you will excel on the course and how it aligns with your future ambitions.
+                </p>
+              </details>
+            </div>
+
+            <h3 style="margin-top: 30px;">Exemplar Statement Templates</h3>
+            <p class="instructions">Select a subject to load a successful, verified exemplar statement.</p>
+            <div class="filters" style="margin-bottom: 15px;">
+              <select id="template-subject-select" onchange="loadPersonalStatementTemplate()" style="width: 100%;">
+                <option value="cs">Computer Science Exemplar</option>
+                <option value="med">Medicine Exemplar</option>
+                <option value="law">Law Exemplar</option>
+                <option value="phys">Physics Exemplar</option>
+              </select>
+            </div>
+            <div id="template-display" style="font-size: 13px; line-height: 1.6; background: var(--paper); border: 1px solid var(--line); padding: 16px; border-radius: var(--radius); max-height: 250px; overflow-y: auto; white-space: pre-wrap; font-family: 'Space Mono', monospace;">
+              <!-- Loaded template -->
+            </div>
+          </div>
+
+          <!-- Right Column: Live Draft Editor & Analyzer -->
+          <div class="card">
+            <h3>Interactive Draft Editor</h3>
+            <p class="instructions">Write or paste your personal statement below to get instant feedback and stats.</p>
+            <textarea id="ps-editor" placeholder="Start typing your statement here..." oninput="updatePersonalStatementStats()" style="width: 100%; height: 220px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); font-family: inherit; font-size: 13px; resize: vertical; background: var(--paper-card); color: var(--ink);"></textarea>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; font-family: 'Space Mono', monospace; font-size: 12px;">
+              <span>Characters: <strong id="ps-char-count">0</strong> / 4000</span>
+              <span>Lines: <strong id="ps-line-count">0</strong> / 47</span>
+            </div>
+
+            <button class="btn primary" style="width: 100%; margin-top: 15px;" onclick="analyzePersonalStatement()">Analyze Draft</button>
+
+            <div id="ps-analysis-results" class="hidden" style="margin-top: 20px; border-top: 1px dashed var(--line); padding-top: 15px;">
+              <h4 style="margin: 0 0 10px 0;">Draft Analysis & Advice</h4>
+              <div style="font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+                <div>Overall Strength: <span id="ps-score-badge" style="font-weight: bold; padding: 2px 6px; border-radius: 3px;">Good</span></div>
+                <div id="ps-academic-feedback" style="font-size: 12px; color: var(--ink-soft);"></div>
+                <div id="ps-length-feedback" style="font-size: 12px; color: var(--ink-soft);"></div>
+                <div id="ps-cliche-feedback" style="font-size: 12px; color: var(--ink-soft);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- University: University Rankings Section -->
+    <section class="section hidden" id="uni-rankings">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Interactive Rankings</p>
+          <h2>University Rankings & Subjects</h2>
+        </div>
+        <div class="card" style="margin-bottom: 24px;">
+          <h3>Search Degree Choices & Subjects</h3>
+          <p class="instructions">Instantly search top UK and international university rankings based on subject choices and academic requirements.</p>
+          <div class="filters" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <input type="text" id="ranking-search" placeholder="Type university name..." oninput="filterRankings()" style="width: 100%; padding: 8px 12px; font-family: 'Space Mono', monospace; font-size: 13px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-card); color: var(--ink);">
+            <select id="ranking-subject" onchange="filterRankings()" style="width: 100%;">
+              <option value="all">All Subjects / Degree Choices</option>
+              <option value="cs">Computer Science</option>
+              <option value="med">Medicine</option>
+              <option value="law">Law</option>
+              <option value="phys">Physics & Astrophysics</option>
+              <option value="econ">Economics & Finance</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-card);">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <thead>
+              <tr style="background: var(--ink); color: var(--highlight); font-family: 'Space Mono', monospace;">
+                <th style="padding: 12px; border-bottom: 1px solid var(--line);">Rank</th>
+                <th style="padding: 12px; border-bottom: 1px solid var(--line);">University Name</th>
+                <th style="padding: 12px; border-bottom: 1px solid var(--line);">Subject Match Score</th>
+                <th style="padding: 12px; border-bottom: 1px solid var(--line);">Typical Offer</th>
+                <th style="padding: 12px; border-bottom: 1px solid var(--line);">Location</th>
+                <th style="padding: 12px; border-bottom: 1px solid var(--line);">Key Strengths</th>
+              </tr>
+            </thead>
+            <tbody id="rankings-table-body">
+              <!-- Live filtered table data -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- University: University Essentials Section -->
+    <section class="section hidden" id="uni-essentials">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Student Checklist & Budgeting</p>
+          <h2>University Essentials</h2>
+        </div>
+        <div class="dashboard-grid">
+          <!-- Essentials Packing List -->
+          <div class="card bento-wide">
+            <h3>Uni Packing & Prep Checklist</h3>
+            <p class="instructions">Make sure you have everything ready. Check off items or add your own custom essentials.</p>
+
+            <div style="margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 6px;">
+                <span>Preparation Progress</span>
+                <span id="packing-progress-label">0%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="packing-progress-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="filters" style="margin-bottom: 15px;">
+              <select id="packing-category-filter" onchange="filterPackingList()" style="width: 100%;">
+                <option value="all">Show All Categories</option>
+                <option value="docs">Important Documents</option>
+                <option value="kitchen">Kitchen Essentials</option>
+                <option value="bedroom">Bedroom & Living</option>
+                <option value="elec">Electronics & Academic</option>
+              </select>
+            </div>
+
+            <div id="packing-list-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 260px; overflow-y: auto; padding: 5px;">
+              <!-- packing checklist items -->
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid var(--line); padding-top: 15px;">
+              <input type="text" id="custom-packing-input" placeholder="Add custom essential item..." style="flex: 1; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px;">
+              <select id="custom-packing-cat" style="padding: 8px; font-size: 13px; border: 1px solid var(--line); border-radius: var(--radius);">
+                <option value="docs">Documents</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="bedroom">Bedroom</option>
+                <option value="elec">Electronics</option>
+              </select>
+              <button class="btn primary" onclick="addCustomPackingItem()" style="padding: 8px 16px;">Add</button>
+            </div>
+          </div>
+
+          <!-- Live Budgeting Tool -->
+          <div class="card">
+            <h3>Student Budget Planner</h3>
+            <p class="instructions">Plan your finances. Balance your student loans against accommodation fees and living expenses.</p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="border-bottom: 1px solid var(--line); padding-bottom: 8px;">
+                <p class="eyebrow" style="font-size: 10px; margin-bottom: 4px;">Monthly Income / Funding</p>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 12px; width: 140px;">Student Loan:</span>
+                  <input type="number" id="budget-loan" value="750" oninput="calculateBudget()" style="flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid var(--line); border-radius: var(--radius);">
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <span style="font-size: 12px; width: 140px;">Allowance/Job:</span>
+                  <input type="number" id="budget-other-inc" value="200" oninput="calculateBudget()" style="flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid var(--line); border-radius: var(--radius);">
+                </div>
+              </div>
+
+              <div>
+                <p class="eyebrow" style="font-size: 10px; margin-bottom: 4px;">Monthly Outgoings</p>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 12px; width: 140px;">Accommodation/Rent:</span>
+                  <input type="number" id="budget-rent" value="550" oninput="calculateBudget()" style="flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid var(--line); border-radius: var(--radius);">
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 12px; width: 140px;">Food & Groceries:</span>
+                  <input type="number" id="budget-food" value="150" oninput="calculateBudget()" style="flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid var(--line); border-radius: var(--radius);">
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <span style="font-size: 12px; width: 140px;">Social & Travel:</span>
+                  <input type="number" id="budget-social" value="120" oninput="calculateBudget()" style="flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid var(--line); border-radius: var(--radius);">
+                </div>
+              </div>
+
+              <div style="background: var(--paper); border: 1px dashed var(--line); padding: 12px; border-radius: var(--radius); text-align: center; margin-top: 10px;">
+                <div style="font-size: 12px; font-weight: 600; color: var(--ink-soft);">Remaining Monthly Budget</div>
+                <div id="budget-remaining-display" style="font-size: 24px; font-weight: 700; font-family: 'Space Mono', monospace; margin: 4px 0;">£130</div>
+                <div id="budget-remaining-feedback" style="font-size: 11px; font-weight: 600; color: #4A5605;">Healthy balance. Good job!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- University: University Accommodation Section -->
+    <section class="section hidden" id="uni-accommodation">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Local Living Options</p>
+          <h2>University Accommodation Finder</h2>
+        </div>
+        <div class="dashboard-grid">
+          <!-- Filters & Preferences -->
+          <div class="card">
+            <h3>Search Accommodation</h3>
+            <p class="instructions">Find safe, vetted student accommodations located directly near your chosen university or city.</p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: var(--ink-soft); display: block; margin-bottom: 4px;">City / Area</label>
+                <select id="accom-city" onchange="filterAccommodations()" style="width: 100%;">
+                  <option value="all">All Locations</option>
+                  <option value="London">London</option>
+                  <option value="Manchester">Manchester</option>
+                  <option value="Bristol">Bristol</option>
+                  <option value="Oxford">Oxford</option>
+                  <option value="Cambridge">Cambridge</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: var(--ink-soft); display: block; margin-bottom: 4px;">Max Price (£ / week)</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <input type="range" id="accom-price" min="100" max="500" value="350" oninput="updatePriceSlider(this.value)" style="flex: 1; accent-color: var(--highlight);">
+                  <span id="accom-price-label" style="font-family: 'Space Mono', monospace; font-size: 13px; font-weight: bold; width: 60px; text-align: right;">£350</span>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: var(--ink-soft); display: block; margin-bottom: 4px;">Room Type</label>
+                <select id="accom-type" onchange="filterAccommodations()" style="width: 100%;">
+                  <option value="all">All Room Types</option>
+                  <option value="Studio">Studio Apartment</option>
+                  <option value="En-suite">En-suite Room</option>
+                  <option value="Shared">Shared House / Flat</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: var(--ink-soft); display: block; margin-bottom: 4px;">Distance to Campus</label>
+                <select id="accom-distance" onchange="filterAccommodations()" style="width: 100%;">
+                  <option value="all">Any Distance</option>
+                  <option value="10">&lt; 10 mins walk</option>
+                  <option value="20">&lt; 20 mins walk</option>
+                  <option value="30">&lt; 30 mins walk</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Matching Listings -->
+          <div class="card bento-wide">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3>Live Listings</h3>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn primary" id="accom-btn-all" onclick="toggleAccomTab('all')" style="font-size: 11px; padding: 4px 10px;">All Listings</button>
+                <button class="btn" id="accom-btn-favs" onclick="toggleAccomTab('favs')" style="font-size: 11px; padding: 4px 10px;">Pinned (0)</button>
+              </div>
+            </div>
+
+            <div id="accom-listings-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-height: 400px; overflow-y: auto; padding: 5px;">
+              <!-- Accom listings -->
             </div>
           </div>
         </div>
@@ -2328,8 +2627,406 @@
       renderWeaknesses();
     }
 
+    // ---------- Logic: University Pathways (Personal Statement, Rankings, Essentials, Accommodation) ----------
+
+    // 1. Personal Statement Advice
+    const PS_TEMPLATES = {
+      cs: `I am fascinated by the dual nature of computer science as both a theoretical branch of mathematics and a highly practical engineering tool. My passion solidified when I read Douglas Hofstadter's 'Gödel, Escher, Bach'. It opened my eyes to how self-referential structures can form the basis of formal computation. Driven to explore this further, I built an interactive cellular automata simulation in Python to model infectious disease spread, optimizing my code through spatial hash partitioning to achieve a 15x rendering speedup. This project taught me the importance of algorithmic efficiency and computational complexity. In addition, I completed the CS50x course online, which deepened my understanding of dynamic memory allocation and data structures. I look forward to contributing to university research in machine learning and distributed systems.`,
+      med: `My desire to study Medicine stems from a combined love for biochemical science and a profound sense of duty to clinical care. During my shadowing experience at a local oncology ward, I witnessed the intricate intersection of cellular biology and human empathy. I watched how clinicians carefully explained complex therapies to patients, demonstrating that communication is as vital as pharmacology. To deepen my scientific foundation, I read 'The Emperor of All Maladies' by Siddhartha Mukherjee, which sparked my research paper for the EPQ on the evolution of targeted immunotherapy treatments. I analyzed how monoclonal antibodies can be engineered to block cancer pathways. Outside of my academic pursuits, volunteering at a care home for the elderly has refined my listening skills and taught me how to support vulnerable individuals under pressure. I am prepared for the rigor and ethical complexity of a medical career.`,
+      law: `Jurisprudence governs the balance of civil liberties and collective security. My decision to pursue a Law degree was catalyzed by reading Lord Denning's 'The Family Story', which highlighted the responsibility of judges to interpret the spirit of the law, rather than its literal phrasing. To explore how constitutional law adapts to modern challenges, I researched the legal implications of facial recognition technology in public spaces, presenting my findings at our school's debate championship. This independent inquiry taught me to synthesize vast amounts of case law and construct logically unassailable arguments. Furthermore, shadowing a criminal barrister solidified my commitment to advocacy, where I learned the meticulous art of cross-examination and trial preparation. I look forward to engaging with legal theory, public policy, and justice frameworks at the university level.`,
+      phys: `From the subatomic scale of quantum mechanics to the cosmological expansions of the universe, Physics represents the ultimate quest to decode reality. Reading Richard Feynman's lectures introduced me to the concept of path integrals, which inspired me to write a simulation that models orbital mechanics and gravitational resonance inside three-body systems. To validate my results, I cross-referenced historical data from NASA's Kepler mission, gaining valuable experience in computational physics and data analysis. I also attended the Oxford Physics Summer School, where I was introduced to thermodynamics and particle acceleration. My ability to isolate variables and solve complex mathematical challenges is further reflected in my participation in the British Physics Olympiad, where I achieved a Gold award. I am eager to study advanced physics to explore the frontiers of astrophysical phenomena.`
+    };
+
+    function loadPersonalStatementTemplate() {
+      const select = document.getElementById('template-subject-select');
+      const display = document.getElementById('template-display');
+      const val = select.value;
+      if (PS_TEMPLATES[val]) {
+        display.textContent = PS_TEMPLATES[val];
+      }
+    }
+
+    function updatePersonalStatementStats() {
+      const editor = document.getElementById('ps-editor');
+      const text = editor.value;
+      const charCount = text.length;
+
+      // Calculate lines, taking into account text wrapping around ~80 characters
+      let lineCount = 0;
+      if (text.trim() === '') {
+        lineCount = 0;
+      } else {
+        const paragraphs = text.split('\n');
+        paragraphs.forEach(p => {
+          lineCount += Math.max(1, Math.ceil(p.length / 80));
+        });
+      }
+
+      document.getElementById('ps-char-count').textContent = charCount;
+      document.getElementById('ps-line-count').textContent = lineCount;
+
+      const charLabel = document.getElementById('ps-char-count');
+      const lineLabel = document.getElementById('ps-line-count');
+
+      if (charCount > 4000) {
+        charLabel.style.color = 'var(--coral)';
+      } else {
+        charLabel.style.color = 'inherit';
+      }
+
+      if (lineCount > 47) {
+        lineLabel.style.color = 'var(--coral)';
+      } else {
+        lineLabel.style.color = 'inherit';
+      }
+    }
+
+    function analyzePersonalStatement() {
+      const editor = document.getElementById('ps-editor');
+      const text = editor.value.trim().toLowerCase();
+      const resultsDiv = document.getElementById('ps-analysis-results');
+
+      if (!text) {
+        alert("Please enter some text in the draft editor to analyze.");
+        return;
+      }
+
+      resultsDiv.classList.remove('hidden');
+
+      const charCount = text.length;
+      const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+
+      // Check academic buzzwords
+      const academicWords = ['read', 'research', 'theory', 'project', 'lecture', 'scientific', 'academic', 'analysis', 'concept', 'challenge', 'interest', 'book', 'analyze', 'explore', 'investigate'];
+      let academicScore = 0;
+      academicWords.forEach(w => {
+        if (text.includes(w)) academicScore++;
+      });
+
+      // Check clichés
+      const cliches = ['since i was young', 'always been passionate', 'ever since', 'from a young age', 'passion for', 'as long as i can remember', 'cliché', 'cliche'];
+      let foundCliches = [];
+      cliches.forEach(c => {
+        if (text.includes(c)) foundCliches.push(c);
+      });
+
+      // Feedback strings
+      let strength = "Needs Work";
+      let strengthColor = "var(--coral)";
+      let strengthBg = "rgba(226, 97, 60, 0.15)";
+
+      let academicFeedback = "";
+      let lengthFeedback = "";
+      let clicheFeedback = "";
+
+      // Determine Strength
+      if (wordCount >= 450 && wordCount <= 620 && academicScore >= 5 && foundCliches.length === 0) {
+        strength = "Excellent (Oxbridge/Russell Group Standard)";
+        strengthColor = "var(--highlight-dark)";
+        strengthBg = "rgba(215, 227, 98, 0.3)";
+      } else if (wordCount >= 300 && academicScore >= 3) {
+        strength = "Good Competitive Draft";
+        strengthColor = "var(--blue-dark)";
+        strengthBg = "rgba(91, 132, 168, 0.2)";
+      }
+
+      // Academic Content Advice
+      if (academicScore < 3) {
+        academicFeedback = "⚠️ <strong>Academic Focus:</strong> Your statement lacks sufficient academic/supercurricular depth. Try to discuss more books, academic papers, lectures, or coding/scientific projects you have undertaken outside school curriculum.";
+      } else {
+        academicFeedback = "✅ <strong>Academic Focus:</strong> Strong academic tone! You have successfully detailed personal research, reading, or practical supercurricular projects.";
+      }
+
+      // Length Advice
+      if (charCount > 4000) {
+        lengthFeedback = "❌ <strong>Length Check:</strong> Your draft is " + charCount + " characters, which exceeds the strict UCAS 4000 character limit. Try to prune redundant filler words.";
+      } else if (wordCount < 350) {
+        lengthFeedback = "⚠️ <strong>Length Check:</strong> Your draft is quite short (" + wordCount + " words). Competent statements are usually between 450 and 600 words to fully demonstrate suitability.";
+      } else {
+        lengthFeedback = "✅ <strong>Length Check:</strong> Perfect draft length! Your statement sits safely within the UCAS limits.";
+      }
+
+      // Clichés Advice
+      if (foundCliches.length > 0) {
+        clicheFeedback = "❌ <strong>Clichés Detected:</strong> Avoid overused opening lines: " + foundCliches.map(c => `"${c}"`).join(', ') + ". Universities want to see active evidence of your interest, not passive statements of passion.";
+      } else {
+        clicheFeedback = "✅ <strong>Cliché Free:</strong> Excellent job! Your writing avoids common, overused introductory phrases and focuses on evidence.";
+      }
+
+      const badge = document.getElementById('ps-score-badge');
+      badge.textContent = strength;
+      badge.style.color = strengthColor;
+      badge.style.background = strengthBg;
+
+      document.getElementById('ps-academic-feedback').innerHTML = academicFeedback;
+      document.getElementById('ps-length-feedback').innerHTML = lengthFeedback;
+      document.getElementById('ps-cliche-feedback').innerHTML = clicheFeedback;
+    }
+
+    // 2. University Rankings & Live Search
+    const UNI_RANKINGS_DATA = [
+      { rank: 1, name: "University of Cambridge", csScore: 99.4, medScore: 98.9, lawScore: 98.4, physScore: 99.6, econScore: 98.7, typicalOffer: "A*A*A", location: "Cambridge", strengths: "Pure theory, deep scientific research, supervision system" },
+      { rank: 2, name: "University of Oxford", csScore: 99.1, medScore: 99.2, lawScore: 99.5, physScore: 99.3, econScore: 99.1, typicalOffer: "A*A*A - AAA", location: "Oxford", strengths: "Tutorial systems, historical jurisprudence, world-class humanities" },
+      { rank: 3, name: "Imperial College London", csScore: 98.5, medScore: 97.4, lawScore: 0, physScore: 98.8, econScore: 0, typicalOffer: "A*A*A - A*AA", location: "London", strengths: "STEM focus, advanced engineering facilities, innovation hubs" },
+      { rank: 4, name: "UCL (University College London)", csScore: 94.2, medScore: 95.8, lawScore: 96.1, physScore: 94.8, econScore: 95.2, typicalOffer: "A*AA - AAA", location: "London", strengths: "Global research networks, extensive clinical links, modern law school" },
+      { rank: 5, name: "LSE (London School of Economics)", csScore: 0, medScore: 0, lawScore: 95.4, physScore: 0, econScore: 98.4, typicalOffer: "A*AA - AAA", location: "London", strengths: "Highly quantitative finance, top economic think-tanks, civil courts proximity" },
+      { rank: 6, name: "University of Edinburgh", csScore: 91.8, medScore: 92.4, lawScore: 90.1, physScore: 91.5, econScore: 90.8, typicalOffer: "AAA - ABB", location: "Edinburgh", strengths: "4-year modular structure, robotics & informatics, classic clinical trial labs" },
+      { rank: 7, name: "University of Manchester", csScore: 89.4, medScore: 91.2, lawScore: 87.5, physScore: 90.2, econScore: 88.5, typicalOffer: "AAA - AAB", location: "Manchester", strengths: "Graphene discovery, industrial partnerships, heavy investment in clinical care" },
+      { rank: 8, name: "University of Bristol", csScore: 88.1, medScore: 89.5, lawScore: 88.2, physScore: 88.9, econScore: 87.1, typicalOffer: "AAA", location: "Bristol", strengths: "Aerospace links, highly selective legal chambers, strong math foundations" },
+      { rank: 9, name: "University of Warwick", csScore: 92.5, medScore: 0, lawScore: 86.4, physScore: 87.2, econScore: 96.2, typicalOffer: "A*AA - AAA", location: "Coventry", strengths: "World-class mathematics, business school integration, financial modeling" },
+      { rank: 10, name: "University of Bath", csScore: 86.4, medScore: 0, lawScore: 0, physScore: 85.4, econScore: 89.2, typicalOffer: "A*AA - AAA", location: "Bath", strengths: "Industry placement years, leading sports facilities, highly practical coursework" },
+      { rank: 11, name: "King's College London", csScore: 84.2, medScore: 93.8, lawScore: 91.4, physScore: 84.1, econScore: 85.4, typicalOffer: "A*AA - AAA", location: "London", strengths: "World-famous hospitals (Guy's & St Thomas'), global health, international relations" },
+      { rank: 12, name: "University of Oxford Brookes", csScore: 68.2, medScore: 0, lawScore: 71.4, physScore: 65.2, econScore: 67.5, typicalOffer: "BBB - CCC", location: "Oxford", strengths: "Motorsport engineering, strong post-graduate employability, modern teaching clinics" }
+    ];
+
+    function filterRankings() {
+      const searchVal = document.getElementById('ranking-search').value.toLowerCase();
+      const subject = document.getElementById('ranking-subject').value;
+      const tbody = document.getElementById('rankings-table-body');
+
+      let filtered = UNI_RANKINGS_DATA.filter(uni => {
+        // Search matches name or location
+        const matchesSearch = uni.name.toLowerCase().includes(searchVal) || uni.location.toLowerCase().includes(searchVal);
+
+        // Subject match: if subject filter is active, university must offer/have score for that subject (> 0)
+        let matchesSubject = true;
+        if (subject !== 'all') {
+          const scoreKey = subject + 'Score';
+          matchesSubject = uni[scoreKey] > 0;
+        }
+
+        return matchesSearch && matchesSubject;
+      });
+
+      // Sort based on subject score if a subject is selected
+      if (subject !== 'all') {
+        const scoreKey = subject + 'Score';
+        filtered.sort((a, b) => b[scoreKey] - a[scoreKey]);
+      } else {
+        filtered.sort((a, b) => a.rank - b.rank);
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: 'Space Mono', monospace;">No matching universities found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((uni, idx) => {
+        const subjectScoreVal = subject !== 'all' ? uni[subject + 'Score'] + '%' : 'N/A';
+        const displayRank = subject !== 'all' ? (idx + 1) : uni.rank;
+        return `
+          <tr style="border-bottom: 1px solid var(--line); transition: background 0.15s ease;" onmouseover="this.style.background='var(--paper)'" onmouseout="this.style.background='transparent'">
+            <td style="padding: 12px; font-weight: bold; font-family: 'Space Mono', monospace;">#${displayRank}</td>
+            <td style="padding: 12px; font-weight: 600; color: var(--ink);">${uni.name}</td>
+            <td style="padding: 12px; font-family: 'Space Mono', monospace; font-weight: bold; color: var(--blue-dark);">${subjectScoreVal}</td>
+            <td style="padding: 12px; font-family: 'Space Mono', monospace;">${uni.typicalOffer}</td>
+            <td style="padding: 12px; color: var(--ink-soft);">${uni.location}</td>
+            <td style="padding: 12px; font-size: 13px; color: var(--ink-soft);">${uni.strengths}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 3. University Essentials & Budget Planner
+    const DEFAULT_PACKING_ITEMS = [
+      { id: 'p1', cat: 'docs', name: 'Passport & UK Residence Permit (if applicable)', checked: false },
+      { id: 'p2', cat: 'docs', name: 'University Acceptance & Enrollment Letter', checked: false },
+      { id: 'p3', cat: 'docs', name: 'Student Finance England Funding Approval Document', checked: false },
+      { id: 'p4', cat: 'docs', name: 'Accommodation Lease Agreement', checked: false },
+      { id: 'p5', cat: 'docs', name: 'Vaccination History & NHS GP Letter', checked: false },
+      { id: 'p6', cat: 'kitchen', name: 'Non-stick Frying Pan & Saucepan', checked: false },
+      { id: 'p7', cat: 'kitchen', name: 'Plates, Bowls, and Fork/Knife/Spoon Set', checked: false },
+      { id: 'p8', cat: 'kitchen', name: 'Can Opener & Bottle Opener', checked: false },
+      { id: 'p9', cat: 'kitchen', name: 'Mugs and Water Bottle', checked: false },
+      { id: 'p10', cat: 'bedroom', name: 'Duvet, Pillow & 2x Bedsheet Sets', checked: false },
+      { id: 'p11', cat: 'bedroom', name: 'Laundry Basket / Pop-up Bag', checked: false },
+      { id: 'p12', cat: 'bedroom', name: 'Coat Hangers & Desk Organizer', checked: false },
+      { id: 'p13', cat: 'elec', name: 'Laptop, Charger & Phone Charger', checked: false },
+      { id: 'p14', cat: 'elec', name: 'Extension Cable Lead', checked: false },
+      { id: 'p15', cat: 'elec', name: 'Academic Notebooks, Pens & Highlighters', checked: false }
+    ];
+
+    let packingItems = JSON.parse(localStorage.getItem('paperTrailPacking')) || DEFAULT_PACKING_ITEMS;
+
+    function initPackingList() {
+      renderPackingList();
+    }
+
+    function renderPackingList() {
+      const filter = document.getElementById('packing-category-filter').value;
+      const container = document.getElementById('packing-list-container');
+
+      const filtered = packingItems.filter(item => filter === 'all' || item.cat === filter);
+
+      container.innerHTML = filtered.map(item => `
+        <label style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; background: var(--paper-card); border: 1px solid var(--line); cursor: pointer; transition: all 0.1s ease; border-radius: var(--radius);">
+           <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="togglePackingItem('${item.id}')" style="margin-top: 3px; accent-color: var(--highlight);">
+           <span style="font-size: 13px; text-decoration: ${item.checked ? 'line-through' : 'none'}; color: ${item.checked ? 'var(--ink-soft)' : 'inherit'};">${item.name}</span>
+        </label>
+      `).join('');
+
+      updatePackingProgress();
+    }
+
+    function togglePackingItem(id) {
+      const item = packingItems.find(i => i.id === id);
+      if (item) {
+        item.checked = !item.checked;
+        localStorage.setItem('paperTrailPacking', JSON.stringify(packingItems));
+        renderPackingList();
+      }
+    }
+
+    function addCustomPackingItem() {
+      const input = document.getElementById('custom-packing-input');
+      const catSelect = document.getElementById('custom-packing-cat');
+      const name = input.value.trim();
+      const cat = catSelect.value;
+
+      if (!name) return;
+
+      const newItem = {
+        id: 'cust-' + Date.now(),
+        cat: cat,
+        name: name,
+        checked: false
+      };
+
+      packingItems.push(newItem);
+      localStorage.setItem('paperTrailPacking', JSON.stringify(packingItems));
+      input.value = '';
+      renderPackingList();
+    }
+
+    function filterPackingList() {
+      renderPackingList();
+    }
+
+    function updatePackingProgress() {
+      const total = packingItems.length;
+      const checked = packingItems.filter(i => i.checked).length;
+      const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+
+      document.getElementById('packing-progress-bar').style.width = percent + '%';
+      document.getElementById('packing-progress-label').textContent = percent + '%';
+    }
+
+    function calculateBudget() {
+      const loan = parseFloat(document.getElementById('budget-loan').value) || 0;
+      const otherInc = parseFloat(document.getElementById('budget-other-inc').value) || 0;
+      const rent = parseFloat(document.getElementById('budget-rent').value) || 0;
+      const food = parseFloat(document.getElementById('budget-food').value) || 0;
+      const social = parseFloat(document.getElementById('budget-social').value) || 0;
+
+      const totalIncome = loan + otherInc;
+      const totalExpenses = rent + food + social;
+      const remaining = totalIncome - totalExpenses;
+
+      const display = document.getElementById('budget-remaining-display');
+      const feedback = document.getElementById('budget-remaining-feedback');
+
+      display.textContent = (remaining < 0 ? '-£' : '£') + Math.abs(remaining);
+
+      if (remaining < 0) {
+        display.style.color = 'var(--coral)';
+        feedback.textContent = "Over budget alert! Consider reducing social outgoings or finding lower rent.";
+        feedback.style.color = 'var(--coral-dark)';
+      } else if (remaining < 100) {
+        display.style.color = 'var(--blue-dark)';
+        feedback.textContent = "Tight balance. Keep close eye on your weekly spending.";
+        feedback.style.color = 'var(--blue-dark)';
+      } else {
+        display.style.color = 'var(--ink)';
+        feedback.textContent = "Healthy balance. Excellent budget management!";
+        feedback.style.color = '#4A5605';
+      }
+    }
+
+    // 4. University Accommodation Finder
+    const MOCK_ACCOMMODATIONS = [
+      { id: 'a1', name: 'Chapter Kings Cross Halls', city: 'London', price: 345, type: 'Studio', distance: 8, strengths: 'Modern amenities, close to UCL & King\'s, gym & cinema room' },
+      { id: 'a2', name: 'Academic Square En-Suite', city: 'London', price: 290, type: 'En-suite', distance: 15, strengths: 'Private bathroom, common study area, high-speed Wi-Fi included' },
+      { id: 'a3', name: 'Piccadilly Student Living', city: 'Manchester', price: 165, type: 'Shared', distance: 12, strengths: 'Affordable, directly next to train hub and Manchester Uni campus' },
+      { id: 'a4', name: 'Princess Street Studios', city: 'Manchester', price: 210, type: 'Studio', distance: 5, strengths: 'Full private kitchenette, 24/7 security, gym access' },
+      { id: 'a5', name: 'Clifton Riverside Hall', city: 'Bristol', price: 195, type: 'En-suite', distance: 18, strengths: 'Scenic river views, bike storage, bills inclusive' },
+      { id: 'a6', name: 'Oxford Central Student Quarters', city: 'Oxford', price: 280, type: 'Studio', distance: 6, strengths: 'Quiet study rooms, historical building, direct links to colleges' },
+      { id: 'a7', name: 'Fitzwilliam House Halls', city: 'Cambridge', price: 260, type: 'En-suite', distance: 9, strengths: 'Beautiful gardens, private study desks, fully laundry service' },
+      { id: 'a8', name: 'UCL Precinct Shared Flat', city: 'London', price: 210, type: 'Shared', distance: 25, strengths: 'Shared with other UCL students, great budget choice for central London' },
+      { id: 'a9', name: 'Bristol Redland Shared House', city: 'Bristol', price: 140, type: 'Shared', distance: 22, strengths: 'Large kitchen garden, communal lounge, dynamic flatmate network' }
+    ];
+
+    let pinnedAccomMap = JSON.parse(localStorage.getItem('paperTrailPinnedAccom')) || {};
+    let activeAccomTab = 'all';
+
+    function updatePriceSlider(val) {
+      document.getElementById('accom-price-label').textContent = '£' + val;
+      filterAccommodations();
+    }
+
+    function toggleAccomTab(tab) {
+      activeAccomTab = tab;
+      document.getElementById('accom-btn-all').classList.toggle('primary', tab === 'all');
+      document.getElementById('accom-btn-favs').classList.toggle('primary', tab === 'favs');
+      filterAccommodations();
+    }
+
+    function filterAccommodations() {
+      const city = document.getElementById('accom-city').value;
+      const price = parseFloat(document.getElementById('accom-price').value);
+      const type = document.getElementById('accom-type').value;
+      const distance = document.getElementById('accom-distance').value;
+      const grid = document.getElementById('accom-listings-grid');
+
+      let filtered = MOCK_ACCOMMODATIONS.filter(item => {
+        const matchesCity = city === 'all' || item.city === city;
+        const matchesPrice = item.price <= price;
+        const matchesType = type === 'all' || item.type === type;
+        const matchesDistance = distance === 'all' || item.distance <= parseInt(distance);
+        const matchesTab = activeAccomTab === 'all' || !!pinnedAccomMap[item.id];
+
+        return matchesCity && matchesPrice && matchesType && matchesDistance && matchesTab;
+      });
+
+      // Update pinned count label
+      const favsCount = Object.keys(pinnedAccomMap).filter(k => pinnedAccomMap[k]).length;
+      document.getElementById('accom-btn-favs').textContent = `Pinned (${favsCount})`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--ink-soft); font-family: 'Space Mono', monospace;">No accommodations match your filter settings.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => {
+        const isPinned = !!pinnedAccomMap[item.id];
+        return `
+          <div class="paper-card" style="padding: 15px; border-radius: var(--radius); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <span class="paper-tag subject-physics">${item.type}</span>
+                <button onclick="togglePinAccom('${item.id}')" style="background: none; border: none; font-size: 18px; cursor: pointer;">${isPinned ? '📌' : '📍'}</button>
+              </div>
+              <h4 style="margin: 0 0 4px 0; font-size: 15px;">${item.name}</h4>
+              <p style="margin: 0 0 8px 0; font-size: 12px; color: var(--ink-soft);">📍 ${item.city} &bull; ${item.distance} mins walk to campus</p>
+              <p style="margin: 0 0 12px 0; font-size: 13px; color: var(--ink-soft); line-height: 1.4;">${item.strengths}</p>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--line); padding-top: 10px;">
+              <span style="font-family: 'Space Mono', monospace; font-weight: bold; font-size: 16px; color: var(--coral);">£${item.price}<span style="font-size: 10px; font-weight: normal; color: var(--ink-soft);">/wk</span></span>
+              <button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="alert('Viewing booking inquiries for ${item.name}. Secure your virtual slot now!')">Inquire ↗</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function togglePinAccom(id) {
+      pinnedAccomMap[id] = !pinnedAccomMap[id];
+      if (!pinnedAccomMap[id]) delete pinnedAccomMap[id];
+      localStorage.setItem('paperTrailPinnedAccom', JSON.stringify(pinnedAccomMap));
+      filterAccommodations();
+    }
+
     // ---------- Navigation & Init ----------
-    const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'checklist', 'weaknesses', 'planner', 'tools', 'support', 'pricing', 'legal'];
+    const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'checklist', 'weaknesses', 'planner', 'tools', 'support', 'pricing', 'legal', 'uni-personal-statement', 'uni-rankings', 'uni-essentials', 'uni-accommodation'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
     let currentSection = null;
 
@@ -2401,6 +3098,10 @@
         }
         if (hash === 'revision') { renderSRS(); startQuiz(); }
         if (hash === 'weaknesses') { renderWeaknesses(); }
+        if (hash === 'uni-personal-statement') { loadPersonalStatementTemplate(); updatePersonalStatementStats(); }
+        if (hash === 'uni-rankings') { filterRankings(); }
+        if (hash === 'uni-essentials') { initPackingList(); calculateBudget(); }
+        if (hash === 'uni-accommodation') { filterAccommodations(); }
       }
     }
     window.onhashchange = navigate;
