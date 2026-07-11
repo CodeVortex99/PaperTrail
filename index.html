@@ -49,6 +49,10 @@
     href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+  <script type="module">
+    import { calculateSM2 } from './sm2.ts';
+    window.calculateSM2 = calculateSM2;
+  </script>
   <style>
     :root {
       --paper: #EEF0E6;
@@ -867,6 +871,127 @@
     .tier li { margin-bottom: 12px; color: var(--ink-soft); }
     .tier li::before { content: "— "; }
 
+    /* RAG Tracker Styles */
+    .rag-summary-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--paper-card);
+      border: 2px solid var(--ink);
+      padding: 20px;
+      margin-bottom: 24px;
+      border-radius: var(--radius);
+    }
+    .rag-progress-track {
+      height: 16px;
+      background: var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+    }
+    .rag-progress-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    .rag-progress-segment.green { background: #4CAF50; }
+    .rag-progress-segment.amber { background: #FFC107; }
+    .rag-progress-segment.red { background: var(--coral); }
+    .rag-progress-segment.null { background: var(--line); }
+
+    .rag-subject-btn, .rag-filter-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      background: var(--paper-card);
+      cursor: pointer;
+      border-radius: 4px;
+      color: var(--ink);
+    }
+    .rag-subject-btn.active {
+      background: var(--ink);
+      color: var(--highlight);
+      border-color: var(--ink);
+    }
+    .rag-filter-btn.active {
+      background: var(--ink);
+      color: var(--highlight);
+      border-color: var(--ink);
+    }
+
+    .rag-topic-card {
+      background: var(--paper-card);
+      border: 2px solid var(--ink);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: var(--radius);
+    }
+    .rag-topic-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 15px;
+      border-bottom: 1px dashed var(--line);
+      padding-bottom: 8px;
+    }
+
+    .rag-point-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--paper-card);
+      border: 1px solid var(--line);
+      margin-bottom: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s ease;
+    }
+    .rag-point-item:hover {
+      box-shadow: 2px 2px 0 var(--ink);
+      transform: translate(-1px, -1px);
+    }
+    .rag-point-item.null { border-left: 6px solid var(--line); }
+    .rag-point-item.red { border-left: 6px solid var(--coral); background: rgba(226, 97, 60, 0.08); }
+    .rag-point-item.amber { border-left: 6px solid #FFC107; background: rgba(255, 193, 7, 0.08); }
+    .rag-point-item.green { border-left: 6px solid #4CAF50; background: rgba(76, 175, 80, 0.08); }
+
+    .rag-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      margin-left: 12px;
+      flex-shrink: 0;
+    }
+    .rag-badge.null { background: var(--line); color: var(--ink-soft); }
+    .rag-badge.red { background: var(--coral); color: white; }
+    .rag-badge.amber { background: #FFC107; color: black; }
+    .rag-badge.green { background: #4CAF50; color: white; }
+
+    /* Shake & Flash Animations */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake-anim {
+      animation: shake 0.4s ease-in-out;
+      border-color: var(--coral) !important;
+    }
+    @keyframes green-flash {
+      0%, 100% { background: var(--paper-card); }
+      50% { background: rgba(76, 175, 80, 0.25); }
+    }
+    .flash-anim {
+      animation: green-flash 0.6s ease-out;
+      border-color: #4CAF50 !important;
+    }
+
     footer {
       border-top: 2px solid var(--ink);
       padding: 40px 0;
@@ -899,6 +1024,9 @@
         <a href="#weaknesses" class="cat-gcse cat-alevel">Weaknesses</a>
         <a href="#planner" class="cat-gcse cat-alevel">Planner</a>
         <a href="#tools" class="cat-gcse cat-alevel">Tools</a>
+        <a href="#grader" class="cat-gcse cat-alevel">AI Grader</a>
+        <a href="#formulas" class="cat-gcse cat-alevel">Formula Trainer</a>
+        <a href="#decoders" class="cat-gcse cat-alevel">Command Decoders</a>
         <a href="#personal-statement" class="cat-uni">Personal Statement Advice</a>
         <a href="#rankings" class="cat-uni">University Rankings</a>
         <a href="#accommodation" class="cat-uni">University Essentials</a>
@@ -1421,22 +1549,40 @@
           <p class="eyebrow">Organization</p>
           <h2>Specification Checklist</h2>
         </div>
-        <div class="card">
-          <h3>Interactive Checklist</h3>
-          <p class="instructions">Upload your exam specification (PDF or TXT) to generate a printable checklist.</p>
-          <div style="border: 2px dashed var(--line); padding: 30px; text-align: center; margin-bottom: 20px;">
-             <input type="file" id="spec-upload" style="display: none;" onchange="handleSpecUpload(event)">
-             <button class="btn primary" onclick="document.getElementById('spec-upload').click()">Upload Specification</button>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+          <button class="rag-subject-btn active" id="rag-sub-maths" onclick="setRagSubject('maths')">📐 Maths</button>
+          <button class="rag-subject-btn" id="rag-sub-physics" onclick="setRagSubject('physics')">⚡ Physics</button>
+          <button class="rag-subject-btn" id="rag-sub-chemistry" onclick="setRagSubject('chemistry')">🧪 Chemistry</button>
+          <button class="rag-subject-btn" id="rag-sub-biology" onclick="setRagSubject('biology')">🧬 Biology</button>
+        </div>
+
+        <div class="rag-summary-bar">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h3 style="margin: 0; font-size: 20px;">Overall Mastery: <span id="rag-percent-text" style="color: #4CAF50;">0%</span></h3>
+              <p class="instructions" style="margin: 4px 0 0;">Toggle points to update your confidence. Saving is automatically debounced.</p>
+            </div>
+            <div style="font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft);" id="rag-counts-summary">
+              Total: 0 | Green: 0 | Amber: 0 | Red: 0 | Unrated: 0
+            </div>
           </div>
-          <div id="checklist-container" class="hidden">
-             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h4 id="checklist-title">My Checklist</h4>
-                <button class="btn" onclick="window.print()" style="font-size: 10px;">Print Checklist</button>
-             </div>
-             <div id="checklist-items" style="display: flex; flex-direction: column; gap: 10px;">
-                <!-- Checklist items will appear here -->
-             </div>
+          <div class="rag-progress-track">
+            <div id="rag-seg-green" class="rag-progress-segment green" style="width: 0%;"></div>
+            <div id="rag-seg-amber" class="rag-progress-segment amber" style="width: 0%;"></div>
+            <div id="rag-seg-red" class="rag-progress-segment red" style="width: 0%;"></div>
+            <div id="rag-seg-null" class="rag-progress-segment null" style="width: 100%;"></div>
           </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+            <button class="rag-filter-btn active" id="rag-filter-all" onclick="setRagFilter('all')">🔍 All</button>
+            <button class="rag-filter-btn" id="rag-filter-null" onclick="setRagFilter('null')">⚪ Unrated</button>
+            <button class="rag-filter-btn" id="rag-filter-red" onclick="setRagFilter('red')">🔴 Red</button>
+            <button class="rag-filter-btn" id="rag-filter-amber" onclick="setRagFilter('amber')">🟡 Amber</button>
+            <button class="rag-filter-btn" id="rag-filter-green" onclick="setRagFilter('green')">🟢 Green</button>
+          </div>
+        </div>
+
+        <div id="rag-checklist-container">
+          <!-- Specification topics & points will be generated dynamically -->
         </div>
       </div>
     </section>
@@ -1508,6 +1654,184 @@
               <h3>Privacy Policy</h3>
               <p style="font-size: 12px; color: var(--ink-soft);">All data (names, target grades, study plans) is stored locally on your device via browser storage. We don't track you.</p>
            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Grader Section -->
+    <section class="section hidden" id="grader">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Artificial Intelligence</p>
+          <h2>AI-Powered Mark Scheme Grader</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start;">
+          <!-- Left Pane (Input) -->
+          <div class="card" style="cursor: default;">
+            <h3>📤 Submit Your Work</h3>
+            <p class="instructions">Paste your answer, upload optional images (e.g., photo of handwritten math/equations), and specify the mark scheme.</p>
+
+            <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px;">Mark Scheme Criteria / Text</label>
+            <textarea id="grade-markscheme" placeholder="Paste the official mark scheme or key criteria here..." style="width: 100%; height: 100px; padding: 10px; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 15px; font-family: inherit; font-size: 13px; background: var(--paper-card); color: var(--ink); resize: vertical;"></textarea>
+
+            <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px;">Your Written Answer</label>
+            <textarea id="grade-answer" placeholder="Type or paste your written response here..." style="width: 100%; height: 150px; padding: 10px; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 15px; font-family: inherit; font-size: 13px; background: var(--paper-card); color: var(--ink); resize: vertical;"></textarea>
+
+            <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px;">Upload Handwriting / Diagram (Optional)</label>
+            <div style="border: 2px dashed var(--line); padding: 15px; text-align: center; margin-bottom: 20px; border-radius: var(--radius);">
+              <input type="file" id="grade-file" accept="image/*" style="display: none;" onchange="handleGradeImageUpload(event)">
+              <button class="btn" style="padding: 6px 12px; font-size: 12px; margin-bottom: 8px;" onclick="document.getElementById('grade-file').click()">Select Image</button>
+              <div id="grade-image-status" style="font-size: 11px; color: var(--ink-soft);">Max size 5MB (PNG/JPG)</div>
+              <div id="grade-image-preview-container" style="display: none; margin-top: 10px; position: relative;">
+                <img id="grade-image-preview" src="" style="max-height: 100px; max-width: 100%; border: 1px solid var(--line); border-radius: 4px;">
+                <button onclick="removeGradeImage()" style="position: absolute; top: -5px; right: -5px; background: var(--coral); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1;">×</button>
+              </div>
+            </div>
+
+            <button class="btn primary" id="btn-grade-submit" style="width: 100%;" onclick="submitGradeRequest()">Analyze & Grade ⚡</button>
+          </div>
+
+          <!-- Right Pane (Feedback) -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Loading Panel -->
+            <div id="grader-loading-panel" class="card hidden" style="cursor: default; text-align: center; padding: 40px 20px;">
+              <div class="timer-display" style="font-size: 36px; animation: pulse 1.5s infinite;">⏳ Grading...</div>
+              <p style="font-size: 14px; font-weight: 600; color: var(--ink-soft);" id="grader-loading-status">Analyzing your work against the mark scheme...</p>
+              <div style="width: 100%; background: var(--paper); height: 6px; border-radius: 3px; overflow: hidden; margin-top: 20px;">
+                <div id="grader-loading-bar" style="height: 100%; background: var(--highlight); width: 10%;"></div>
+              </div>
+            </div>
+
+            <!-- Feedback Result Card -->
+            <div id="grader-result-card" class="card hidden" style="cursor: default; border-left: 6px solid var(--blue);">
+              <h3 style="margin-top: 0; display: flex; justify-content: space-between; align-items: center;">
+                <span>🎯 Grading Report</span>
+                <span class="rag-badge green" id="grader-score-badge" style="font-size: 14px; padding: 4px 10px;">0 / 0 Marks</span>
+              </h3>
+              <p class="instructions" style="margin-bottom: 20px;">Detailed analysis generated by AI. Refine your answers based on the feedback.</p>
+
+              <div style="background: var(--paper); padding: 15px; border-radius: var(--radius); margin-bottom: 20px; text-align: center;">
+                <span style="font-size: 13px; color: var(--ink-soft); font-family: 'Space Mono', monospace;">SCORE PERCENTAGE</span>
+                <div style="font-size: 32px; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--blue-dark);" id="grader-percent">0%</div>
+              </div>
+
+              <h4 style="margin-bottom: 10px;">Criteria Breakdown</h4>
+              <div id="grader-breakdown-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                <!-- Filled dynamically -->
+              </div>
+
+              <h4 style="margin-bottom: 10px;">Improvement Actions</h4>
+              <ul id="grader-improvements-list" style="padding-left: 20px; font-size: 13px; color: var(--ink-soft); display: flex; flex-direction: column; gap: 6px;">
+                <!-- Filled dynamically -->
+              </ul>
+            </div>
+
+            <!-- Empty State -->
+            <div id="grader-empty-state" class="card" style="cursor: default; text-align: center; padding: 60px 20px; color: var(--ink-soft);">
+              <span style="font-size: 48px;">📊</span>
+              <h3 style="margin-top: 15px;">No Active Grade Analysis</h3>
+              <p style="font-size: 13px; max-width: 300px; margin: 10px auto auto;">Submit your response and the exam board criteria on the left to receive feedback.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formula Trainer Section -->
+    <section class="section hidden" id="formulas">
+      <div class="wrap" style="max-width: 600px;">
+        <div class="section-head" style="text-align: center;">
+          <p class="eyebrow">Calculus & Kinematics</p>
+          <h2>STEM Formula Trainer</h2>
+          <p class="instructions" style="margin: auto; max-width: 450px;">Speed-test your mechanical memory and algebra. 100% client-side, zero latency.</p>
+        </div>
+
+        <!-- Streak Counter -->
+        <div style="text-align: center; margin-bottom: 20px;">
+          <span style="font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; background: var(--ink); color: var(--highlight); padding: 8px 16px; border-radius: var(--radius); border: 2px solid var(--ink); display: inline-block;">
+            🔥 Current Streak: <span id="formula-streak">0</span>
+          </span>
+        </div>
+
+        <!-- Question Container -->
+        <div class="card" id="formula-container" style="cursor: default; transition: all 0.3s ease; text-align: center; padding: 40px 24px; border: 2px solid var(--ink);">
+          <h3 style="margin-top: 0; font-family: 'Space Mono', monospace; font-size: 24px;" id="formula-eq-title">Equation: ...</h3>
+          <p style="font-size: 15px; color: var(--ink-soft); margin-bottom: 12px;" id="formula-desc">Solve for the variable...</p>
+          <div style="background: var(--paper); font-size: 18px; font-family: 'Space Mono', monospace; font-weight: 700; padding: 15px; border-radius: var(--radius); border: 1px dashed var(--line); display: inline-block; margin-bottom: 24px;" id="formula-values">
+            Given: ...
+          </div>
+
+          <!-- Input Container -->
+          <div style="margin-bottom: 30px;">
+            <input type="number" step="0.1" id="formula-input" placeholder="Enter value..." style="text-align: center; font-size: 24px; font-family: 'Space Mono', monospace; font-weight: 700; padding: 10px; width: 220px; border: 2px solid var(--ink); border-radius: var(--radius); margin-bottom: 12px; outline: none; background: var(--paper-card); color: var(--ink);">
+            <br>
+            <button class="btn primary" style="width: 220px;" onclick="checkFormulaAnswer()">Check Answer</button>
+          </div>
+
+          <!-- Multiple Choice Hint options -->
+          <div style="border-top: 1px dashed var(--line); padding-top: 20px;">
+            <p class="instructions" style="margin-bottom: 12px;">Stuck? Select one of the possible answers below:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" id="formula-options">
+              <!-- Dynamically populated buttons -->
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="btn" style="padding: 6px 16px; font-size: 12px;" onclick="nextFormulaQuestion()">Skip Equation &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Command Word Decoder Section -->
+    <section class="section hidden" id="decoders">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Exam Board Secret Decoder</p>
+          <h2>Interactive Command Word Decoder</h2>
+          <p class="instructions" style="margin: 0;">Unmask the true requirements behind keywords like Evaluate, Explain, and Analyze with side-by-side model comparison.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: start;">
+          <!-- Left side: Selectable Grid -->
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <h3 style="margin-top: 0; font-size: 18px;">Select a Command Word</h3>
+            <div id="decoder-grid" style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Right side: Slide-in details panel -->
+          <div class="card" id="decoder-panel" style="cursor: default; border: 2px solid var(--ink); display: none;">
+            <h3 id="decoder-word-title" style="margin-top: 0; font-size: 24px; font-family: 'Space Mono', monospace;">Word</h3>
+
+            <div style="background: var(--paper); padding: 15px; border-radius: var(--radius); margin-bottom: 24px; border-left: 4px solid var(--purple);">
+              <h4 style="margin-top: 0; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--purple-dark); text-transform: uppercase;">Official Definition</h4>
+              <p id="decoder-definition" style="font-size: 14px; margin: 0; color: var(--ink); font-weight: 500;"></p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+              <!-- Poor Response (Red border) -->
+              <div style="border: 2px solid var(--coral); background: rgba(226, 97, 60, 0.05); padding: 20px; border-radius: var(--radius); position: relative;">
+                <span class="rag-badge red" style="position: absolute; top: -11px; left: 15px; margin-left: 0;">Poor Example (1/4 Marks)</span>
+                <p id="decoder-poor-text" style="font-size: 13px; color: var(--ink); line-height: 1.5; margin-top: 10px; font-style: italic;"></p>
+                <div style="margin-top: 15px; border-top: 1px dashed var(--line); padding-top: 10px;">
+                  <strong style="color: var(--coral-dark); font-size: 12px; font-family: 'Space Mono', monospace; text-transform: uppercase; display: block; margin-bottom: 4px;">⚠️ What is missing?</strong>
+                  <p id="decoder-poor-missing" style="font-size: 12px; color: var(--ink-soft); margin: 0;"></p>
+                </div>
+              </div>
+
+              <!-- Full-mark Response (Green border) -->
+              <div style="border: 2px solid #4CAF50; background: rgba(76, 175, 80, 0.05); padding: 20px; border-radius: var(--radius); position: relative;">
+                <span class="rag-badge green" style="position: absolute; top: -11px; left: 15px; margin-left: 0;">Full-mark Example (4/4 Marks)</span>
+                <p id="decoder-full-text" style="font-size: 13px; color: var(--ink); line-height: 1.5; margin-top: 10px;"></p>
+                <div style="margin-top: 15px; border-top: 1px dashed var(--line); padding-top: 10px;">
+                  <strong style="color: #2E7D32; font-size: 12px; font-family: 'Space Mono', monospace; text-transform: uppercase; display: block; margin-bottom: 4px;">🎯 Key Phrase Satisfiers</strong>
+                  <p style="font-size: 12px; color: var(--ink-soft); margin: 0;">The **bolded phrases** represent specific, high-scoring markers that directly address the criteria elements required by exam boards.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2167,31 +2491,41 @@
       }
 
       list.innerHTML = due.map(c => `
-        <div class="card" style="padding: 40px; border-style: dashed; cursor: default; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
-          <div style="font-size: 10px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 5px;">${c.deck}</div>
-          <div style="font-weight: 600; margin-bottom: 10px;">${c.q}</div>
-          <details style="font-size: 14px; background: var(--highlight); padding: 8px; border-radius: 4px; margin-bottom: 10px;">
-            <summary style="cursor:pointer; font-weight: 500;">Show Answer</summary>
-            <div style="margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 10px; color: #000;">${c.a}</div>
-          </details>
-          <div class="srs-buttons">
-            <button class="btn srs-btn hard" style="flex:1" onclick="rateCard(${c.id}, 0)">Hard</button>
-            <button class="btn srs-btn good" style="flex:1" onclick="rateCard(${c.id}, 1)">Good</button>
-            <button class="btn srs-btn easy" style="flex:1" onclick="rateCard(${c.id}, 2)">Easy</button>
+        <div class="flashcard-container" onclick="this.querySelector('.flashcard').classList.toggle('flipped')" style="height: 250px; margin-bottom: 20px;">
+          <div class="flashcard">
+            <div class="flashcard-front">
+              <div>
+                <div style="font-size: 11px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px;">${c.deck}</div>
+                <div style="font-weight: 700; font-size: 18px; color: var(--ink);">${c.q}</div>
+                <p class="instructions" style="margin-top: 25px; font-size: 11px; color: var(--ink-soft);">Click Card to Flip & Reveal Answer</p>
+              </div>
+            </div>
+            <div class="flashcard-back" onclick="event.stopPropagation()">
+              <div style="width: 100%; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                <div style="font-size: 11px; text-transform: uppercase; color: rgba(0,0,0,0.6); margin-bottom: 5px;">Answer</div>
+                <div style="font-weight: 700; font-size: 20px; color: #000; flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 10px 0;">${c.a}</div>
+                <div class="srs-buttons" style="margin-top: 10px; width: 100%;">
+                  <button class="btn srs-btn again" style="flex:1; background: #E2613C; color: white;" onclick="rateCardSM2(${c.id}, 'again')">Again</button>
+                  <button class="btn srs-btn hard" style="flex:1; background: #5B84A8; color: white;" onclick="rateCardSM2(${c.id}, 'hard')">Hard</button>
+                  <button class="btn srs-btn good" style="flex:1; background: #8A7CC7; color: white;" onclick="rateCardSM2(${c.id}, 'good')">Good</button>
+                  <button class="btn srs-btn easy" style="flex:1; background: #4CAF50; color: white;" onclick="rateCardSM2(${c.id}, 'easy')">Easy</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       `).join('');
     }
 
-    function rateCard(cardId, rating) {
-      let d = srsData[cardId] || { interval: 0, ease: 2.5, nextDue: 0 };
-      if (rating === 0) d.interval = 1;
-      else if (rating === 1) d.interval = d.interval === 0 ? 1 : Math.ceil(d.interval * d.ease);
-      else { d.interval = d.interval === 0 ? 4 : Math.ceil(d.interval * d.ease * 1.3); d.ease += 0.1; }
-      d.nextDue = Date.now() + (d.interval * 24 * 60 * 60 * 1000);
-      srsData[cardId] = d;
+    function rateCardSM2(cardId, rating) {
+      let current = srsData[cardId];
+      const newState = window.calculateSM2(rating, current);
+      srsData[cardId] = newState;
       localStorage.setItem('paperTrailSRS', JSON.stringify(srsData));
       renderSRS();
+      if (typeof addActivity === 'function') {
+        addActivity(`Reviewed flashcard. Next interval: ${newState.interval} days.`);
+      }
     }
     function resetSRS() { localStorage.removeItem('paperTrailSRS'); srsData = {}; renderSRS(); }
 
@@ -2394,33 +2728,226 @@
     }
 
     // ---------- Logic: Checklist & Weaknesses ----------
+    const SPEC_DATA = {
+      maths: [
+        {
+          topic: "Algebra & Functions",
+          points: [
+            { id: "m1", text: "Laws of indices and standard algebraic manipulation including quadratic equations" },
+            { id: "m2", text: "Simultaneous equations, analytical and graphical solutions" },
+            { id: "m3", text: "Algebraic proof, deduction, exhaustion and counter-example" },
+            { id: "m4", text: "Coordinate geometry in the (x,y) plane including straight lines and circles" }
+          ]
+        },
+        {
+          topic: "Calculus",
+          points: [
+            { id: "m5", text: "Differentiation from first principles, standard derivatives and equations of tangents" },
+            { id: "m6", text: "Integration as the reverse of differentiation, definite and indefinite integrals" },
+            { id: "m7", text: "Integration by substitution, integration by parts, and numerical methods" }
+          ]
+        }
+      ],
+      physics: [
+        {
+          topic: "Particles & Radiation",
+          points: [
+            { id: "p1", text: "Constituents of the atom: protons, neutrons, electrons, and isotopes" },
+            { id: "p2", text: "Stable and unstable nuclei, strong nuclear force and alpha/beta decay" },
+            { id: "p3", text: "Classification of particles: hadrons, leptons, quarks, and antiquarks" },
+            { id: "p4", text: "Photoelectric effect: threshold frequency, work function, and Einstein's equation" }
+          ]
+        },
+        {
+          topic: "Waves & Optics",
+          points: [
+            { id: "p5", text: "Progressive waves: amplitude, frequency, wavelength, and speed formula" },
+            { id: "p6", text: "Superposition and interference, stationary waves on strings and air columns" },
+            { id: "p7", text: "Refraction, Snell's Law, critical angle, and optical fibers" }
+          ]
+        }
+      ],
+      chemistry: [
+        {
+          topic: "Physical Chemistry",
+          points: [
+            { id: "c1", text: "Amount of substance: moles, Avogadro's constant, and ideal gas equation" },
+            { id: "c2", text: "Energetics: Hess's Law, enthalpy changes, and calorimetry" },
+            { id: "c3", text: "Chemical equilibria, Le Chatelier's principle, and equilibrium constant Kc" }
+          ]
+        },
+        {
+          topic: "Organic Chemistry",
+          points: [
+            { id: "c4", text: "Nomenclature, isomerism, and functional groups representation" },
+            { id: "c5", text: "Alkanes, fractional distillation, free-radical substitution" },
+            { id: "c6", text: "Alkenes, electrophilic addition mechanism with HBr, halogens" }
+          ]
+        }
+      ],
+      biology: [
+        {
+          topic: "Biological Molecules",
+          points: [
+            { id: "b1", text: "Monomers and polymers: condensation and hydrolysis reactions" },
+            { id: "b2", text: "Carbohydrates: monosaccharides, disaccharides, and polysaccharides" },
+            { id: "b3", text: "Lipids: triglycerides and phospholipids, structure and functions" },
+            { id: "b4", text: "Proteins: amino acid structure, primary, secondary, tertiary, and quaternary levels" }
+          ]
+        },
+        {
+          topic: "Cells & Exchange",
+          points: [
+            { id: "b5", text: "Eukaryotic and prokaryotic cell structure, functions of organelles" },
+            { id: "b6", text: "Transport across cell membranes: simple diffusion, facilitated diffusion, osmosis, active transport" },
+            { id: "b7", text: "Gas exchange systems in humans, insects, fish, and plants" }
+          ]
+        }
+      ]
+    };
+
     let userWeaknesses = JSON.parse(localStorage.getItem('paperTrailWeaknesses')) || [];
 
-    async function handleSpecUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const container = document.getElementById('checklist-container');
-      const list = document.getElementById('checklist-items');
-      container.classList.remove('hidden');
-      document.getElementById('checklist-title').textContent = `Checklist for ${file.name}`;
+    let ragSubject = 'maths';
+    let ragFilter = 'all';
+    let ragStatuses = JSON.parse(localStorage.getItem('paperTrailRAG')) || {};
 
-      let items = ['Introduction to Topic', 'Core Concepts', 'Advanced Applications', 'Case Studies', 'Exam Techniques'];
+    function setRagSubject(subj) {
+      ragSubject = subj;
+      document.querySelectorAll('.rag-subject-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `rag-sub-${subj}`);
+      });
+      renderRagChecklist();
+    }
 
-      if (file.type === "text/plain") {
-         try {
-           const text = await file.text();
-           const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 5 && l.length < 100);
-           if (lines.length > 0) items = lines.slice(0, 20);
-         } catch (err) { console.error("Error reading file", err); }
+    function setRagFilter(filt) {
+      ragFilter = filt;
+      document.querySelectorAll('.rag-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `rag-filter-${filt}`);
+      });
+      renderRagChecklist();
+    }
+
+    function renderRagChecklist() {
+      const container = document.getElementById('rag-checklist-container');
+      if (!container) return;
+
+      const topics = SPEC_DATA[ragSubject] || [];
+      let total = 0;
+      let greenCount = 0;
+      let amberCount = 0;
+      let redCount = 0;
+      let nullCount = 0;
+
+      // Count stats for current subject
+      topics.forEach(t => {
+        t.points.forEach(p => {
+          total++;
+          const status = ragStatuses[p.id];
+          if (status === 'green') greenCount++;
+          else if (status === 'amber') amberCount++;
+          else if (status === 'red') redCount++;
+          else nullCount++;
+        });
+      });
+
+      // Render topics and points
+      let html = '';
+      topics.forEach(t => {
+        // Filter points within this topic
+        const filteredPoints = t.points.filter(p => {
+          const status = ragStatuses[p.id] || 'null';
+          if (ragFilter === 'all') return true;
+          return status === ragFilter;
+        });
+
+        if (filteredPoints.length > 0) {
+          html += `
+            <div class="rag-topic-card">
+              <h4 class="rag-topic-title">${t.topic}</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+          `;
+          filteredPoints.forEach(p => {
+            const status = ragStatuses[p.id] || 'null';
+            let statusLabel = '⚪ Unrated';
+            if (status === 'red') statusLabel = '🔴 Red';
+            else if (status === 'amber') statusLabel = '🟡 Amber';
+            else if (status === 'green') statusLabel = '🟢 Green';
+
+            html += `
+              <div class="rag-point-item ${status}" onclick="toggleRagPoint('${p.id}')">
+                <span style="font-size: 14px; line-height: 1.4;">${p.text}</span>
+                <span class="rag-badge ${status}">${statusLabel}</span>
+              </div>
+            `;
+          });
+          html += `
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      if (html === '') {
+        html = `
+          <div style="text-align: center; padding: 40px; color: var(--ink-soft); font-family: 'Space Mono', monospace;">
+            No specification points match this filter.
+          </div>
+        `;
       }
 
-      list.innerHTML = items.map((item, i) => `
-        <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--paper-card); border: 1px solid var(--line); cursor: pointer;">
-           <input type="checkbox">
-           <span style="font-size: 14px;">${item}</span>
-        </label>
-      `).join('');
+      container.innerHTML = html;
+
+      // Update Summary Bar
+      const percent = total > 0 ? Math.round((greenCount / total) * 100) : 0;
+      document.getElementById('rag-percent-text').textContent = `${percent}%`;
+      document.getElementById('rag-counts-summary').textContent =
+        `Total: ${total} | Green: ${greenCount} | Amber: ${amberCount} | Red: ${redCount} | Unrated: ${nullCount}`;
+
+      // Update Progress Bar segments
+      const greenPct = total > 0 ? (greenCount / total) * 100 : 0;
+      const amberPct = total > 0 ? (amberCount / total) * 100 : 0;
+      const redPct = total > 0 ? (redCount / total) * 100 : 0;
+      const nullPct = total > 0 ? (nullCount / total) * 100 : 100;
+
+      const segGreen = document.getElementById('rag-seg-green');
+      const segAmber = document.getElementById('rag-seg-amber');
+      const segRed = document.getElementById('rag-seg-red');
+      const segNull = document.getElementById('rag-seg-null');
+
+      if (segGreen) segGreen.style.width = `${greenPct}%`;
+      if (segAmber) segAmber.style.width = `${amberPct}%`;
+      if (segRed) segRed.style.width = `${redPct}%`;
+      if (segNull) segNull.style.width = `${nullPct}%`;
     }
+
+    function toggleRagPoint(pointId) {
+      const current = ragStatuses[pointId] || 'null';
+      let next = 'null';
+      if (current === 'null') next = 'red';
+      else if (current === 'red') next = 'amber';
+      else if (current === 'amber') next = 'green';
+      else if (current === 'green') next = 'null';
+
+      if (next === 'null') {
+        delete ragStatuses[pointId];
+      } else {
+        ragStatuses[pointId] = next;
+      }
+
+      // Update UI instantly
+      renderRagChecklist();
+
+      // Debounced save
+      debouncedSaveRag();
+    }
+
+    const debouncedSaveRag = debounce(() => {
+      localStorage.setItem('paperTrailRAG', JSON.stringify(ragStatuses));
+      if (typeof addActivity === 'function') {
+        addActivity("Saved specification checklist progress");
+      }
+    }, 1000);
 
     function addWeakness() {
       const input = document.getElementById('weakness-input');
@@ -2456,6 +2983,473 @@
       userWeaknesses.splice(i, 1);
       localStorage.setItem('paperTrailWeaknesses', JSON.stringify(userWeaknesses));
       renderWeaknesses();
+    }
+
+    // ---------- Logic: AI Grader ----------
+    let gradeImageBase64 = "";
+
+    function handleGradeImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Image exceeds 5MB limit. Please upload a smaller image.");
+        e.target.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        gradeImageBase64 = event.target.result;
+        document.getElementById('grade-image-preview').src = gradeImageBase64;
+        document.getElementById('grade-image-preview-container').style.display = 'block';
+        document.getElementById('grade-image-status').textContent = `${file.name} (${Math.round(file.size / 1024 / 1024 * 100) / 100} MB) loaded.`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeGradeImage() {
+      gradeImageBase64 = "";
+      document.getElementById('grade-file').value = "";
+      document.getElementById('grade-image-preview').src = "";
+      document.getElementById('grade-image-preview-container').style.display = 'none';
+      document.getElementById('grade-image-status').textContent = "Max size 5MB (PNG/JPG)";
+    }
+
+    async function submitGradeRequest() {
+      const markscheme = document.getElementById('grade-markscheme').value.trim();
+      const answer = document.getElementById('grade-answer').value.trim();
+
+      if (!markscheme || !answer) {
+        alert("Please enter both the mark scheme criteria and your written answer.");
+        return;
+      }
+
+      // Show loading state
+      const btn = document.getElementById('btn-grade-submit');
+      const loadPanel = document.getElementById('grader-loading-panel');
+      const resultCard = document.getElementById('grader-result-card');
+      const emptyState = document.getElementById('grader-empty-state');
+      const loadBar = document.getElementById('grader-loading-bar');
+      const loadStatus = document.getElementById('grader-loading-status');
+
+      btn.disabled = true;
+      emptyState.classList.add('hidden');
+      resultCard.classList.add('hidden');
+      loadPanel.classList.remove('hidden');
+
+      // Simulated streaming loading states
+      const steps = [
+        { progress: 10, msg: "Connecting to secure AQA/OCR/Edexcel parsing endpoint..." },
+        { progress: 30, msg: "Validating inputs and compiling multimodal data structures..." },
+        { progress: 50, msg: "Analyzing student response structure and handwriting overlays..." },
+        { progress: 75, msg: "Applying official mark scheme guidelines and grading criteria matrix..." },
+        { progress: 90, msg: "Formulating improvement suggestions and finalizing JSON scoring payload..." }
+      ];
+
+      let stepIndex = 0;
+      const interval = setInterval(() => {
+        if (stepIndex < steps.length) {
+          loadBar.style.width = `${steps[stepIndex].progress}%`;
+          loadStatus.textContent = steps[stepIndex].msg;
+          stepIndex++;
+        }
+      }, 800);
+
+      try {
+        const response = await fetch('/api/grade', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            markscheme,
+            answer,
+            image: gradeImageBase64
+          })
+        });
+
+        clearInterval(interval);
+
+        if (!response.ok) {
+          throw new Error(`Server responded with ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Populate results
+        document.getElementById('grader-score-badge').textContent = `${data.marks_awarded} / ${data.total_marks} Marks`;
+        const percentage = data.total_marks > 0 ? Math.round((data.marks_awarded / data.total_marks) * 100) : 0;
+        document.getElementById('grader-percent').textContent = `${percentage}%`;
+
+        // Render criteria list
+        const list = document.getElementById('grader-breakdown-list');
+        list.innerHTML = data.breakdown.map(item => `
+          <div style="border-left: 4px solid ${item.achieved ? '#4CAF50' : 'var(--coral)'}; background: var(--paper); padding: 12px; border-radius: 4px; display: flex; align-items: start; gap: 10px;">
+            <span style="font-size: 16px; line-height: 1;">${item.achieved ? '✅' : '❌'}</span>
+            <div style="flex-grow: 1;">
+              <div style="font-weight: 700; font-size: 13px;">${item.point}</div>
+              <div style="font-size: 12px; color: var(--ink-soft); margin-top: 4px;">${item.reason}</div>
+            </div>
+          </div>
+        `).join('');
+
+        // Render improvements
+        const improvementsList = document.getElementById('grader-improvements-list');
+        improvementsList.innerHTML = data.improvement_actions.map(action => `
+          <li>${action}</li>
+        `).join('');
+
+        // Switch panel visibility
+        loadPanel.classList.add('hidden');
+        resultCard.classList.remove('hidden');
+
+        addActivity(`Graded written response: ${data.marks_awarded}/${data.total_marks} marks`);
+
+      } catch (err) {
+        clearInterval(interval);
+        console.error(err);
+        alert("An error occurred while grading. Please make sure the Vite development server is running and try again.");
+        loadPanel.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // ---------- Logic: STEM Formula Trainer ----------
+    const FORMULAS = [
+      {
+        name: "Constant Acceleration (v = u + at)",
+        equation: "v = u + at",
+        generate: () => {
+          const u = Math.floor(Math.random() * 10) + 1;
+          const a = Math.floor(Math.random() * 5) + 1;
+          const t = Math.floor(Math.random() * 8) + 2;
+          const v = u + a * t;
+
+          const values = { u, a, t, v };
+          const target = ["v", "u", "a", "t"][Math.floor(Math.random() * 4)];
+          const answer = parseFloat(values[target].toFixed(1));
+
+          const distractors = new Set();
+          if (target === 'v') {
+            distractors.add(u + a + t);
+            distractors.add(u * a * t);
+            distractors.add(u + (a / t));
+          } else if (target === 'u') {
+            distractors.add(v + a * t);
+            distractors.add(v - a - t);
+            distractors.add(v / (a * t));
+          } else if (target === 'a') {
+            distractors.add((v - u) * t);
+            distractors.add(v - u - t);
+            distractors.add((v + u) / t);
+          } else if (target === 't') {
+            distractors.add((v - u) * a);
+            distractors.add(v - u - a);
+            distractors.add((v + u) / a);
+          }
+
+          while (distractors.size < 3) {
+            const offset = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 5) + 1);
+            distractors.add(parseFloat((answer + offset).toFixed(1)));
+          }
+
+          return {
+            equation: "v = u + at",
+            description: `Given the constant acceleration formula v = u + at, solve for the missing variable ${target}.`,
+            given: Object.keys(values).filter(k => k !== target).map(k => `${k} = ${values[k]}`).join(', '),
+            target,
+            answer,
+            distractors: Array.from(distractors).map(d => parseFloat((d).toFixed(1))),
+            correctText: `${target} = ${answer}`
+          };
+        }
+      },
+      {
+        name: "Constant Acceleration (v² = u² + 2as)",
+        equation: "v² = u² + 2as",
+        generate: () => {
+          const u = Math.floor(Math.random() * 5) + 1;
+          const a = Math.floor(Math.random() * 4) + 1;
+          const s = Math.floor(Math.random() * 12) + 2;
+          const vSquare = u * u + 2 * a * s;
+          const v = parseFloat(Math.sqrt(vSquare).toFixed(1));
+
+          const values = { u, a, s, v };
+          const target = ["v", "u", "a", "s"][Math.floor(Math.random() * 4)];
+          let answer = 0;
+          const distractors = new Set();
+
+          if (target === 'v') {
+            answer = v;
+            distractors.add(vSquare);
+            distractors.add(parseFloat((u + 2 * a * s).toFixed(1)));
+            distractors.add(parseFloat(Math.sqrt(u * u + a * s).toFixed(1)));
+          } else if (target === 'u') {
+            answer = u;
+            distractors.add(parseFloat(Math.sqrt(v * v + 2 * a * s).toFixed(1)));
+            distractors.add(parseFloat((v * v - 2 * a * s).toFixed(1)));
+            distractors.add(parseFloat(Math.sqrt(v * v - a * s).toFixed(1)));
+          } else if (target === 'a') {
+            answer = parseFloat(((v * v - u * u) / (2 * s)).toFixed(1));
+            distractors.add(parseFloat(((v - u) / (2 * s)).toFixed(1)));
+            distractors.add(parseFloat(((v * v + u * u) / (2 * s)).toFixed(1)));
+            distractors.add(parseFloat(((v * v - u * u) / s).toFixed(1)));
+          } else if (target === 's') {
+            answer = parseFloat(((v * v - u * u) / (2 * a)).toFixed(1));
+            distractors.add(parseFloat(((v - u) / (2 * a)).toFixed(1)));
+            distractors.add(parseFloat(((v * v + u * u) / (2 * a)).toFixed(1)));
+            distractors.add(parseFloat(((v * v - u * u) / a).toFixed(1)));
+          }
+
+          while (distractors.size < 3) {
+            const offset = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 4) + 1);
+            distractors.add(parseFloat((answer + offset).toFixed(1)));
+          }
+
+          return {
+            equation: "v² = u² + 2as",
+            description: `Given the kinematic equation v² = u² + 2as, solve for ${target}. (Round to 1 decimal place if needed)`,
+            given: Object.keys(values).filter(k => k !== target).map(k => `${k} = ${values[k]}`).join(', '),
+            target,
+            answer: parseFloat(answer.toFixed(1)),
+            distractors: Array.from(distractors).map(d => parseFloat((d).toFixed(1))),
+            correctText: `${target} = ${answer}`
+          };
+        }
+      },
+      {
+        name: "Newton's Second Law (F = ma)",
+        equation: "F = ma",
+        generate: () => {
+          const m = Math.floor(Math.random() * 20) + 2;
+          const a = Math.floor(Math.random() * 8) + 1;
+          const F = m * a;
+
+          const values = { F, m, a };
+          const target = ["F", "m", "a"][Math.floor(Math.random() * 3)];
+          const answer = parseFloat(values[target].toFixed(1));
+          const distractors = new Set();
+
+          if (target === 'F') {
+            distractors.add(m + a);
+            distractors.add(parseFloat((m / a).toFixed(1)));
+            distractors.add(m * a * 9.81);
+          } else if (target === 'm') {
+            distractors.add(F * a);
+            distractors.add(F - a);
+            distractors.add(parseFloat((a / F).toFixed(1)));
+          } else if (target === 'a') {
+            distractors.add(F * m);
+            distractors.add(F - m);
+            distractors.add(parseFloat((m / F).toFixed(1)));
+          }
+
+          while (distractors.size < 3) {
+            const offset = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 5) + 1);
+            distractors.add(parseFloat((answer + offset).toFixed(1)));
+          }
+
+          return {
+            equation: "F = ma",
+            description: `Given Newton's second law F = ma, solve for the missing variable ${target}.`,
+            given: Object.keys(values).filter(k => k !== target).map(k => `${k} = ${values[k]}`).join(', '),
+            target,
+            answer,
+            distractors: Array.from(distractors).map(d => parseFloat((d).toFixed(1))),
+            correctText: `${target} = ${answer}`
+          };
+        }
+      }
+    ];
+
+    let formulaStreak = 0;
+    let currentFormulaQuestion = null;
+
+    function nextFormulaQuestion() {
+      const container = document.getElementById('formula-container');
+      if (container) {
+        container.classList.remove('flash-anim', 'shake-anim');
+      }
+
+      const template = FORMULAS[Math.floor(Math.random() * FORMULAS.length)];
+      currentFormulaQuestion = template.generate();
+
+      document.getElementById('formula-eq-title').textContent = `Equation: ${currentFormulaQuestion.equation}`;
+      document.getElementById('formula-desc').textContent = currentFormulaQuestion.description;
+      document.getElementById('formula-values').textContent = `Given: ${currentFormulaQuestion.given}`;
+      document.getElementById('formula-input').value = '';
+
+      // Render Options
+      const options = [currentFormulaQuestion.answer, ...currentFormulaQuestion.distractors];
+      options.sort(() => Math.random() - 0.5);
+
+      const optionsDiv = document.getElementById('formula-options');
+      optionsDiv.innerHTML = options.map(opt => `
+        <button class="btn" style="padding: 10px; font-family: 'Space Mono', monospace; font-size: 14px; background: var(--paper-card); color: var(--ink);" onclick="checkFormulaAnswer(${opt})">${opt}</button>
+      `).join('');
+    }
+
+    function checkFormulaAnswer(selectedVal) {
+      const container = document.getElementById('formula-container');
+      container.classList.remove('flash-anim', 'shake-anim');
+
+      let userVal;
+      if (selectedVal !== undefined) {
+        userVal = selectedVal;
+      } else {
+        userVal = parseFloat(document.getElementById('formula-input').value);
+      }
+
+      if (isNaN(userVal)) {
+        alert("Please enter a valid numeric value.");
+        return;
+      }
+
+      const diff = Math.abs(userVal - currentFormulaQuestion.answer);
+      const isCorrect = diff <= 0.15; // Allow minor rounding tolerances
+
+      if (isCorrect) {
+        formulaStreak++;
+        document.getElementById('formula-streak').textContent = formulaStreak;
+        container.classList.add('flash-anim');
+
+        addActivity(`Solved Formula Question correctly! Current Streak: ${formulaStreak}`);
+
+        setTimeout(() => {
+          nextFormulaQuestion();
+        }, 800);
+      } else {
+        formulaStreak = 0;
+        document.getElementById('formula-streak').textContent = formulaStreak;
+        container.classList.add('shake-anim');
+
+        addActivity(`Failed Formula Question. Streak reset.`);
+
+        setTimeout(() => {
+          container.classList.remove('shake-anim');
+        }, 500);
+      }
+    }
+
+    // ---------- Logic: Command Word Decoders ----------
+    const COMMAND_WORDS = [
+      {
+        word: "Evaluate",
+        definition: "Requires you to make a judgement or build an argument by weighing up points for and against, concluding with a supported final decision.",
+        poor: {
+          text: "We should build nuclear power plants because they are really powerful and don't make carbon dioxide, which is good for the environment.",
+          missing: "Missing any counter-arguments, quantitative evidence, and a balanced conclusion with a final supported judgement."
+        },
+        full_mark: {
+          text: "Nuclear power offers **significant advantages, chiefly zero carbon emissions during operation** and high base-load reliability. However, this must be balanced against **extremely high decommissioning costs and long-term radioactive waste storage issues**. On balance, while the capital cost is immense, nuclear energy is **essential to meet immediate net-zero targets as a stable alternative to fossil fuels** until battery storage for renewables matures."
+        }
+      },
+      {
+        word: "Explain",
+        definition: "Requires you to give reasons or write about how/why something happens. Use words like 'because', 'therefore', or 'this leads to' to show cause and effect.",
+        poor: {
+          text: "Hot air rises. When you heat air it goes up because it gets warmer.",
+          missing: "Fails to link the heating of the air to density changes, Archimedes' principle, or buoyancy. It is circular and lacks scientific cause-and-effect links."
+        },
+        full_mark: {
+          text: "When air is heated, the gas particles gain kinetic energy, causing them to move further apart and expand. This **reduces the density of the heated air relative to the cooler surrounding air**. Consequently, **the less dense hot air experiences a net upward buoyant force**, causing it to rise."
+        }
+      },
+      {
+        word: "Analyze",
+        definition: "Requires you to break down a complex topic or process into its component parts, exploring the relationships between them and detailing how they interact.",
+        poor: {
+          text: "Enzymes are protein catalysts. They speed up reactions in the body and work best at 37 degrees Celsius.",
+          missing: "Merely describes enzymes and states an optimum temperature rather than analyzing the structural relationship between active sites, kinetic energy, and denaturing."
+        },
+        full_mark: {
+          text: "At low temperatures, rate of reaction is limited by kinetic energy. As temperature rises, **increased kinetic energy leads to a higher frequency of successful collision complexes**. Above the optimum temperature, **thermal agitation disrupts hydrogen bonds within the enzyme's tertiary structure**, altering the specific shape of the active site. This **denatures the enzyme, preventing substrate binding** and rapidly reducing reaction velocity."
+        }
+      },
+      {
+        word: "Compare",
+        definition: "Requires you to identify both similarities and differences between two or more items, ensuring you cover both throughout your response.",
+        poor: {
+          text: "Eukaryotic cells have a nucleus and are found in humans. Prokaryotes are bacteria.",
+          missing: "Fails to compare equivalent features directly, lacks similarities (e.g. both have ribosomes, cell membranes), and does not use comparative connectors."
+        },
+        full_mark: {
+          text: "**Both eukaryotic and prokaryotic cells possess ribosomes and a semi-permeable cell membrane** as part of their fundamental cell structures. However, they differ in genetic storage; **eukaryotes isolate linear DNA within a double-membrane nucleus**, whereas **prokaryotes contain a single circular chromosome free-floating in the cytoplasm** alongside smaller accessory plasmids."
+        }
+      },
+      {
+        word: "Suggest",
+        definition: "Requires you to apply your existing scientific knowledge to a novel scenario, proposing a reasonable hypothesis or course of action.",
+        poor: {
+          text: "Maybe the scientists should just do the experiment again and be more careful so they don't get bad results.",
+          missing: "Does not propose a scientifically grounded mechanism or modification based on theory; merely suggests repeating the test."
+        },
+        full_mark: {
+          text: "The anomalous rate decrease could be explained by **unintentional denaturing due to localized heating from the exothermic reaction**. To verify this, the investigator should **introduce a buffer solution and conduct the experiment inside a water bath** to maintain a constant temperature."
+        }
+      },
+      {
+        word: "Describe",
+        definition: "Requires you to state the characteristics or recall details of a process, pattern, or graph. You do not need to give reasons or explain why.",
+        poor: {
+          text: "The graph goes up and down. It reaches a peak and then it decreases.",
+          missing: "Lacks specific data points, coordinates, units, and clear rate of change descriptions from the graph."
+        },
+        full_mark: {
+          text: "The enzyme rate of reaction **increases linearly from 0 to 4.5 μmol/min** as temperature rises from **10°C to the optimum of 40°C**. Beyond 40°C, the rate **falls precipitously to 0 μmol/min at 55°C**."
+        }
+      }
+    ];
+
+    function renderDecoderGrid() {
+      const grid = document.getElementById('decoder-grid');
+      if (!grid) return;
+      grid.innerHTML = COMMAND_WORDS.map((item, idx) => `
+        <button class="btn" id="decoder-btn-${idx}" style="text-align: left; padding: 12px 16px; font-weight: 700; font-family: 'Space Mono', monospace; font-size: 14px; width: 100%; display: flex; justify-content: space-between; align-items: center;" onclick="selectCommandWord(${idx})">
+          <span>${item.word}</span>
+          <span>&rarr;</span>
+        </button>
+      `).join('');
+    }
+
+    function selectCommandWord(idx) {
+      const item = COMMAND_WORDS[idx];
+      if (!item) return;
+
+      // Update button active styling
+      COMMAND_WORDS.forEach((_, i) => {
+        const btn = document.getElementById(`decoder-btn-${i}`);
+        if (btn) {
+          if (i === idx) {
+            btn.style.background = 'var(--ink)';
+            btn.style.color = 'var(--highlight)';
+            btn.style.borderColor = 'var(--ink)';
+          } else {
+            btn.style.background = 'var(--paper-card)';
+            btn.style.color = 'var(--ink)';
+            btn.style.borderColor = 'var(--line)';
+          }
+        }
+      });
+
+      // Show panel
+      const panel = document.getElementById('decoder-panel');
+      panel.style.display = 'block';
+
+      document.getElementById('decoder-word-title').textContent = item.word;
+      document.getElementById('decoder-definition').textContent = item.definition;
+      document.getElementById('decoder-poor-text').textContent = item.poor.text;
+      document.getElementById('decoder-poor-missing').textContent = item.poor.missing;
+
+      // Replace markdown bold tags in full_mark.text with strong html elements
+      let formattedFullText = item.full_mark.text;
+      formattedFullText = formattedFullText.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #2E7D32; font-weight: 700;">$1</strong>');
+      document.getElementById('decoder-full-text').innerHTML = formattedFullText;
+
+      addActivity(`Explored command word decoder for: ${item.word}`);
     }
 
     // ---------- Logic: University Sections (Personal Statement, Rankings, Accommodation) ----------
@@ -2691,7 +3685,7 @@
     }
 
     // ---------- Navigation & Init ----------
-    const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'checklist', 'weaknesses', 'planner', 'tools', 'personal-statement', 'rankings', 'accommodation', 'pricing', 'legal'];
+    const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'checklist', 'weaknesses', 'planner', 'tools', 'personal-statement', 'rankings', 'accommodation', 'pricing', 'legal', 'grader', 'formulas', 'decoders'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
     let currentSection = null;
 
@@ -2762,9 +3756,12 @@
            else renderMonthlyPlanner();
         }
         if (hash === 'revision') { renderSRS(); startQuiz(); }
+        if (hash === 'checklist') { renderRagChecklist(); }
         if (hash === 'weaknesses') { renderWeaknesses(); }
         if (hash === 'rankings') { renderRankings(); }
         if (hash === 'accommodation') { renderAccommodations(); }
+        if (hash === 'formulas') { nextFormulaQuestion(); }
+        if (hash === 'decoders') { renderDecoderGrid(); selectCommandWord(0); }
       }
     }
     window.onhashchange = navigate;
