@@ -51,7 +51,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
   <script type="module">
     import { calculateSM2 } from './sm2.ts';
+    import { statements } from './statementsData.ts';
     window.calculateSM2 = calculateSM2;
+    window.STATEMENT_LIBRARY = statements;
   </script>
   <style>
     :root {
@@ -1007,6 +1009,109 @@
       margin: 0 auto;
       padding: 0 24px;
     }
+
+    /* Anonymized Statement Library Styles */
+    .statement-library-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 40px;
+    }
+
+    .statement-sidebar {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .statement-main-area {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .statement-split-layout {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .statement-text-pane {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .statement-annotation-pane {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .annotated-segment {
+      text-decoration: underline;
+      text-decoration-style: dashed;
+      text-decoration-color: var(--purple);
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1.5px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      padding: 2px 4px;
+      margin: 0 -4px;
+      border-radius: 3px;
+    }
+
+    .annotated-segment:hover {
+      background-color: rgba(138, 124, 199, 0.15);
+      color: var(--purple-dark);
+    }
+
+    body.dark-mode .annotated-segment:hover {
+      background-color: rgba(138, 124, 199, 0.3);
+      color: var(--highlight);
+    }
+
+    .annotated-segment.active-annotation {
+      background-color: var(--highlight);
+      color: #000 !important;
+      text-decoration-style: solid;
+      text-decoration-color: var(--ink);
+    }
+
+    .sl-match-item {
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: var(--paper-card);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+      border-radius: var(--radius);
+      font-weight: 500;
+    }
+
+    .sl-match-item:hover {
+      border-color: var(--ink);
+      box-shadow: 2px 2px 0 var(--ink);
+      transform: translate(-1px, -1px);
+    }
+
+    .sl-match-item.active {
+      background: var(--ink);
+      color: var(--highlight) !important;
+      border-color: var(--ink);
+    }
+
+    body.dark-mode .sl-match-item.active {
+      color: #000 !important;
+    }
+
+    @media (max-width: 900px) {
+      .statement-library-grid {
+        grid-template-columns: 1fr;
+      }
+      .statement-split-layout {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -1436,6 +1541,86 @@
                 <li>Focus on what you've read, watched, or done outside school.</li>
                 <li>Don't just list achievements—reflect on what you learned from them.</li>
               </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Successful Anonymized Statement Library with Inline Annotations -->
+        <div style="margin-top: 40px; border-top: 2px solid var(--ink); padding-top: 40px;" id="statement-library-sub">
+          <div class="section-head">
+            <p class="eyebrow">Statement Library</p>
+            <h2>Successful Anonymized Statements</h2>
+            <p class="instructions" style="margin-bottom: 20px;">Browse real, successful personal statements from top applicants with expert commentary highlighting key strategy choices.</p>
+          </div>
+
+          <div class="statement-library-grid">
+            <!-- Left Sidebar with filters and search -->
+            <div class="statement-sidebar card" style="cursor: default;">
+              <h3>🔍 Search & Filter</h3>
+              <p class="instructions" style="margin-bottom: 15px;">Filter by course, university, or search keywords.</p>
+
+              <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 6px; font-family: 'Space Mono', monospace;">Search Keyword</label>
+                <input type="text" id="sl-search-input" placeholder="Type keyword..." style="width: 100%; padding: 10px; border: 1px solid var(--line); font-family: inherit; font-size: 13px; background: var(--paper-card); color: var(--ink);">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 6px; font-family: 'Space Mono', monospace;">Course</label>
+                <select id="sl-course-filter" style="width: 100%; padding: 10px; border: 1px solid var(--line); font-family: 'Space Mono', monospace; font-size: 13px; background: var(--paper-card); color: var(--ink);">
+                  <option value="all">All Courses</option>
+                  <option value="Medicine">Medicine</option>
+                  <option value="Law">Law</option>
+                  <option value="Computer Science">Computer Science</option>
+                </select>
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 6px; font-family: 'Space Mono', monospace;">University</label>
+                <select id="sl-uni-filter" style="width: 100%; padding: 10px; border: 1px solid var(--line); font-family: 'Space Mono', monospace; font-size: 13px; background: var(--paper-card); color: var(--ink);">
+                  <option value="all">All Universities</option>
+                  <option value="University of Oxford">University of Oxford</option>
+                  <option value="University of Cambridge">University of Cambridge</option>
+                  <option value="Imperial College London">Imperial College London</option>
+                </select>
+              </div>
+
+              <div style="border-top: 1px dashed var(--line); padding-top: 15px;">
+                <p class="eyebrow" style="font-size: 11px; margin-bottom: 10px;">Matching Statements</p>
+                <div id="sl-list-container" style="display: flex; flex-direction: column; gap: 8px;">
+                  <!-- Matches list populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Main displaying Area -->
+            <div class="statement-main-area">
+              <div class="statement-split-layout">
+                <!-- Statement text area -->
+                <div class="statement-text-pane card" style="cursor: default;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--ink); padding-bottom: 10px; margin-bottom: 15px;">
+                    <div>
+                      <span class="paper-tag subject-maths" id="sl-course-badge" style="margin-bottom: 4px;">Medicine</span>
+                      <h3 id="sl-title" style="margin: 0; font-size: 18px;">Statement Title</h3>
+                      <p id="sl-uni-meta" style="font-size: 12px; color: var(--ink-soft); margin: 2px 0 0;">University of Oxford</p>
+                    </div>
+                  </div>
+                  <div id="sl-paragraphs-container" style="font-size: 14px; line-height: 1.6; color: var(--ink);">
+                    <!-- Dynamic paragraphs with underlined text annotations go here -->
+                  </div>
+                </div>
+
+                <!-- Interactive Expert commentary panel -->
+                <div class="statement-annotation-pane card" style="cursor: default; border-left: 6px solid var(--purple);">
+                  <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <span>💡 Expert Commentary</span>
+                  </h3>
+                  <p class="instructions" style="margin-bottom: 15px;">Strategic analysis of your writing.</p>
+
+                  <div id="sl-annotation-content" style="font-size: 13px; color: var(--ink); line-height: 1.55; background: var(--paper); padding: 15px; border-radius: var(--radius); min-height: 120px;">
+                    <p style="color: var(--ink-soft); font-style: italic; margin: 0;">Click any subtly underlined sentence on the left to read tutor insights and analysis of why that sentence works.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -3584,6 +3769,20 @@
         aBills.addEventListener('change', renderAccommodations);
         aGym.addEventListener('change', renderAccommodations);
       }
+
+      // Statement library search & filters
+      const slSearch = document.getElementById('sl-search-input');
+      const slCourse = document.getElementById('sl-course-filter');
+      const slUni = document.getElementById('sl-uni-filter');
+
+      if (slSearch && slCourse && slUni) {
+        const triggerSlSearch = debounce(() => {
+          renderStatementLibrary(true);
+        }, 150);
+        slSearch.addEventListener('input', triggerSlSearch);
+        slCourse.addEventListener('change', () => renderStatementLibrary(true));
+        slUni.addEventListener('change', () => renderStatementLibrary(true));
+      }
     }
 
     function renderRankings() {
@@ -3684,6 +3883,130 @@
       `).join('');
     }
 
+    // ---------- Logic: Statement Library ----------
+    let slSelectedId = "med-oxford";
+
+    function selectSlStatement(id) {
+      slSelectedId = id;
+      renderStatementLibrary(false);
+    }
+
+    function selectAnnotation(el, id, paraIdx, segIdx) {
+      document.querySelectorAll('.annotated-segment').forEach(span => span.classList.remove('active-annotation'));
+      el.classList.add('active-annotation');
+
+      const statements = window.STATEMENT_LIBRARY || [];
+      const statement = statements.find(s => s.id === id);
+      if (!statement) return;
+
+      const segment = statement.paragraphs[paraIdx][segIdx];
+      const content = document.getElementById('sl-annotation-content');
+      if (content && segment && segment.annotation) {
+        content.innerHTML = `
+          <div style="font-weight: 700; font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--purple-dark); margin-bottom: 8px;">Tutor Analysis</div>
+          <p style="margin: 0; font-size: 13px; line-height: 1.55;">${segment.annotation}</p>
+        `;
+      }
+    }
+
+    function renderStatementLibrary(resetSelection = true) {
+      const searchInput = document.getElementById('sl-search-input');
+      const courseFilter = document.getElementById('sl-course-filter');
+      const uniFilter = document.getElementById('sl-uni-filter');
+      const listContainer = document.getElementById('sl-list-container');
+
+      if (!searchInput || !courseFilter || !uniFilter || !listContainer) return;
+
+      const query = searchInput.value.toLowerCase().trim();
+      const course = courseFilter.value;
+      const uni = uniFilter.value;
+
+      const statements = window.STATEMENT_LIBRARY || [];
+
+      // Filter statements
+      const filtered = statements.filter(s => {
+        const matchesCourse = course === 'all' || s.course === course;
+        const matchesUni = uni === 'all' || s.university === uni;
+
+        let matchesQuery = true;
+        if (query !== '') {
+          const inMeta = s.title.toLowerCase().includes(query) || s.course.toLowerCase().includes(query) || s.university.toLowerCase().includes(query);
+          let inContent = false;
+          s.paragraphs.forEach(p => {
+            p.forEach(seg => {
+              if (seg.text.toLowerCase().includes(query)) {
+                inContent = true;
+              }
+            });
+          });
+          matchesQuery = inMeta || inContent;
+        }
+
+        return matchesCourse && matchesUni && matchesQuery;
+      });
+
+      // Handle selection reset
+      if (filtered.length > 0) {
+        if (resetSelection) {
+          const stillExists = filtered.some(s => s.id === slSelectedId);
+          if (!stillExists) {
+            slSelectedId = filtered[0].id;
+          }
+        }
+      } else {
+        slSelectedId = null;
+      }
+
+      // Render matches list
+      listContainer.innerHTML = filtered.map(s => {
+        const isActive = s.id === slSelectedId;
+        return `
+          <div class="sl-match-item ${isActive ? 'active' : ''}" onclick="selectSlStatement('${s.id}')">
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 2px; font-family: 'Space Mono', monospace;">${s.course}</div>
+            <div style="font-weight: 700;">${s.university}</div>
+          </div>
+        `;
+      }).join('');
+
+      // Render active statement
+      const titleEl = document.getElementById('sl-title');
+      const badgeEl = document.getElementById('sl-course-badge');
+      const uniEl = document.getElementById('sl-uni-meta');
+      const paragraphsEl = document.getElementById('sl-paragraphs-container');
+      const annotationContent = document.getElementById('sl-annotation-content');
+
+      if (slSelectedId) {
+        const activeStatement = statements.find(s => s.id === slSelectedId);
+        if (activeStatement) {
+          titleEl.textContent = activeStatement.title;
+          badgeEl.textContent = activeStatement.course;
+          uniEl.textContent = activeStatement.university;
+
+          // Render paragraphs
+          paragraphsEl.innerHTML = activeStatement.paragraphs.map((p, pIdx) => {
+            const paraHtml = p.map((seg, sIdx) => {
+              if (seg.annotation) {
+                return `<span class="annotated-segment" onclick="selectAnnotation(this, '${activeStatement.id}', ${pIdx}, ${sIdx})">${seg.text}</span>`;
+              } else {
+                return `<span>${seg.text}</span>`;
+              }
+            }).join('');
+            return `<p style="margin-bottom: 16px;">${paraHtml}</p>`;
+          }).join('');
+
+          // Reset commentary state
+          annotationContent.innerHTML = `<p style="color: var(--ink-soft); font-style: italic; margin: 0;">Click any subtly underlined sentence on the left to read tutor insights and analysis of why that sentence works.</p>`;
+        }
+      } else {
+        // Empty state
+        titleEl.textContent = "No statements found";
+        badgeEl.textContent = "N/A";
+        uniEl.textContent = "Please adjust filters";
+        paragraphsEl.innerHTML = `<p style="color: var(--ink-soft); font-style: italic;">No personal statements match your current search queries or dropdown filters.</p>`;
+        annotationContent.innerHTML = `<p style="color: var(--ink-soft); font-style: italic; margin: 0;">No active selection.</p>`;
+      }
+    }
+
     // ---------- Navigation & Init ----------
     const SECTIONS = ['landing', 'dashboard', 'papers', 'revision', 'checklist', 'weaknesses', 'planner', 'tools', 'personal-statement', 'rankings', 'accommodation', 'pricing', 'legal', 'grader', 'formulas', 'decoders'];
     let selectedCategory = localStorage.getItem('paperTrailCategory');
@@ -3758,6 +4081,7 @@
         if (hash === 'revision') { renderSRS(); startQuiz(); }
         if (hash === 'checklist') { renderRagChecklist(); }
         if (hash === 'weaknesses') { renderWeaknesses(); }
+        if (hash === 'personal-statement') { renderStatementLibrary(); }
         if (hash === 'rankings') { renderRankings(); }
         if (hash === 'accommodation') { renderAccommodations(); }
         if (hash === 'formulas') { nextFormulaQuestion(); }
